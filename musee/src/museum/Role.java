@@ -4,6 +4,11 @@ public class Role {
 	private int id_role;
 	private String name;
 	
+	/**
+	 * constructor for Role
+	 * @param id_role
+	 * @param name
+	 */
 	public Role(int id_role, String name) {
 		this.id_role = id_role;
 		this.name = name;

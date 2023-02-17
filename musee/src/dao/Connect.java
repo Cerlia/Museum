@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
@@ -42,6 +40,9 @@ public class Connect {
 		super();
 	}
 
+	
+	// TODO revoir le fichier à partir d'ici, je sais pas à quoi tout sert
+	
 	public static ResultSet executeQuery(String requete){
 		Statement st = null ;
 		ResultSet rs = null;
@@ -50,7 +51,7 @@ public class Connect {
 			st = getInstance().createStatement() ;
 			rs = st.executeQuery(requete) ;
 		}catch(SQLException e){
-			System.out.println("Echec de la tentative d'ex�cution de requete : " +requete + " ["+ e.getMessage()+"]") ;
+			System.out.println("Echec de la tentative d'exécution de requete : " +requete + " ["+ e.getMessage()+"]") ;
 		}
 		return rs;
 	}
@@ -91,13 +92,17 @@ public class Connect {
 		connection=null;
 	}
 
-	/**
+	
+	/* TODO vérifier si ces méthodes servent vraiment, j'ai l'impression qu'elles
+	 * ne sonts appelées par aucune fonction dans le projet du prof !
+	 * 
+	 * 
+
 	 * Requ�te qui permet de r�cup�rer le plus grand id de la table, a priori celui qui vient d'�tre affect�
 	 * � une ligne cr��e via identity.
 	 * @param cle
 	 * @param table
 	 * @return
-	 */
 	public static int getMaxId(String cle, String table) {
 		String requete = "SELECT MAX("+cle+")as max FROM "+table;
 		ResultSet rs = Connect.executeQuery(requete);
@@ -110,6 +115,8 @@ public class Connect {
 		}
 		return id;
 	}
+	
+
 
 	public static List<Integer> getLesIds(String attribut, String table, String clauseWhere) {
 		String requete = "SELECT DISTINCT "+attribut+" FROM "+table;
@@ -128,4 +135,7 @@ public class Connect {
 		}
 		return liste;		
 	}	
+	
+		 */
+	
 }

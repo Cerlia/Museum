@@ -7,6 +7,14 @@ public class Zone {
 	private int dim_y;
 	private Room room;
 	
+	/**
+	 * constructor for Zone
+	 * @param id_zone
+	 * @param name
+	 * @param dim_x
+	 * @param dim_y
+	 * @param room
+	 */
 	public Zone(int id_zone, String name, int dim_x, int dim_y, Room room) {
 		this.id_zone = id_zone;
 		this.name = name;

@@ -3,7 +3,7 @@ package dao;
 import java.util.HashMap;
 
 /**
- * Patron de conception DAO *
+ * Patron de conception DAO
  * @param <T> avec type générique T
  */
 public abstract class DAO<T> {

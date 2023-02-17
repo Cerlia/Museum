@@ -9,6 +9,16 @@ public class Display {
 	private Zone zone;
 	private DisplayType display_type;
 	
+	/**
+	 * constructor for Display
+	 * @param id_display
+	 * @param name
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param zone
+	 * @param display_type
+	 */
 	public Display(int id_display, String name, int dim_x, int dim_y, int dim_z, Zone zone, DisplayType display_type) {
 		this.id_display = id_display;
 		this.name = name;

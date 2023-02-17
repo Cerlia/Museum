@@ -14,6 +14,21 @@ public class Art {
 	private ArtStatus art_status;
 	private ArtType art_type;
 	
+	/**
+	 * constructor for Art
+	 * @param id_art
+	 * @param art_code
+	 * @param art_title
+	 * @param creation_date
+	 * @param materials
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param image
+	 * @param author
+	 * @param art_status
+	 * @param art_type
+	 */
 	public Art(int id_art, String art_code, String art_title, String creation_date, String materials,
 			int dim_x, int dim_y, int dim_z, String image, Author author, ArtStatus art_status, ArtType art_type) {
 		this.id_art = id_art;
