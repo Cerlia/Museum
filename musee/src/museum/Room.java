@@ -10,8 +10,39 @@ public class Room {
 	private int pos_x;
 	private int pos_y;
 	
+	/**
+	 * constructor for Room if id_room is known
+	 * @param id_room
+	 * @param name
+	 * @param floor
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param pos_x
+	 * @param pos_y
+	 */
 	public Room(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		this.id_room= id_room;
+		this.name = name;
+		this.floor = floor;
+		this.dim_x = dim_x;
+		this.dim_y = dim_y;
+		this.dim_z = dim_z;
+		this.pos_x = pos_x;
+		this.pos_y = pos_y;
+	}
+	
+	/**
+	 * constructor for Room if id_room is unknown
+	 * @param name
+	 * @param floor
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param pos_x
+	 * @param pos_y
+	 */
+	public Room(String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		this.name = name;
 		this.floor = floor;
 		this.dim_x = dim_x;
@@ -23,6 +54,10 @@ public class Room {
 
 	public int getId_room() {
 		return id_room;
+	}
+	
+	public void setId_room(int id_room) {
+		this.id_room = id_room;
 	}
 
 	public String getName() {

@@ -6,13 +6,24 @@ public class User {
 	private String first_name;
 	private String login;
 	private String password;
+	private Role role;
 	
-	public User(int id_user, String last_name, String first_name, String login, String password) {
+	/**
+	 * constructor for User
+	 * @param id_user
+	 * @param last_name
+	 * @param first_name
+	 * @param login
+	 * @param password
+	 * @param role
+	 */
+	public User(int id_user, String last_name, String first_name, String login, String password, Role role) {
 		this.id_user = id_user;
 		this.last_name = last_name;
 		this.first_name = first_name;
 		this.login = login;
 		this.password = password;
+		this.role = role;
 	}
 
 	public int getId_user() {
@@ -33,6 +44,10 @@ public class User {
 
 	public String getPassword() {
 		return password;
+	}
+	
+	public Role getRole() {
+		return role;
 	}
 	
 	@Override

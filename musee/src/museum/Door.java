@@ -8,6 +8,15 @@ public class Door {
 	private int pos_y;
 	private Room room;
 	
+	/**
+	 * constructor for Door
+	 * @param id_door
+	 * @param dim_x
+	 * @param dim_z
+	 * @param pos_x
+	 * @param pos_y
+	 * @param room
+	 */
 	public Door(int id_door, int dim_x, int dim_z, int pos_x, int pos_y, Room room) {
 		this.id_door = id_door;
 		this.dim_x = dim_x;
