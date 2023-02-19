@@ -1,4 +1,4 @@
-package museum;
+package museum.floorplan;
 
 public class Door {
 	private int id_door;

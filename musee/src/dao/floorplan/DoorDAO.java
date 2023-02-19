@@ -1,12 +1,14 @@
-package dao;
+package dao.floorplan;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.Door;
-import museum.Room;
+import dao.Connect;
+import dao.DAO;
+import museum.floorplan.Door;
+import museum.floorplan.Room;
 
 public class DoorDAO extends DAO<Door> {
 	

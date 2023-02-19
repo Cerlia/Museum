@@ -1,13 +1,16 @@
-package dao;
+package dao.display;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.ArtType;
-import museum.DisplayArtType;
-import museum.DisplayType;
+import dao.Connect;
+import dao.DAO;
+import dao.art.ArtTypeDAO;
+import museum.art.ArtType;
+import museum.display.DisplayArtType;
+import museum.display.DisplayType;
 
 public class DisplayArtTypeDAO extends DAO<DisplayArtType> {
 	

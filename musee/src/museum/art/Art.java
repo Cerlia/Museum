@@ -1,4 +1,4 @@
-package museum;
+package museum.art;
 
 public class Art {
 	private int id_art;

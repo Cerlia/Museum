@@ -1,7 +1,7 @@
-package museum;
+package museum.floorplan;
 
-public class Zone {
-	private int id_zone;
+public class Surface {
+	private int id_surface;
 	private String name;
 	private int dim_x;
 	private int dim_y;
@@ -15,16 +15,16 @@ public class Zone {
 	 * @param dim_y
 	 * @param room
 	 */
-	public Zone(int id_zone, String name, int dim_x, int dim_y, Room room) {
-		this.id_zone = id_zone;
+	public Surface(int id_surface, String name, int dim_x, int dim_y, Room room) {
+		this.id_surface = id_surface;
 		this.name = name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
 		this.room = room;
 	}
 
-	public int getId_zone() {
-		return id_zone;
+	public int getId_surface() {
+		return id_surface;
 	}
 
 	public String getName() {
@@ -45,7 +45,7 @@ public class Zone {
 	
 	@Override
 	public String toString() {
-		return "Zone [id=" + id_zone + ", nom=" + name + ", dim_x=" + dim_x + ", dim_y=" + dim_y +
+		return "Surface [id=" + id_surface + ", name=" + name + ", dim_x=" + dim_x + ", dim_y=" + dim_y +
 				", roomId=" + room.getId_room() + "]";
 	}
 }

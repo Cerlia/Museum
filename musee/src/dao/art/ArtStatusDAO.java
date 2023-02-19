@@ -1,11 +1,13 @@
-package dao;
+package dao.art;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.ArtStatus;
+import dao.Connect;
+import dao.DAO;
+import museum.art.ArtStatus;
 
 public class ArtStatusDAO extends DAO<ArtStatus> {
 	

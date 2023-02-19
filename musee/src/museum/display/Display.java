@@ -1,4 +1,6 @@
-package museum;
+package museum.display;
+
+import museum.floorplan.Surface;
 
 public class Display {
 	private int id_display;
@@ -6,8 +8,8 @@ public class Display {
 	private int dim_x;
 	private int dim_y;
 	private int dim_z;
-	private Zone zone;
-	private DisplayType display_type;
+	private Surface surface;
+	private DisplayModel display_model;
 	
 	/**
 	 * constructor for Display
@@ -16,17 +18,17 @@ public class Display {
 	 * @param dim_x
 	 * @param dim_y
 	 * @param dim_z
-	 * @param zone
-	 * @param display_type
+	 * @param surface
+	 * @param display_model
 	 */
-	public Display(int id_display, String name, int dim_x, int dim_y, int dim_z, Zone zone, DisplayType display_type) {
+	public Display(int id_display, String name, int dim_x, int dim_y, int dim_z, Surface surface, DisplayModel display_model) {
 		this.id_display = id_display;
 		this.name = name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
 		this.dim_z = dim_z;
-		this.zone = zone;
-		this.display_type = display_type;
+		this.surface = surface;
+		this.display_model = display_model;
 	}
 
 	public int getId_display() {
@@ -49,18 +51,18 @@ public class Display {
 		return dim_z;
 	}
 
-	public Zone getZone() {
-		return zone;
+	public Surface getSurface() {
+		return surface;
 	}
 	
-	public DisplayType getDisplay_type() {
-		return display_type;
+	public DisplayModel getDisplay_model() {
+		return display_model;
 	}
 	
 	@Override
 	public String toString() {
 		return "Display [id=" + id_display + ", nom=" + name + ", dim_x=" + dim_x +
-				", dim_y=" + dim_y + ", dim_z=" + dim_z +  ", zoneId=" + zone.getId_zone() +
-				", displayTypeID=" + display_type.getId_display_type() + "]";
+				", dim_y=" + dim_y + ", dim_z=" + dim_z +  ", zoneId=" + surface.getId_surface() +
+				", displayTypeID=" + display_model.getId_display_model() + "]";
 	}
 }
