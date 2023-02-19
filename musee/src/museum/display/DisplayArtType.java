@@ -1,4 +1,6 @@
-package museum;
+package museum.display;
+
+import museum.art.ArtType;
 
 public class DisplayArtType {
 	private int id_display_art;
@@ -31,6 +33,6 @@ public class DisplayArtType {
 	@Override
 	public String toString() {
 		return "CompatibilitéDisplayArt [id=" + id_display_art + "displayTypeId=" + display_type.getId_display_type() +
-				", objectTypeId=" + art_type.getId_Art_type() + "]";
+				", artTypeId=" + art_type.getId_Art_type() + "]";
 	}
 }

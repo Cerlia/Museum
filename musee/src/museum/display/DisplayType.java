@@ -1,4 +1,4 @@
-package museum;
+package museum.display;
 
 public class DisplayType {
 	private int id_display_type;

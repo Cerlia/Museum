@@ -18,7 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import museum.Room;
+import museum.floorplan.Room;
 
 public class ArchitectControl {
 	

@@ -1,20 +1,23 @@
-package dao;
+package dao.display;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.Display;
-import museum.DisplayType;
-import museum.Zone;
+import dao.Connect;
+import dao.DAO;
+import dao.floorplan.SurfaceDAO;
+import museum.display.Display;
+import museum.display.DisplayModel;
+import museum.floorplan.Surface;
 
 public class DisplayDAO extends DAO<Display> {
 	
 	private static final String TABLE = "display";
 	private static final String PK = "id_display";
-	private static final String ZONE = "ref_zone";
-	private static final String TYPE = "ref_display_type";
+	private static final String SURFACE = "ref_surface";
+	private static final String MODEL = "ref_display_model";
 	private static final String NAME = "name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
@@ -62,15 +65,15 @@ public class DisplayDAO extends DAO<Display> {
 				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id;
 				ResultSet rs = Connect.executeQuery(requete);
 				rs.next();
-				int ref_zone = rs.getInt(ZONE);
-				int ref_type = rs.getInt(TYPE);
+				int ref_surface = rs.getInt(SURFACE);
+				int ref_model = rs.getInt(MODEL);
 				String name = rs.getString(NAME);
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
-				Zone zone = ZoneDAO.getInstance().read(ref_zone);
-				DisplayType display_type = DisplayTypeDAO.getInstance().read(ref_type);
-				display = new Display(id, name, dim_x, dim_y, dim_z, zone, display_type);
+				Surface surface = SurfaceDAO.getInstance().read(ref_surface);
+				DisplayModel display_model = DisplayModelDAO.getInstance().read(ref_model);
+				display = new Display(id, name, dim_x, dim_y, dim_z, surface, display_model);
 				data.put(id, display);
 			} catch (SQLException e) {
 				e.printStackTrace();

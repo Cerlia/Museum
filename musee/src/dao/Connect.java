@@ -25,7 +25,7 @@ public class Connect {
 				ds.setUser(ID);
 				ds.setPassword(MDP);
 				ds.setServerName("localhost\\SQLEXPRESS");
-				ds.setDatabaseName("museum");
+				ds.setDatabaseName("museum-full");
 				connection = ds.getConnection();
 				System.out.println("connecté");
 			}

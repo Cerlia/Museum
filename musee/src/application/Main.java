@@ -12,32 +12,34 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-import museum.Art;
-import museum.ArtStatus;
-import museum.ArtType;
-import museum.Author;
-import museum.Display;
-import museum.DisplayArtType;
-import museum.DisplayType;
-import museum.Door;
 import museum.Role;
-import museum.Room;
 import museum.User;
-import museum.Zone;
+import museum.art.Art;
+import museum.art.ArtStatus;
+import museum.art.ArtType;
+import museum.art.Author;
+import museum.display.Display;
+import museum.display.DisplayArtType;
+import museum.display.DisplayType;
+import museum.floorplan.Door;
+import museum.floorplan.Floor;
+import museum.floorplan.Room;
+import museum.floorplan.Surface;
 import controller.ArchitectControl;
 import controller.LoginControl;
-import dao.ArtDAO;
-import dao.ArtStatusDAO;
-import dao.ArtTypeDAO;
-import dao.AuthorDAO;
-import dao.DisplayArtTypeDAO;
-import dao.DisplayDAO;
-import dao.DisplayTypeDAO;
-import dao.DoorDAO;
 import dao.RoleDAO;
-import dao.RoomDAO;
 import dao.UserDAO;
-import dao.ZoneDAO;
+import dao.art.ArtDAO;
+import dao.art.ArtStatusDAO;
+import dao.art.ArtTypeDAO;
+import dao.art.AuthorDAO;
+import dao.display.DisplayArtTypeDAO;
+import dao.display.DisplayDAO;
+import dao.display.DisplayTypeDAO;
+import dao.floorplan.DoorDAO;
+import dao.floorplan.FloorDAO;
+import dao.floorplan.RoomDAO;
+import dao.floorplan.SurfaceDAO;
 
 public class Main extends Application {
 	
@@ -64,7 +66,7 @@ public class Main extends Application {
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();	
-	private ObservableList<Zone> zoneData = FXCollections.observableArrayList();
+	private ObservableList<Surface> zoneData = FXCollections.observableArrayList();
 	
 	public Main() {
 		super();
@@ -177,24 +179,26 @@ public class Main extends Application {
 		return userData;
 	}
 	
-	public ObservableList<Zone> getzoneData() {
+	public ObservableList<Surface> getzoneData() {
 		zoneData = FXCollections.observableArrayList();
-		List<Zone> zones = ZoneDAO.getInstance().readAll();
-		for (Zone zone : zones) {
+		List<Surface> zones = SurfaceDAO.getInstance().readAll();
+		for (Surface zone : zones) {
 			zoneData.add(zone);
 		}
 		return zoneData;
 	}
 	
-	public void addRoom(String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Room room = new Room(name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
+	public void addRoom(String name, int id_floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+		Floor floor = FloorDAO.getInstance().read(id_floor);
+		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
 		if (RoomDAO.getInstance().create(room)) {
 			architectCtrl.notifyRoomSaved("La salle a bien été enregistrée");
 		}		
 	}
 	
-	public void updateRoom(int id_room, String name, int floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Room room = new Room(id_room, name, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
+	public void updateRoom(int id_room, String name, int id_floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+		Floor floor = FloorDAO.getInstance().read(id_floor);
+		Room room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
 		if (RoomDAO.getInstance().update(room)) {
 			architectCtrl.notifyRoomSaved("La salle a été modifiée");
 		}		

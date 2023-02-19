@@ -1,4 +1,4 @@
-package dao;
+package dao.floorplan;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,19 +7,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import museum.Room;
+import dao.Connect;
+import dao.DAO;
+import museum.floorplan.Floor;
+import museum.floorplan.Room;
 
 public class RoomDAO extends DAO<Room> {
 	
 	private static final String TABLE = "room";
 	private static final String PK = "id_room";
 	private static final String NAME = "name";
-	private static final String FLOOR = "floor";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
 	private static final String POSX = "pos_x";
-	private static final String POSY = "pos_y";	
+	private static final String POSY = "pos_y";
+	private static final String FLOOR = "ref_floor";
 	
 	private static RoomDAO instance=null;
 
@@ -42,7 +45,7 @@ public class RoomDAO extends DAO<Room> {
 					+", "+POSX+", "+POSY+") VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, room.getName());
-			pst.setInt(2, room.getFloor());
+			pst.setInt(2, room.getFloor().getId_floor());
 			pst.setInt(3, room.getDim_x());
 			pst.setInt(4, room.getDim_y());
 			pst.setInt(5, room.getDim_z());
@@ -88,7 +91,7 @@ public class RoomDAO extends DAO<Room> {
 					+"= ?,"+POSX+"= ?,"+POSY+"= ? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, room.getName());
-			pst.setInt(2, room.getFloor());
+			pst.setInt(2, room.getFloor().getId_floor());
 			pst.setInt(3, room.getDim_x());
 			pst.setInt(4, room.getDim_y());
 			pst.setInt(5, room.getDim_z());
@@ -116,13 +119,14 @@ public class RoomDAO extends DAO<Room> {
 				ResultSet rs = Connect.executeQuery(requete);
 				rs.next();
 				String nom = rs.getString(NAME);
-				int floor = rs.getInt(FLOOR);
+				int ref_floor = rs.getInt(FLOOR);
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
 				int pos_x = rs.getInt(POSX);
 				int pos_y = rs.getInt(POSY);
-				room = new Room(id, nom, floor, dim_x, dim_y, dim_z, pos_x, pos_y);
+				Floor floor = FloorDAO.getInstance().read(ref_floor);
+				room = new Room(id, nom, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
 				data.put(id, room);
 			} catch (SQLException e) {
 				e.printStackTrace();
