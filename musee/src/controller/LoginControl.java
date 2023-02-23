@@ -31,6 +31,6 @@ public class LoginControl {
 		 * Vérifier le rôle associé pour savoir quel contrôleur appeler ensuite
 		 * Par défaut, on va utiliser le rôle architecte
 		*/
-		mainControler.showArchitectPane();
+		mainControler.showArchitectMuseumPane();
 	}
 }

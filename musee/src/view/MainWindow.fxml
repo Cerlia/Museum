@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <Label prefHeight="56.0" prefWidth="106.0" text="Gestion de musée" BorderPane.alignment="CENTER" />
+      <MenuBar fx:id="menu_bar" visible="false" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Architecture">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Musée" onAction="#showArchitectMuseumPane" />
+              <MenuItem mnemonicParsing="false" text="Étages" onAction="#showArchitectFloorPane" />
+              <MenuItem mnemonicParsing="false" text="Salles" onAction="#showArchitectRoomPane" />
+            </items>
+          </Menu>
+          <Menu fx:id="art_menu" mnemonicParsing="false" text="Œuvres">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Liste des œuvres" />
+              <MenuItem mnemonicParsing="false" text="Gestion des expositions" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Profil">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Déconnexion" />
+                  <MenuItem mnemonicParsing="false" text="Activer le mode Visiteur" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </top>
 </BorderPane>
