@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectRoomControl">
+   <children>
+      <Label layoutX="12.0" layoutY="60.0" prefHeight="18.0" prefWidth="160.0" text="Salles">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
+      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleRoomTableAction" prefHeight="450.0" prefWidth="350.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="122.39999389648438" text="Nom" />
+          <TableColumn fx:id="floorColumn" prefWidth="156.0000457763672" text="Étage" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnCreateRoom" layoutX="272.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
+      <AnchorPane fx:id="pneRoomCreatEdit" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+         <children>
+            <Label fx:id="roomFormTitle" layoutX="89.0" layoutY="14.0" text="" />
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="65.0" layoutY="58.0" prefHeight="18.0" prefWidth="53.0" text="Nom" />
+            <TextField fx:id="txtRoomName" layoutX="133.0" layoutY="53.0" />
+            <Label alignment="CENTER_RIGHT" layoutX="64.0" layoutY="90.0" prefHeight="18.0" prefWidth="54.0" text="Étage" textAlignment="RIGHT" />
+            <Label alignment="CENTER_RIGHT" layoutX="35.0" layoutY="124.0" prefHeight="18.0" prefWidth="83.0" text="Longueur (x)" />
+            <Label alignment="CENTER_RIGHT" layoutX="27.0" layoutY="158.0" prefHeight="18.0" prefWidth="90.0" text="Largeur (y)" />
+            <Label alignment="CENTER_RIGHT" layoutX="34.0" layoutY="193.0" prefHeight="18.0" prefWidth="83.0" text="Hauteur (z)" />
+            <TextField fx:id="txtRoomDimX" layoutX="133.0" layoutY="120.0" prefHeight="26.0" prefWidth="68.0" />
+            <TextField fx:id="txtRoomDimY" layoutX="133.0" layoutY="154.0" prefHeight="26.0" prefWidth="68.0" />
+            <TextField fx:id="txtRoomDimZ" layoutX="133.0" layoutY="189.0" prefHeight="26.0" prefWidth="68.0" />
+            <Label layoutX="7.0" layoutY="261.0" prefHeight="18.0" prefWidth="110.0" text="Position en longueur" />
+            <TextField fx:id="txtRoomPosX" layoutX="133.0" layoutY="257.0" prefHeight="26.0" prefWidth="68.0" />
+            <Label alignment="CENTER_RIGHT" layoutX="7.0" layoutY="296.0" prefHeight="18.0" prefWidth="110.0" text="Position en largeur" />
+            <TextField fx:id="txtRoomPosY" layoutX="133.0" layoutY="292.0" prefHeight="26.0" prefWidth="68.0" />
+            <Button layoutX="201.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleSaveRoom" prefHeight="26.0" prefWidth="75.0" text="Enregistrer" />
+            <Button layoutX="72.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleCancelRoomEdit" prefHeight="26.0" prefWidth="75.0" text="Annuler" />
+            <CheckBox fx:id="chbIgnoreRoomDim" layoutX="133.0" layoutY="225.0" mnemonicParsing="false" onAction="#handleIgnoreRoomDim" text="Ignorer les dimensions" />
+            <CheckBox fx:id="chbIgnoreRoomPos" layoutX="133.0" layoutY="330.0" mnemonicParsing="false" onAction="#handleIgnoreRoomPos" text="Ignorer la position" />
+            <ComboBox fx:id="cbbFloor" layoutX="133.0" layoutY="87.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+      <Line endX="900.0" layoutX="100.0" layoutY="40.0" startX="-100.0" />
+      <Label fx:id="lblMuseumName" layoutX="12.0" layoutY="12.0" prefHeight="18.0" prefWidth="800.0" text="Label" />
+      <AnchorPane fx:id="pneRoomDisplay" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="603.0" style="-fx-background-color: #FFFFFF;" visible="false">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="14.0" prefHeight="18.0" prefWidth="142.0" text="Détails de la salle" textAlignment="CENTER" />
+            <Label alignment="CENTER_RIGHT" layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="75.0" text="Nom" />
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="15.0" layoutY="129.0" prefHeight="18.0" prefWidth="118.0" text="Longueur (x)" />
+            <Label alignment="CENTER_RIGHT" layoutX="15.0" layoutY="168.0" prefHeight="18.0" prefWidth="117.0" text="Largeur (y)" />
+            <Button fx:id="btnDeleteRoom" layoutX="65.0" layoutY="354.0" mnemonicParsing="false" onAction="#handleRoomDeletion" prefHeight="26.0" prefWidth="90.0" text="Supprimer" />
+            <Button fx:id="btnEditRoom" layoutX="195.0" layoutY="354.0" mnemonicParsing="false" onAction="#handleRoomUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier" />
+            <Label fx:id="lblRoomName" layoutX="145.0" layoutY="58.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label fx:id="lblDimY" layoutX="145.0" layoutY="168.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label fx:id="lblDimX" layoutX="145.0" layoutY="129.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label alignment="CENTER_RIGHT" layoutX="21.0" layoutY="206.0" prefHeight="18.0" prefWidth="110.0" text="Hauteur (z)" />
+            <Label fx:id="lblDimZ" layoutX="145.0" layoutY="206.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="5.0" layoutY="244.0" prefHeight="18.0" prefWidth="127.0" text="Position en longueur" />
+            <Label alignment="CENTER_RIGHT" layoutX="12.0" layoutY="283.0" prefHeight="18.0" prefWidth="118.0" text="Position en largeur" />
+            <Label fx:id="lblPosY" layoutX="145.0" layoutY="283.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label fx:id="lblPosX" layoutX="145.0" layoutY="244.0" prefHeight="18.0" prefWidth="191.0" />
+            <Label alignment="CENTER_RIGHT" layoutX="60.0" layoutY="93.0" prefHeight="18.0" prefWidth="75.0" text="Étage" />
+            <Label fx:id="lblFloorName" layoutX="149.0" layoutY="93.0" prefHeight="18.0" prefWidth="191.0" />
+            <Button layoutX="410.0" layoutY="45.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
+            <Button layoutX="481.0" layoutY="116.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
+            <Button layoutX="410.0" layoutY="186.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
+            <Button layoutX="339.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
+            <Button layoutX="424.0" layoutY="87.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="83.0" text="Sol" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

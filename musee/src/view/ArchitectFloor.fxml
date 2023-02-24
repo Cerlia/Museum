@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectFloorControl">
+   <children>
+      <Label layoutX="12.0" layoutY="60.0" prefHeight="18.0" prefWidth="160.0" text="Étages">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
+      <TableView fx:id="floorTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleFloorTableAction" prefHeight="450.0" prefWidth="350.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="349.5999940872192" text="Nom" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnCreateFloor" layoutX="272.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleFloorAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
+      <AnchorPane fx:id="pneFloorCreatEdit" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+         <children>
+            <Label fx:id="floorFormTitle" layoutX="89.0" layoutY="14.0" text="" />
+            <Label layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="30.0" text="Nom" />
+            <TextField fx:id="txtFloorName" layoutX="105.0" layoutY="53.0" />
+            <Label layoutX="31.0" layoutY="96.0" prefHeight="18.0" prefWidth="59.0" text="Largeur (x)" />
+            <Label layoutX="23.0" layoutY="136.0" prefHeight="18.0" prefWidth="75.0" text="Longueur (y)" />
+            <TextField fx:id="txtFloorDimX" layoutX="105.0" layoutY="92.0" prefHeight="26.0" prefWidth="68.0" />
+            <TextField fx:id="txtFloorDimY" layoutX="105.0" layoutY="132.0" prefHeight="26.0" prefWidth="68.0" />
+            <Button layoutX="209.0" layoutY="284.0" mnemonicParsing="false" onAction="#handleSaveFloor" prefHeight="26.0" prefWidth="75.0" text="Enregistrer" />
+            <Button layoutX="76.0" layoutY="284.0" mnemonicParsing="false" onAction="#handleCancelFloorEdit" prefHeight="26.0" prefWidth="75.0" text="Annuler" />
+            <CheckBox fx:id="chbIgnoreFloorDim" layoutX="105.0" layoutY="174.0" mnemonicParsing="false" onAction="#handleIgnoreFloorDim" text="Ignorer les dimensions" />
+         </children>
+      </AnchorPane>
+      <Label fx:id="lblMuseumName" layoutX="12.0" layoutY="12.0" prefHeight="18.0" prefWidth="800.0" />
+      <Line endX="900.0" layoutX="100.0" layoutY="40.0" startX="-100.0" />
+      <AnchorPane fx:id="pneFloorDisplay" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="14.0" prefHeight="18.0" prefWidth="142.0" text="Détails de l'étage" textAlignment="CENTER" />
+            <Label layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="30.0" text="Nom" />
+            <Label layoutX="31.0" layoutY="96.0" prefHeight="18.0" prefWidth="59.0" text="Largeur (x)" />
+            <Label layoutX="23.0" layoutY="136.0" prefHeight="18.0" prefWidth="75.0" text="Longueur (y)" />
+            <Button fx:id="btnDeleteFloor" layoutX="65.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleFloorDeletion" prefHeight="26.0" prefWidth="90.0" text="Supprimer" />
+            <Button fx:id="btnEditFloor" layoutX="195.0" layoutY="321.0" mnemonicParsing="false" onAction="#handleFloorUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier" />
+            <Label fx:id="lblFloorName" layoutX="110.0" layoutY="58.0" prefHeight="18.0" prefWidth="230.0" />
+            <Label fx:id="lblDimY" layoutX="110.0" layoutY="136.0" prefHeight="18.0" prefWidth="230.0" />
+            <Label fx:id="lblDimX" layoutX="110.0" layoutY="96.0" prefHeight="18.0" prefWidth="230.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

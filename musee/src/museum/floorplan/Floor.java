@@ -1,24 +1,36 @@
 package museum.floorplan;
 
+import java.util.List;
+
+import dao.floorplan.RoomDAO;
+
 public class Floor {
 	private int id_floor;
 	private String floor_name;
 	private int dim_x;
 	private int dim_y;
-	private Museum museum;
 	
 	/**
-	 * constructor for Floor
+	 * constructor for Floor if id_floor is known
 	 * @param id_floor
 	 * @param floor_name
-	 * @param museum
 	 */
-	public Floor(int id_floor, int dim_x, int dim_y, String floor_name, Museum museum) {
+	public Floor(int id_floor, String floor_name, int dim_x, int dim_y) {
 		this.setId_floor(id_floor);
 		this.floor_name = floor_name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
-		this.museum = museum;
+	}
+	
+	/**
+	 * constructor for Floor if id_floor is unknown
+	 * @param id_floor
+	 * @param floor_name
+	 */
+	public Floor(String floor_name, int dim_x, int dim_y) {
+		this.floor_name = floor_name;
+		this.dim_x = dim_x;
+		this.dim_y = dim_y;
 	}
 
 	public int getId_floor() {
@@ -40,16 +52,24 @@ public class Floor {
 	public int getDim_y() {
 		return dim_y;
 	}
-
-	public Museum getMuseum() {
-		return museum;
+	
+	public List<Room> getRooms() {
+		List<Room> rooms = RoomDAO.getInstance().readAll();
+		for (Room room : rooms) {
+			if (room.getFloor() != this) {
+				rooms.remove(room);
+			}
+		}
+		return rooms;
+	}
+	
+	public int getRoom_nb() {
+		return getRooms().size();
 	}
 	
 	@Override
 	public String toString() {
-		return "Floor [id=" + id_floor + ", name=" + floor_name + ", dim_x=" + dim_x + ", dim_y=" + dim_y +
-				", museum=" + museum.getMuseum_name() + "]";
+		// return "Floor [id=" + id_floor + ", name=" + floor_name + ", dim_x=" + dim_x + ", dim_y=" + dim_y + "]";
+		return floor_name;
 	}
-
-
 }
