@@ -23,7 +23,7 @@ public class ArchitectMuseumControl {
 	 * 
 	 *  --------------------------- */
 	
-	private Main mainControler;
+	private Main mainController;
 	// musée sur lequel on travaille actuellement
 	private Museum currentMuseum;
 	private Stage notifWindow = new Stage();
@@ -73,15 +73,15 @@ public class ArchitectMuseumControl {
 	 * définit le contrôleur principal
 	 * @param mainControler
 	 */
-	public void setMainControl(Main mainControler) {
-		this.mainControler = mainControler;
+	public void setMainControl(Main mainController) {
+		this.mainController = mainController;
 	}
 	
 	/**
 	 * récupère les dernières infos de la BD
 	 */
 	public void refreshData() {
-		this.currentMuseum = mainControler.getCurrentMuseum();
+		this.currentMuseum = mainController.getCurrentMuseum();
 		if (currentMuseum == null) {
 			// affichage des champs permettant l'ajout d'un musée			
 			addUpdateMuseumPane.setVisible(true);
@@ -92,11 +92,11 @@ public class ArchitectMuseumControl {
 		}
 		else {
 			// affichage des infos concernant le musée
-			this.currentMuseum = mainControler.getCurrentMuseum();
+			this.currentMuseum = mainController.getCurrentMuseum();
 			addUpdateMuseumPane.setVisible(false);
 			lblMuseumName.setText(currentMuseum.getMuseum_name());
-			lblFloorNb.setText(mainControler.getFloorData().size()+"");
-			lblRoomNb.setText(mainControler.getRoomData().size()+"");
+			lblFloorNb.setText(mainController.getFloorData().size()+"");
+			lblRoomNb.setText(mainController.getRoomData().size()+"");
 			btnShowFloorPane.setVisible(true);
 			btnShowRoomPane.setVisible(true);
 		}
@@ -107,7 +107,7 @@ public class ArchitectMuseumControl {
 	 */
 	public void addMuseum() {
 		String museumName = txtMuseumName.getText();
-		mainControler.addMuseum(museumName);
+		mainController.addMuseum(museumName);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class ArchitectMuseumControl {
 	 */
 	public void updateMuseum() {
 		String museumName = txtMuseumName.getText();
-		mainControler.updateMuseum(currentMuseum.getId_museum(), museumName);
+		mainController.updateMuseum(currentMuseum.getId_museum(), museumName);
 	}
 	
 	/**
@@ -140,15 +140,14 @@ public class ArchitectMuseumControl {
 	/**
 	 * à la demande du contrôleur principal, affiche une notification
 	 */
-	public void notifyMuseumSaved(String message) {
+	public void notifyMuseumSaved(String title, String body) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Confirmation de modification");
 		};		
 		try {
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifMuseum.fxml"));
+			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
 			// passage de ce contrôleur à la vue
 			loader.setController(this);
 			dialogMuseumCreated = (Pane)loader.load();
@@ -159,7 +158,8 @@ public class ArchitectMuseumControl {
 			addingMuseum = false;
 			// affichage de la fenêtre pop-up
 			Scene scene = new Scene(dialogMuseumCreated);
-			lblNotification.setText(message);
+			notifWindow.setTitle(title);
+			lblNotification.setText(body);
 			notifWindow.setScene(scene);
 			notifWindow.show();
 		} catch (IOException e) {
@@ -223,7 +223,7 @@ public class ArchitectMuseumControl {
 	 * @param e
 	 */
 	@FXML
-	private void confirmMuseumCreated(ActionEvent e) {
+	private void confirm(ActionEvent e) {
 		notifWindow.close();
 		// récupération des données mises à jour
 		refreshData();
@@ -234,7 +234,7 @@ public class ArchitectMuseumControl {
 	 */
 	@FXML
 	private void showArchitectFloorPane(ActionEvent event) {
-		this.mainControler.showArchitectFloorPane();
+		this.mainController.showArchitectFloorPane();
 	}	
 	
 	/**
@@ -242,6 +242,6 @@ public class ArchitectMuseumControl {
 	 */
 	@FXML
 	private void showArchitectRoomPane(ActionEvent event) {
-		this.mainControler.showArchitectRoomPane();
+		this.mainController.showArchitectRoomPane();
 	}
 }

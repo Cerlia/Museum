@@ -152,4 +152,4 @@ public class RoomDAO extends DAO<Room> {
 		}
 		return rooms;		
 	}
-}
+ }
