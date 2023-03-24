@@ -8,6 +8,11 @@ import java.util.HashMap;
  */
 public abstract class DAO<T> {
 	
+	// TODO
+	// Test 24/03/23 pour vérifier le nombre de read effectués par chaque classe DAO
+	// l'idée est de vérifier qu'on ne fait pas trop d'appels inutiles
+	protected static int nbRead = 0;
+	
 	protected final HashMap<Integer, T> data = new HashMap<Integer, T>();
 		
 	/**

@@ -24,6 +24,6 @@ public class ArtType {
 	
 	@Override
 	public String toString() {
-		return "ArtType [id=" + id_art_type + ", libellé=" + name + "]";
+		return name;
 	}
 }

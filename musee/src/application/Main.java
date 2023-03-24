@@ -1,21 +1,27 @@
 package application;
 	
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,6 +43,8 @@ import museum.floorplan.SurfaceType;
 import controller.ArchitectFloorControl;
 import controller.ArchitectMuseumControl;
 import controller.ArchitectRoomControl;
+import controller.CuratorArtDataControl;
+import controller.CuratorArtMovementControl;
 import controller.LoginControl;
 import dao.RoleDAO;
 import dao.UserDAO;
@@ -62,17 +70,26 @@ public class Main extends Application {
 	private Stage notifWindow = new Stage();   // "stage" des fenêtres de notification
 	private Pane dialogFail;
 	
+	private final String NTF_TITLE_FORM_NG = "Échec de l'enregistrement";
+	private final String NTF_BODY_FORM_NG = "Enregistrement impossible : les champs ne sont pas "
+			+ "correctement remplis. Vérifiez les données saisies, puis réessayez.";
+	private final String NTF_TITLE_SAVE_OK = "Confirmation d'enregistrement";
+	
 	// sous-fenêtres
 	private AnchorPane loginPane = null;
 	private AnchorPane architectMuseumPane = null;
 	private AnchorPane architectFloorPane = null;
 	private AnchorPane architectRoomPane = null;
+	private AnchorPane curatorArtDataPane = null;
+	private AnchorPane curatorArtMovementPane = null;
 	
 	// sous-contrôleurs des différentes sous-fenêtres
 	private LoginControl loginCtrl = null;
 	private ArchitectMuseumControl architectMuseumCtrl = null;
 	private ArchitectFloorControl architectFloorCtrl = null;
 	private ArchitectRoomControl architectRoomCtrl = null;
+	private CuratorArtDataControl curatorArtDataCtrl = null;
+	private CuratorArtMovementControl curatorArtMovementCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -92,19 +109,29 @@ public class Main extends Application {
 	
 	// éléments de la vue
 	@FXML
+	private Button btnQuit;
+	@FXML
+	private Button btnDisconnect;
+	@FXML
+	private ImageView imgLogo;
+	@FXML
 	private Label lblNotification;
+	@FXML
+	private Label lblRoleStatus;
 	@FXML
 	private MenuBar menu_bar;
 	@FXML
-	private Menu art_menu;
+	private Menu curator_menu;
+	@FXML
+	private Menu architect_menu;
+
+
 	
 	/**
 	 * constructeur du contrôleur principal 
 	 */
 	public Main() {
 		super();
-		// TODO pourquoi les lignes ci-dessous, déjà ?
-		// ah, parce que je vais en avoir besoin pour tester les login/mdp entrés dans Login
 		this.roleData = getRoleData();
 		this.userData = getUserData();
 	}
@@ -302,7 +329,11 @@ public class Main extends Application {
 	 * @return l'objet Musée correspondant au musée actuel
 	 */
 	public Museum getCurrentMuseum() {
-		return currentMuseum;
+		try {
+			return currentMuseum;
+		} catch (Exception e){
+			return null;
+		}
 	}
 	
 	/**
@@ -319,35 +350,71 @@ public class Main extends Application {
 	}
 	
 	/**
+	 * retourne la liste de surfaces liées à une salle (TODO remplacer par un attribut de la classe Room ?)
+	 * @param id_room
+	 * @return
+	 */
+	public List<Surface> getRoomSurfaces(int id_room) {
+		return SurfaceDAO.getInstance().readRoomSurfaces(id_room);
+	}
+	
+	/**
+	 * retourne les informations détaillées d'une œuvre (inclut image)
+	 * @param id_art
+	 * @return
+	 */
+	public Art getFullArtData(int id_art) {
+		Art fullArt = ArtDAO.getInstance().read(id_art);
+		return fullArt;
+	}
+	
+	/**
 	 * à la demande d'un des sous-contrôleurs, affiche une notification
 	 */
-	public void notifyFail() {
+	public void notifyFail(String body) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Échec de l'enregistrement");
 		};		
 		try {
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifFail.fxml"));
+			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
 			// passage de ce contrôleur à la vue
 			loader.setController(this);
 			dialogFail = (Pane)loader.load();
 			// affichage de la fenêtre pop-up
 			Scene scene = new Scene(dialogFail);
+			notifWindow.setTitle(NTF_TITLE_FORM_NG);
+			String message = NTF_BODY_FORM_NG;
+			if (!body.equals(null)) {
+				message = body;
+			}
+			lblNotification.setText(message);
 			notifWindow.setScene(scene);
 			notifWindow.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * transmet à curatorArtDataCtrl la demande de curatorAuthorSelectCtrl de mettre à jour l'auteur d'une œuvre 
+	 * @param author
+	 */
+	public void setAuthor(Author author) {
+		curatorArtDataCtrl.setAuthor(author);
+	}
 		
 	/// Méthodes d'ajout dans la base (add)
 	
+	/**
+	 * demande à la DAO d'ajouter un musée dans la base
+	 * @param name
+	 */
 	public void addMuseum(String name) {
 		Museum museum = new Museum(name);
 		if (MuseumDAO.getInstance().create(museum)) {
-			architectMuseumCtrl.notifyMuseumSaved("Le musée été créé.");
+			architectMuseumCtrl.notifyMuseumSaved(NTF_TITLE_SAVE_OK, "Le musée été créé.");
 			setCurrentMuseum();
 		} else {
 			// TODO gérer ça avec une exception, ou je sais pas, à voir
@@ -355,16 +422,32 @@ public class Main extends Application {
 		}
 	}
 	
+	/**
+	 * demande à la DAO d'ajouter un étage dans la base
+	 * @param name
+	 * @param dim_x
+	 * @param dim_y
+	 */
 	public void addFloor(String name, int dim_x, int dim_y) {
 		Floor floor = new Floor(name, dim_x, dim_y);
 		if (FloorDAO.getInstance().create(floor)) {
-			architectFloorCtrl.notifyFloorSaved("L'étage a été créé.");
+			architectFloorCtrl.notifyFloorSaved(NTF_TITLE_SAVE_OK, "L'étage a été créé.");
 		} else {
 			// TODO gérer ça avec une exception, ou je sais pas, à voir
 			System.out.println("Impossible de créer l'étage");
 		}
 	}
 	
+	/**
+	 * demande à la DAO d'ajouter une salle dans la base
+	 * @param name
+	 * @param floor
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param pos_x
+	 * @param pos_y
+	 */
 	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
 		try {
@@ -386,7 +469,7 @@ public class Main extends Application {
 						}
 						SurfaceDAO.getInstance().create(surface);
 					}
-					architectRoomCtrl.notifyRoomSaved("La salle été créée.");
+					architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle été créée.");
 				}
 			}			
 		} catch (Exception e) {
@@ -394,13 +477,54 @@ public class Main extends Application {
 		}		
 	}
 	
+	/**
+	 * demande à la DAO d'ajouter une œuvre dans la base
+	 * @param art_code
+	 * @param art_title
+	 * @param creation_date
+	 * @param materials
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param image
+	 * @param author
+	 * @param art_status
+	 * @param art_type
+	 */
+	public void addArt(String art_code, String art_title, String creation_date,
+			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
+			ArtStatus art_status, ArtType art_type, Display display) {
+		// par défaut, une œuvre est placée "En réserve" (id_art_status = 1)
+		// et elle n'a pas de présentoir (display = null)
+		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
+		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
+				author, artStatus, art_type, null);
+		if (ArtDAO.getInstance().create(art)) {
+			curatorArtDataCtrl.notifyArtSaved(NTF_TITLE_SAVE_OK, "L'œuvre a été ajoutée à la base de données");
+		}		
+	}
+		
+	/**
+	 * demande à la DAO d'ajouter un auteur dans la base
+	 * @param last_name
+	 * @param first_name
+	 * @param additional_name
+	 * @param dates
+	 */
+	public void addAuthor(String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().create(author)) {
+			curatorArtDataCtrl.notifyAuthorSaved(NTF_TITLE_SAVE_OK, "L'auteur a été enregistré enregistré");
+		}		
+	}
+		
 	
 	/// Méthodes de modification de la base (update)
 	
 	public void updateMuseum(int id_museum, String museum_name) {
 		Museum museum = new Museum(id_museum, museum_name);
 		if (MuseumDAO.getInstance().update(museum)) {
-			architectMuseumCtrl.notifyMuseumSaved("Le nom du musée a été modifié");
+			architectMuseumCtrl.notifyMuseumSaved(NTF_TITLE_SAVE_OK, "Le nom du musée a été modifié");
 			// mise à jour du musée actuel avec les dernières infos
 			setCurrentMuseum();
 		}
@@ -409,7 +533,7 @@ public class Main extends Application {
 	public void updateFloor(int id_floor, String name, int dim_x, int dim_y) {
 		Floor floor = new Floor(id_floor, name, dim_x, dim_y);
 		if (FloorDAO.getInstance().update(floor)) {
-			architectFloorCtrl.notifyFloorSaved("L'étage a été modifié");
+			architectFloorCtrl.notifyFloorSaved(NTF_TITLE_SAVE_OK, "L'étage a été modifié");
 		}	
 	}
 	
@@ -417,7 +541,7 @@ public class Main extends Application {
 		try {
 			Room room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);		
 			if (RoomDAO.getInstance().update(room)) {
-				List<Surface> surfaces = SurfaceDAO.getInstance().readRoomSurfaces(id_room);
+				List<Surface> surfaces = getRoomSurfaces(id_room);
 				Surface newSurface = null;
 				for (Surface oldSurface : surfaces) {
 					// si c'est un sol
@@ -438,10 +562,26 @@ public class Main extends Application {
 					}
 					SurfaceDAO.getInstance().update(newSurface);
 				}				
-				architectRoomCtrl.notifyRoomSaved("La salle a été modifiée");
+				architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle a été modifiée");
 			}
 		} catch (Exception e) {
 			System.out.println("Impossible de modifier la salle");
+		}		
+	}
+	
+	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
+			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type, Display display) {
+		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
+				author, art_status, art_type, display);
+		if (ArtDAO.getInstance().update(art)) {
+			curatorArtDataCtrl.notifyArtSaved(NTF_TITLE_SAVE_OK, "L'œuvre a été modifiée");
+		}		
+	}
+	
+	public void updateAuthor(int id_author, String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(id_author, last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().update(author)) {
+			curatorArtDataCtrl.notifyAuthorSaved(NTF_TITLE_SAVE_OK, "L'auteur a été enregistré");
 		}		
 	}
 	
@@ -459,7 +599,7 @@ public class Main extends Application {
 	public void deleteRoom(int id_room) {
 		Room room = RoomDAO.getInstance().read(id_room);
 		if (RoomDAO.getInstance().delete(room)) {
-			architectRoomCtrl.notifyRoomSaved("La salle a été supprimée");
+			architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle a été supprimée");
 		}
 	}
 
@@ -492,7 +632,12 @@ public class Main extends Application {
 			loader.setController(this);
 			mainWindowRoot = (BorderPane)loader.load();
 			// affichage de la fenêtre principale
-			Scene scene = new Scene(mainWindowRoot);
+			double height = Screen.getPrimary().getBounds().getHeight();   
+			double width = Screen.getPrimary().getBounds().getWidth();   
+			Scene scene = new Scene(mainWindowRoot, width, height);
+			imgLogo.setImage(new Image("/img/logo_bandw.png"));
+			btnQuit.setLayoutX(width-150);
+			btnDisconnect.setLayoutX(btnQuit.getLayoutX()-150);
 			mainWindow.setScene(scene);
 			mainWindow.show();
 		} catch (IOException e) {
@@ -514,8 +659,12 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.loginCtrl.setMainControl(this);
 			}
+			// définition des menus accessibles
+			menu_bar.setVisible(false);
+			menu_bar.prefWidthProperty().bind(mainWindow.widthProperty());			
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(loginPane);
+			lblRoleStatus.setText("Non connecté");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -539,12 +688,13 @@ public class Main extends Application {
 			setCurrentMuseum();
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// rafraîchissement des données pour cette sous-fenêtre
 			architectMuseumCtrl.refreshData();
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectMuseumPane);
-
+			lblRoleStatus.setText("Connecté avec le rôle Architecte");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -566,12 +716,12 @@ public class Main extends Application {
 			}
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectFloorPane);
 			// rafraîchissement des données
 			architectFloorCtrl.refreshData();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -593,10 +743,61 @@ public class Main extends Application {
 			}
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectRoomPane);
-
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre ArtData du rôle "conservateur"
+	 */
+	public void showCuratorArtDataPane() {
+		try {
+			if (curatorArtDataPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/CuratorArtData.fxml"));
+				curatorArtDataPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.curatorArtDataCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.curatorArtDataCtrl.setMainControl(this);
+			}
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(curatorArtDataPane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre ArtMovement du rôle "conservateur"
+	 */
+	public void showCuratorArtMovementPane() {
+		try {
+			if (curatorArtMovementPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/CuratorArtMovement.fxml"));
+				curatorArtMovementPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.curatorArtMovementCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.curatorArtMovementCtrl.setMainControl(this);
+			}
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(curatorArtMovementPane);
+			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -607,8 +808,26 @@ public class Main extends Application {
 	 * @param e
 	 */
 	@FXML
-	private void confirmFail(ActionEvent e) {
+	private void confirm(ActionEvent e) {
 		notifWindow.close();
+	}
+	
+	/**
+	 * event listener du bouton "Quitter" de la bannière
+	 * @param e
+	 */
+	@FXML
+	private void handleQuit(ActionEvent e) {
+		Platform.exit();
+	}
+	
+	/**
+	 * event listener du bouton "Se déconnecter" de la bannière
+	 * @param e
+	 */
+	@FXML
+	private void handleDisconnect(ActionEvent e) {
+		this.showLoginPane();
 	}
 			
 	/**

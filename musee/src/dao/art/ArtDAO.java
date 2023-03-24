@@ -1,16 +1,21 @@
 package dao.art;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import dao.Connect;
 import dao.DAO;
+import dao.display.DisplayDAO;
 import museum.art.Art;
 import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
+import museum.display.Display;
 
 public class ArtDAO extends DAO<Art> {
 	
@@ -27,8 +32,12 @@ public class ArtDAO extends DAO<Art> {
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
 	private static final String IMAGE = "image";
+	private static final String DISPLAY = "ref_display";
 	
 	private static ArtDAO instance=null;
+	
+	// hashmap dégradé pour stocker les œuvres sans l'image
+	private final HashMap<Integer, Art> dataLight = new HashMap<Integer, Art>();
 	
 	public static ArtDAO getInstance(){
 		if (instance==null){
@@ -43,8 +52,37 @@ public class ArtDAO extends DAO<Art> {
 
 	@Override
 	public boolean create(Art art) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean success = true;
+		try {
+			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+
+					", "+TITLE+", "+DATE+", "+ MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ", "+
+					IMAGE +", "+DISPLAY+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, art.getArt_type().getId_Art_type());
+			pst.setInt(2, art.getAuthor().getId_author());
+			pst.setInt(3, art.getArt_status().getId_art_status());
+			pst.setString(4, art.getArt_code());
+			pst.setString(5, art.getArt_title());
+			pst.setString(6, art.getCreation_date());
+			pst.setString(7, art.getMaterials());
+			pst.setInt(8, art.getDim_x());
+			pst.setInt(9, art.getDim_y());
+			pst.setInt(10, art.getDim_z());
+			pst.setInt(11, art.getDisplay().getId_display());
+			pst.setBytes(12, art.getImage());
+			pst.executeUpdate();
+			// on récupère la clé générée et on la pousse dans l'objet initial
+			ResultSet rs = pst.getGeneratedKeys();
+			if (rs.next()) {
+				art.setId_art(rs.getInt(1));
+			}
+			data.put(art.getId_art(), art);
+
+		} catch (SQLException e) {
+			success=false;
+			e.printStackTrace();
+		}
+		return success;		
 	}
 
 	@Override
@@ -54,11 +92,38 @@ public class ArtDAO extends DAO<Art> {
 	}
 
 	@Override
-	public boolean update(Art art) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(Art art) {		
+		boolean success = true;
+		try {
+			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+
+					"=?, "+CODE+"=?, "+TITLE+"=?, "+DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+
+					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+DISPLAY+"?= WHERE "+PK+"= ?";
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+			pst.setInt(1, art.getArt_type().getId_Art_type());
+			pst.setInt(2, art.getAuthor().getId_author());
+			pst.setInt(3, art.getArt_status().getId_art_status());
+			pst.setString(4, art.getArt_code());
+			pst.setString(5, art.getArt_title());
+			pst.setString(6, art.getCreation_date());
+			pst.setString(7, art.getMaterials());
+			pst.setInt(8, art.getDim_x());
+			pst.setInt(9, art.getDim_y());
+			pst.setInt(10, art.getDim_z());
+			pst.setBytes(11, art.getImage());
+			pst.setInt(12, art.getDisplay().getId_display());
+			pst.setInt(13, art.getId_art());
+			pst.executeUpdate();
+			data.put(art.getId_art(), art);
+		} catch (SQLException e) {
+			success=false;
+			e.printStackTrace();
+		}
+		return success;
 	}
 
+	/**
+	 * lit une œuvre en BD dans sa totalité (inclut l'image)
+	 */
 	@Override
 	public Art read(int id) {
 		Art art = null;
@@ -80,19 +145,72 @@ public class ArtDAO extends DAO<Art> {
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
-				String image = rs.getString(IMAGE);
+				byte[] image = rs.getBytes(IMAGE);
+				int ref_display = rs.getInt(DISPLAY);
+				Display display = null;
+				if (ref_display != 0) {
+					display = DisplayDAO.getInstance().read(ref_display);
+				}
 				ArtType art_type = ArtTypeDAO.getInstance().read(ref_art_type);
 				Author author = AuthorDAO.getInstance().read(ref_author);
 				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
 				art = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
-						image, author, art_status, art_type);
+						image, author, art_status, art_type, display);
 				data.put(id, art);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		// TODO supprimer ce TEST du nombre de read, mis en place pour chercher cause de ralentissement au démarrage
+		nbRead += 1;
+		System.out.println(nbRead + " (readFull)");
 		return art;
 	}
+	
+	/**
+	 * lit une œuvre en BD en version allégée (sans l'image)
+	 */
+	public Art readLight(int id) {
+		Art artLight = null;
+		if (dataLight.containsKey(id)) {
+			artLight=dataLight.get(id);
+		}
+		else {
+			try {
+				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id;
+				ResultSet rs = Connect.executeQuery(requete);
+				rs.next();
+				int ref_art_type = rs.getInt(TYPE);
+				int ref_author = rs.getInt(AUTHOR);
+				int ref_art_status = rs.getInt(STATUS);
+				String code = rs.getString(CODE);
+				String title = rs.getString(TITLE);
+				String date = rs.getString(DATE);
+				String materials = rs.getString(MATERIALS);
+				int dim_x = rs.getInt(DIMX);
+				int dim_y = rs.getInt(DIMY);
+				int dim_z = rs.getInt(DIMZ);
+				int ref_display = rs.getInt(DISPLAY);
+				Display display = null;
+				if (ref_display != 0) {
+					display = DisplayDAO.getInstance().read(ref_display);
+				}
+				ArtType art_type = ArtTypeDAO.getInstance().read(ref_art_type);
+				Author author = AuthorDAO.getInstance().read(ref_author);
+				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
+				artLight = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
+						null, author, art_status, art_type, display);
+				dataLight.put(id, artLight);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// TODO à supprimer
+		// lignes test nombre de read d'une classe
+		nbRead += 1;
+		System.out.println(nbRead + " (readLight)");
+		return artLight;
+	}	
 	
 	public List<Art> readAll() {
 		List<Art> art_objects = new ArrayList<Art>();
@@ -102,7 +220,7 @@ public class ArtDAO extends DAO<Art> {
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art = rs.getInt(1);
-				art = ArtDAO.getInstance().read(id_art);
+				art = ArtDAO.getInstance().readLight(id_art);
 				art_objects.add(art);
 			}
 		} catch (SQLException e) {
