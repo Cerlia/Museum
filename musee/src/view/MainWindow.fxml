@@ -24,8 +24,9 @@
                 </Menu>
                 <Menu fx:id="curator_menu" mnemonicParsing="false" text="Œuvres">
                   <items>
-                  	<MenuItem mnemonicParsing="false" onAction="#showCuratorArtMovementPane" text="Gérer les mouvements" />
-                    <MenuItem mnemonicParsing="false" onAction="#showCuratorArtDataPane" text="Voir les œuvres" />                    
+                  	<MenuItem mnemonicParsing="false" onAction="#showCuratorArtExhibitPane" text="Gérer les expositions" />
+                  	<MenuItem mnemonicParsing="false" onAction="#showCuratorArtMovementPane" text="Gérer les mouvements" />                  	   
+                    <MenuItem mnemonicParsing="false" onAction="#showCuratorArtDataPane" text="Voir les œuvres" />                                      
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Profil">

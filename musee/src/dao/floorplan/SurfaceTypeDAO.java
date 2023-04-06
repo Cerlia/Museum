@@ -12,7 +12,6 @@ public class SurfaceTypeDAO extends DAO<SurfaceType> {
 	private static final String TABLE = "surface_type";
 	private static final String PK = "id_surface_type";
 	private static final String NAME = "name";
-	private static final String HAVE_DOOR = "can_have_door";
 	
 private static SurfaceTypeDAO instance=null;
 	
@@ -57,8 +56,7 @@ private static SurfaceTypeDAO instance=null;
 				ResultSet rs = Connect.executeQuery(requete);
 				rs.next();
 				String name = rs.getString(NAME);
-				boolean can_have_door = rs.getBoolean(HAVE_DOOR);
-				surface_type = new SurfaceType(id, name, can_have_door);
+				surface_type = new SurfaceType(id, name);
 				data.put(id, surface_type);
 			} catch (SQLException e) {
 				e.printStackTrace();

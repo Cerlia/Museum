@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +12,13 @@ import java.util.List;
 import dao.Connect;
 import dao.DAO;
 import dao.display.DisplayDAO;
+import dao.floorplan.RoomDAO;
 import museum.art.Art;
 import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
 import museum.display.Display;
+import museum.floorplan.Room;
 
 public class ArtDAO extends DAO<Art> {
 	
@@ -68,7 +71,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(8, art.getDim_x());
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
-			pst.setInt(11, art.getDisplay().getId_display());
+			pst.setNull(11, Types.INTEGER);
 			pst.setBytes(12, art.getImage());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
@@ -97,7 +100,7 @@ public class ArtDAO extends DAO<Art> {
 		try {
 			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+
 					"=?, "+CODE+"=?, "+TITLE+"=?, "+DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+
-					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+DISPLAY+"?= WHERE "+PK+"= ?";
+					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+DISPLAY+"=? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -110,7 +113,11 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
 			pst.setBytes(11, art.getImage());
-			pst.setInt(12, art.getDisplay().getId_display());
+			if (art.getDisplay() != null) {
+				pst.setInt(12, art.getDisplay().getId_display());
+			} else {
+				pst.setNull(12, Types.INTEGER);
+			}
 			pst.setInt(13, art.getId_art());
 			pst.executeUpdate();
 			data.put(art.getId_art(), art);
@@ -160,10 +167,10 @@ public class ArtDAO extends DAO<Art> {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			// TODO supprimer ce TEST du nombre de read, mis en place pour chercher cause de ralentissement au démarrage
+			nbRead += 1;
+			System.out.println(nbRead + " (readFull)");
 		}
-		// TODO supprimer ce TEST du nombre de read, mis en place pour chercher cause de ralentissement au démarrage
-		nbRead += 1;
-		System.out.println(nbRead + " (readFull)");
 		return art;
 	}
 	
@@ -204,19 +211,93 @@ public class ArtDAO extends DAO<Art> {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-		// TODO à supprimer
-		// lignes test nombre de read d'une classe
-		nbRead += 1;
-		System.out.println(nbRead + " (readLight)");
+			// TODO à supprimer
+			// lignes test nombre de read d'une classe
+			nbRead += 1;
+			System.out.println(nbRead + " (readLight) ");			
+		}	
 		return artLight;
-	}	
+	}
+	
+	/**
+	 * retourne la liste des œuvres d'un présentoir donné
+	 * @param id_display
+	 * @return
+	 */
+	public List<Art> readAllArtsOfDisplay(int id_display) {
+		List<Art> arts = new ArrayList<Art>();
+		Art art = null;
+		try {			
+			String requete = "SELECT * FROM " + TABLE +" WHERE "+DISPLAY+"="+id_display;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLight(id_art);
+				arts.add(art);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return arts;
+	}
+	
+	/**
+	 * retourne la liste des œuvres d'une salle donnée
+	 * @param id_room
+	 * @return
+	 */
+	public List<Art> readAllArtsOfRoom(int id_room) {
+		List<Art> arts = new ArrayList<Art>();
+		Art art = null;
+		try {			
+			String requete = "SELECT a."+PK+" FROM "+TABLE+" a JOIN display d ON (a.ref_display = d.id_display)"
+					+ " JOIN surface s ON (s.id_surface = d.ref_surface)"
+					+ " JOIN room r ON (r.id_room = s.ref_room)"
+					+ " WHERE r.id_room=" + id_room;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLight(id_art);
+				arts.add(art);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return arts;
+	}
+	
+	/**
+	 * retourne la liste des œuvres d'une surface donnée
+	 * @param id_room
+	 * @return
+	 */
+	public List<Art> readAllArtsOfSurface(int id_surface) {
+		List<Art> arts = new ArrayList<Art>();
+		Art art = null;
+		try {			
+			String requete = "SELECT a."+PK+" FROM "+TABLE+" a JOIN display d ON (a.ref_display = d.id_display)"
+					+ " JOIN surface s ON (s.id_surface = d.ref_surface)"
+					+ " WHERE s.id_surface=" + id_surface;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLight(id_art);
+				arts.add(art);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return arts;
+	}
 	
 	public List<Art> readAll() {
 		List<Art> art_objects = new ArrayList<Art>();
 		Art art = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
+			String requete = "SELECT * FROM " + TABLE + " ORDER BY "+CODE;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art = rs.getInt(1);

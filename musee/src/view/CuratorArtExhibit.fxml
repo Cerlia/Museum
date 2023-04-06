@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1417.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtExhibitControl">
+   <children>
+      <AnchorPane layoutX="-2.0" layoutY="50.0" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="1427.0">
+         <children>
+            <Pane fx:id="pneRoomSurfaces" layoutX="26.0" layoutY="105.0" prefHeight="427.0" prefWidth="243.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <Button fx:id="btnAllSurfaces" layoutX="19.0" layoutY="132.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="51.0" prefWidth="207.0" text="Toutes les surfaces" />
+                  <Button fx:id="btnWall1" layoutX="67.0" layoutY="229.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
+                  <Button fx:id="btnWall2" layoutX="137.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
+                  <Button fx:id="btnWall3" layoutX="67.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
+                  <Button fx:id="btnWall4" layoutX="-3.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
+                  <Button fx:id="btnFloor" layoutX="80.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" text="Sol" />
+               </children>
+            </Pane>
+            <Pane layoutX="295.0" layoutY="12.0" prefHeight="522.0" prefWidth="1106.0" style="-fx-background-color: #EBEBEB;">
+               <children>
+                  <TabPane layoutX="22.0" layoutY="68.0" prefHeight="440.0" prefWidth="902.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="Par œuvres">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="tblArtDisplay" layoutX="20.0" layoutY="20.0" prefHeight="367.0" prefWidth="865.0">
+                                      <columns>
+                                        <TableColumn fx:id="tclTitle" maxWidth="600.0" prefWidth="240.0" text="Titre" />
+                                        <TableColumn fx:id="tclCode" maxWidth="400.0" minWidth="4.0" prefWidth="100.0" text="Code" />
+                                          <TableColumn fx:id="tclAuthor" maxWidth="400.0" minWidth="4.0" prefWidth="120.0" text="Auteur" />
+                                          <TableColumn fx:id="tclDisplay" maxWidth="400.0" minWidth="4.0" prefWidth="90.0" text="Présentoir" />
+                                          <TableColumn fx:id="tclDisplayType" maxWidth="400.0" minWidth="4.0" prefWidth="200.0" text="Type de présentoir" />
+                                          <TableColumn fx:id="tclSurfaceArt" maxWidth="300.0" minWidth="4.0" prefWidth="110.0" text="Surface" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                      <Tab text="Par présentoirs">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TableView fx:id="tblDisplay" layoutX="20.0" layoutY="20.0" prefHeight="374.0" prefWidth="862.0">
+                                      <columns>
+                                        <TableColumn fx:id="tclName" maxWidth="300.0" text="Nom" />
+                                        <TableColumn fx:id="tclModel" maxWidth="400.0" minWidth="0.0" prefWidth="100.0" text="Modèle" />
+                                        <TableColumn fx:id="tclType" maxWidth="400.0" minWidth="0.0" prefWidth="180.0" text="Type" />
+                                        <TableColumn fx:id="tclDimX" maxWidth="400.0" minWidth="0.0" prefWidth="90.0" text="Longueur (x)" />
+                                        <TableColumn fx:id="tclDimY" maxWidth="400.0" minWidth="0.0" prefWidth="90.0" text="Largeur (y)" />
+                                        <TableColumn fx:id="tclDimZ" maxWidth="400.0" minWidth="0.0" prefWidth="90.0" text="Hauteur (z)" />
+                                        <TableColumn fx:id="tclNbArt" maxWidth="200.0" minWidth="0.0" prefWidth="120.0" text="Nombre d'œuvres" />
+                                        <TableColumn fx:id="tclSurfaceDisp" maxWidth="300.0" minWidth="0.0" prefWidth="105.0" text="Surface" />                                        
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </Pane>
+            <ChoiceBox fx:id="chbRoom" layoutX="26.0" layoutY="66.0" onAction="#handleRoomListAction" prefHeight="26.0" prefWidth="243.0" />
+            <Label layoutX="27.0" layoutY="29.0" prefHeight="27.0" prefWidth="243.0" text="SALLE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblDisplayedArtPaneTitle" layoutX="316.0" layoutY="31.0" prefHeight="27.0" prefWidth="765.0" text="EXPOSITION">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Pane layoutX="-5.0" layoutY="-6.0" prefHeight="58.0" prefWidth="1427.0" style="-fx-background-color: #DAE4E8;">
+         <children>
+            <Label alignment="TOP_LEFT" layoutX="22.0" layoutY="20.0" prefHeight="18.0" prefWidth="397.0" text="Interface conservateur - mouvements des oeuvres" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

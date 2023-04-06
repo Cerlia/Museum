@@ -1,5 +1,7 @@
 package museum.floorplan;
 
+import java.util.List;
+
 public class Room {
 	private int id_room;
 	private String name;
@@ -9,6 +11,7 @@ public class Room {
 	private int pos_x;
 	private int pos_y;
 	private Floor floor;
+	private List<Surface> surfaces;
 	
 	/**
 	 * constructor for Room if id_room is known
@@ -20,8 +23,10 @@ public class Room {
 	 * @param pos_x
 	 * @param pos_y
 	 * @param floor
+	 * @param surfaces
 	 */
-	public Room(int id_room, String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y, Floor floor) {
+	public Room(int id_room, String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y,
+			Floor floor, List<Surface> surfaces) {
 		this.id_room= id_room;
 		this.name = name;
 		this.dim_x = dim_x;
@@ -30,6 +35,7 @@ public class Room {
 		this.pos_x = pos_x;
 		this.pos_y = pos_y;
 		this.floor = floor;
+		this.surfaces = surfaces;
 	}
 	
 	/**
@@ -41,8 +47,10 @@ public class Room {
 	 * @param pos_x
 	 * @param pos_y
 	 * @param floor
+	 * @param surfaces
 	 */
-	public Room(String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y, Floor floor) {
+	public Room(String name, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y,
+			Floor floor, List<Surface> surfaces) {
 		this.name = name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
@@ -50,6 +58,7 @@ public class Room {
 		this.pos_x = pos_x;
 		this.pos_y = pos_y;
 		this.floor = floor;
+		this.surfaces = surfaces;
 	}
 
 	public int getId_room() {
@@ -88,9 +97,12 @@ public class Room {
 		return floor;
 	}
 	
+	public List<Surface> getSurfaces() {
+		return surfaces;
+	}
+	
 	@Override
 	public String toString() {
-		return "Room [id=" + id_room + ", nom=" + name + ", étage=" + floor.getId_floor() + ", dim_x=" + dim_x +
-				", dim_y=" + dim_y + ", dim_z=" + dim_z + ", pos_x=" + pos_x + ", pos_y=" + pos_y + "]";
+		return name + " (" + floor.getFloor_name() + ")";
 	}
 }

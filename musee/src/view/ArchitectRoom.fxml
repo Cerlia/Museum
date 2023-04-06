@@ -18,7 +18,7 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleRoomTableAction" prefHeight="450.0" prefWidth="350.0">
+      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleRoomTableAction" onKeyReleased="#handleRoomTableKeyPressed" prefHeight="450.0" prefWidth="350.0">
         <columns>
           <TableColumn fx:id="nameColumn" prefWidth="122.39999389648438" text="Nom" />
           <TableColumn fx:id="floorColumn" prefWidth="156.0000457763672" text="Étage" />
@@ -77,9 +77,9 @@
             <Pane fx:id="pneSurfaceInfo" layoutX="344.0" layoutY="238.0" prefHeight="202.0" prefWidth="250.0" visible="false">
                <children>
                   <Label layoutX="96.0" layoutY="15.0" text="Nom" />
-                  <Label layoutX="27.0" layoutY="46.0" text="Longueur (x) en m" />
-                  <Label layoutX="37.0" layoutY="76.0" text="Largeur (y) en m" />
-                  <Label layoutX="34.0" layoutY="108.0" prefHeight="17.0" prefWidth="90.0" text="Hauteur (z) en m" />
+                  <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="46.0" prefHeight="17.0" prefWidth="110.0" text="Longueur (x) en cm" />
+                  <Label alignment="CENTER_RIGHT" layoutX="25.0" layoutY="76.0" prefHeight="17.0" prefWidth="99.0" text="Largeur (y) en cm" />
+                  <Label alignment="CENTER_RIGHT" layoutX="25.0" layoutY="108.0" prefHeight="17.0" prefWidth="99.0" text="Hauteur (z) en cm" />
                   <Label fx:id="lblSurfaceName" layoutX="139.0" layoutY="15.0" prefHeight="17.0" prefWidth="83.0" />
                   <Label fx:id="lblSurfaceX" layoutX="139.0" layoutY="46.0" prefHeight="17.0" prefWidth="90.0" />
                   <Label fx:id="lblSurfaceY" layoutX="139.0" layoutY="76.0" prefHeight="17.0" prefWidth="90.0" />

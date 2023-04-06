@@ -24,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -35,6 +36,7 @@ import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
 import museum.display.Display;
+import utils.InputCheck;
 
 public class CuratorArtDataControl {
 	
@@ -46,12 +48,12 @@ public class CuratorArtDataControl {
 	
 	private Main mainController;
 	// ligne sélectionnée dans la table des œuvres, par défaut aucune
-	private int selectedArtLine = 0;
+	private int selectedArtLine = -1;
 	private Stage notifWindow = new Stage();
 	private Pane dialogArtSaved;
 	private boolean updatingArt = false;
 	private boolean addingArt = false;
-	private Stage stgAuthorAddition = new Stage();
+	private Stage stgAuthorSelect = new Stage();
 	private CuratorAuthorSelectControl authorSelectCtrl = null;
 	private Stage stgImageSelect = new Stage();
 	// récupération des infos du système utilisé
@@ -59,6 +61,8 @@ public class CuratorArtDataControl {
 	private Desktop desktop = Desktop.getDesktop();
 	final FileChooser fileChooser = new FileChooser();
 	private File file = null;
+	// taille maximale acceptée pour une illustration d'œuvre
+	private final static int IMGMAXSIZE = 250000;
 	
 	@FXML
 	private Button createAction;
@@ -171,7 +175,6 @@ public class CuratorArtDataControl {
 	 */
 	public void setMainControl(Main mainController) {
 		this.mainController = mainController;
-		refreshData();
 	}
 	
 	public void refreshData() {
@@ -191,7 +194,7 @@ public class CuratorArtDataControl {
 		txtDimX.setText("");
 		txtDimY.setText("");
 		txtDimZ.setText("");
-		lblImgPath.setText("");
+		lblImgPath.setText("aucune image sélectionnée");
 	}
 	
 	/**
@@ -248,13 +251,15 @@ public class CuratorArtDataControl {
 			if (selectedArt.getImage() != null) {
 				try {
 					Image image = byteArrayToImage(selectedArt.getImage());
-					imgArt.setImage(image);					
+					imgArt.setImage(image);		
+					lblImgPath.setText("image présente dans la base");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
 				imgArt.setImage(null);
+				lblImgPath.setText("aucune image dans la base");
 			}
 			pneArtInfo.setVisible(true);
 		}		
@@ -296,6 +301,7 @@ public class CuratorArtDataControl {
 					artImage, author, null, artType, null);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'œuvre");
+			e.printStackTrace();
 		}
 	}
 	
@@ -324,6 +330,7 @@ public class CuratorArtDataControl {
 				artDimY, artDimZ, artImage, author, artStatus, artType, display);			
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'œuvre");
+			e.printStackTrace();
 		}
 	}
 	
@@ -474,12 +481,21 @@ public class CuratorArtDataControl {
 	}
 	
 	/**
-	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleArtTableAction(MouseEvent event) {
 		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
-		showArtInfo();		
+		showArtInfo();	
+	}
+	
+	/**
+	 * event listener de la liste d'œuvres, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleArtTableKeyPressed(KeyEvent event) {
+		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
+		showArtInfo();	
 	}
 	
 	/**
@@ -487,8 +503,8 @@ public class CuratorArtDataControl {
 	 */
 	@FXML
 	private void handleAuthorSelect(ActionEvent event) {
-		if (stgAuthorAddition.getModality() != Modality.APPLICATION_MODAL) {
-			stgAuthorAddition.initModality(Modality.APPLICATION_MODAL);
+		if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
+			stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
 		};		
 		try {
 			// lien avec la vue
@@ -499,9 +515,12 @@ public class CuratorArtDataControl {
 			this.authorSelectCtrl = loader.getController();
 			// passage du contrôleur principal au sous-contrôleur
 			this.authorSelectCtrl.setMainControl(this.mainController);
+			// rafraîchissement des données de la sous-fenêtre
+			this.authorSelectCtrl.refreshData();
+			// affichage de la fenêtre
 			Scene scene = new Scene(pneAuthorSelect);
-			stgAuthorAddition.setScene(scene);
-			stgAuthorAddition.show();
+			stgAuthorSelect.setScene(scene);
+			stgAuthorSelect.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -515,9 +534,18 @@ public class CuratorArtDataControl {
 		// sélection du fichier JPG
 		stgImageSelect.setTitle("Choisir un fichier");
 		this.fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG", "*.jpg"));
-        this.file = fileChooser.showOpenDialog(stgImageSelect);
-        // affichage du nom du fichier dans le formulaire de modification de l'œuvre
-        String filename = file.getName();
-        lblImgPath.setText(filename);
+        this.file = fileChooser.showOpenDialog(stgImageSelect);        
+        // si un fichier a été sélectionné
+        if (this.file != null) {
+            // vérification du contenu et de la taille du fichier
+            // TODO
+            if (InputCheck.CheckType(this.file) && InputCheck.CheckFileSize(this.file, IMGMAXSIZE)) {
+                // affichage du nom du fichier dans le formulaire de modification de l'œuvre        	
+                String filename = file.getName();
+                lblImgPath.setText(filename);
+            } else {
+            	mainController.notifyFail("Ce fichier ne remplit pas les critères demandés.");
+            }
+        }
 	}		
 }

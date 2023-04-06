@@ -10,6 +10,7 @@ import java.util.List;
 import dao.Connect;
 import dao.DAO;
 import museum.floorplan.Floor;
+import museum.floorplan.Room;
 
 public class FloorDAO extends DAO<Floor> {
 	
@@ -105,9 +106,20 @@ public class FloorDAO extends DAO<Floor> {
 				rs.next();				
 				String name = rs.getString(NAME);
 				int dim_x = rs.getInt(DIMX);
-				int dim_y = rs.getInt(DIMY);				
-				floor = new Floor(id, name, dim_x, dim_y);				
+				int dim_y = rs.getInt(DIMY);
+				// TODO
+				// revoir cette partie et la commenter dans le compte-rendu d'activité
+				// on crée une liste de salles, vide
+				List<Room> rooms = new ArrayList<Room>();
+				// on crée l'objet Floor, avec cette liste (vide)
+				floor = new Floor(id, name, dim_x, dim_y, rooms);		
+				// on stocker l'objet dans la hashmap, ou plus précisément son adresse !
 				data.put(id, floor);
+				// dans l'objet room (référence à son adresse en mémoire, plus exactement),
+				// on ajoute toutes les salles présentes dans cet étage.
+				// Pas besoin de refaire un put ! Ce sont des références qui sont stockées
+				// dans la hashmap. La référence n'a pas changé, seulement le contenu de rooms
+				rooms.addAll(RoomDAO.getInstance().readAllRoomsOfFloor(id));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -119,7 +131,7 @@ public class FloorDAO extends DAO<Floor> {
 		List<Floor> floors = new ArrayList<Floor>();
 		Floor floor = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
+			String requete = "SELECT * FROM " + TABLE + " ORDER BY " + NAME;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_floor = rs.getInt(1);
@@ -133,4 +145,22 @@ public class FloorDAO extends DAO<Floor> {
 		return floors;	
 	}
 
+	/**
+	 * retourne le nombre d'étages du musée
+	 * @return
+	 */
+	public int getFloorCount() {
+		int floorCount = 0;
+		try {			
+			String requete = "SELECT COUNT(*) FROM " + TABLE;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				floorCount = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return floorCount;
+	}
 }

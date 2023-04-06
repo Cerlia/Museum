@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -41,6 +42,8 @@ public class ArchitectFloorControl {
 	private TableView<Floor> floorTable;
 	@FXML
 	private TableColumn<Floor, String> nameColumn;
+	@FXML
+	private TableColumn<Floor, String> nbRoomColumn;
 	@FXML
 	private AnchorPane pneFloorCreatEdit;
 	@FXML
@@ -91,8 +94,7 @@ public class ArchitectFloorControl {
 	 * @param mainControler
 	 */
 	public void setMainControl(Main mainController) {
-		this.mainController = mainController;
-		refreshData();		
+		this.mainController = mainController;	
 	}
 	
 	/**
@@ -237,6 +239,7 @@ public class ArchitectFloorControl {
 	@FXML
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor_name()));
+		nbRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRooms().size()+""));
 	}
 	
 	/**
@@ -337,11 +340,20 @@ public class ArchitectFloorControl {
 	}
 	
 	/**
-	 * event listener de la liste d'étages, récupère la ligne sélectionnée et affiche les données
+	 * event listener de la liste d'étages, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleFloorTableAction(MouseEvent event) {
 		selectedFloorLine = floorTable.getSelectionModel().getSelectedIndex();
 		showFloorInfo();
-	}	
+	}
+	
+	/**
+	 * event listener de la liste d'étages, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleFloorTableKeyPressed(KeyEvent event) {
+		selectedFloorLine = floorTable.getSelectionModel().getSelectedIndex();
+		showFloorInfo();	
+	}
 }
