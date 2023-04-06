@@ -95,8 +95,8 @@ public class ArchitectMuseumControl {
 			this.currentMuseum = mainController.getCurrentMuseum();
 			addUpdateMuseumPane.setVisible(false);
 			lblMuseumName.setText(currentMuseum.getMuseum_name());
-			lblFloorNb.setText(mainController.getFloorData().size()+"");
-			lblRoomNb.setText(mainController.getRoomData().size()+"");
+			lblFloorNb.setText(mainController.getFloorCount()+"");
+			lblRoomNb.setText(mainController.getRoomCount()+"");
 			btnShowFloorPane.setVisible(true);
 			btnShowRoomPane.setVisible(true);
 		}

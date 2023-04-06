@@ -7,9 +7,14 @@ import java.util.List;
 
 import dao.Connect;
 import dao.DAO;
+import dao.art.ArtDAO;
+import dao.floorplan.RoomDAO;
 import dao.floorplan.SurfaceDAO;
+import museum.art.Art;
 import museum.display.Display;
 import museum.display.DisplayModel;
+import museum.floorplan.Floor;
+import museum.floorplan.Room;
 import museum.floorplan.Surface;
 
 public class DisplayDAO extends DAO<Display> {
@@ -55,14 +60,14 @@ public class DisplayDAO extends DAO<Display> {
 	}
 
 	@Override
-	public Display read(int id) {
+	public Display read(int id_display) {
 		Display display = null;
-		if (data.containsKey(id)) {
-			display=data.get(id);
+		if (data.containsKey(id_display)) {
+			display=data.get(id_display);
 		}
 		else {
 			try {
-				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id;
+				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_display;
 				ResultSet rs = Connect.executeQuery(requete);
 				rs.next();
 				int ref_surface = rs.getInt(SURFACE);
@@ -73,8 +78,10 @@ public class DisplayDAO extends DAO<Display> {
 				int dim_z = rs.getInt(DIMZ);
 				Surface surface = SurfaceDAO.getInstance().read(ref_surface);
 				DisplayModel display_model = DisplayModelDAO.getInstance().read(ref_model);
-				display = new Display(id, name, dim_x, dim_y, dim_z, surface, display_model);
-				data.put(id, display);
+				List<Art> arts = new ArrayList<Art>();
+				display = new Display(id_display, name, dim_x, dim_y, dim_z, surface, display_model, arts);
+				data.put(id_display, display);
+				arts.addAll(ArtDAO.getInstance().readAllArtsOfDisplay(id_display));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -96,6 +103,53 @@ public class DisplayDAO extends DAO<Display> {
 		} catch (SQLException e) {
 			// e.printStackTrace();
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return displays;
+	}
+	
+	/**
+	 * retourne la liste des présentoirs d'une surface donnée
+	 * @param id_surface
+	 * @return
+	 */
+	public List<Display> readAllDisplaysOfSurface(int id_surface) {
+		List<Display> displays = new ArrayList<Display>();
+		Display display = null;
+		try {
+			String requete = "SELECT * FROM " + TABLE + " WHERE " + SURFACE + "= " + id_surface;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_display = rs.getInt(1);
+				display = DisplayDAO.getInstance().read(id_display);
+				displays.add(display);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return displays;
+	}
+	
+	/**
+	 * retourne la liste des présentoirs d'une salle donnée
+	 * @param id_surface
+	 * @return
+	 */
+	public List<Display> readAllDisplaysOfRoom(int id_room) {
+		List<Display> displays = new ArrayList<Display>();
+		Display display = null;
+		try {
+			String requete = "SELECT * FROM DISPLAY d JOIN surface s ON (d.ref_surface = s.id_surface)"
+					+ "	JOIN room r ON (s.ref_room = r.id_room) WHERE id_room=" + id_room;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_display = rs.getInt(1);
+				display = DisplayDAO.getInstance().read(id_display);
+				displays.add(display);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return displays;
 	}

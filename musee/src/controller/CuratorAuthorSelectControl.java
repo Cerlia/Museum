@@ -95,7 +95,6 @@ public class CuratorAuthorSelectControl {
 	 */
 	public void setMainControl(Main mainController) {
 		this.mainController = mainController;
-		refreshData();
 	}
 	
 	public void refreshData() {

@@ -16,13 +16,14 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="floorTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleFloorTableAction" prefHeight="450.0" prefWidth="350.0">
+      <TableView fx:id="floorTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleFloorTableAction" onKeyReleased="#handleFloorTableKeyPressed" prefHeight="450.0" prefWidth="304.0">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="349.5999940872192" text="Nom" />
+          <TableColumn fx:id="nameColumn" prefWidth="177" text="Nom" />
+            <TableColumn fx:id="nbRoomColumn" prefWidth="124" text="Nombre de salles" />
         </columns>
       </TableView>
-      <Button fx:id="btnCreateFloor" layoutX="272.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleFloorAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
-      <AnchorPane fx:id="pneFloorCreatEdit" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+      <Button fx:id="btnCreateFloor" layoutX="225.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleFloorAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
+      <AnchorPane fx:id="pneFloorCreatEdit" disable="false" layoutX="330.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
          <children>
             <Label fx:id="floorFormTitle" layoutX="89.0" layoutY="14.0" text="" />
             <Label layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="30.0" text="Nom" />
@@ -38,7 +39,7 @@
       </AnchorPane>
       <Label fx:id="lblMuseumName" layoutX="12.0" layoutY="12.0" prefHeight="18.0" prefWidth="800.0" />
       <Line endX="900.0" layoutX="100.0" layoutY="40.0" startX="-100.0" />
-      <AnchorPane fx:id="pneFloorDisplay" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+      <AnchorPane fx:id="pneFloorDisplay" disable="false" layoutX="330.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="14.0" prefHeight="18.0" prefWidth="142.0" text="Détails de l'étage" textAlignment="CENTER" />
             <Label layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="30.0" text="Nom" />

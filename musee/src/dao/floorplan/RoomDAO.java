@@ -11,6 +11,7 @@ import dao.Connect;
 import dao.DAO;
 import museum.floorplan.Floor;
 import museum.floorplan.Room;
+import museum.floorplan.Surface;
 
 public class RoomDAO extends DAO<Room> {
 	
@@ -108,17 +109,17 @@ public class RoomDAO extends DAO<Room> {
 	}
 
 	@Override
-	public Room read(int id) {
+	public Room read(int id_room) {
 		Room room = null;
-		if (data.containsKey(id)) {
-			room=data.get(id);
+		if (data.containsKey(id_room)) {
+			room=data.get(id_room);
 		}
 		else {
 			try {
-				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id;
+				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_room;
 				ResultSet rs = Connect.executeQuery(requete);
 				rs.next();
-				String nom = rs.getString(NAME);
+				String name = rs.getString(NAME);
 				int ref_floor = rs.getInt(FLOOR);
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
@@ -126,8 +127,10 @@ public class RoomDAO extends DAO<Room> {
 				int pos_x = rs.getInt(POSX);
 				int pos_y = rs.getInt(POSY);
 				Floor floor = FloorDAO.getInstance().read(ref_floor);
-				room = new Room(id, nom, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
-				data.put(id, room);
+				List<Surface> surfaces = new ArrayList<Surface>();				
+				room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, surfaces);
+				data.put(id_room, room);
+				surfaces.addAll(SurfaceDAO.getInstance().readAllSurfacesOfRoom(id_room));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -139,7 +142,7 @@ public class RoomDAO extends DAO<Room> {
 		List<Room> rooms = new ArrayList<Room>();
 		Room room = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
+			String requete = "SELECT * FROM " + TABLE+ " ORDER BY "+FLOOR+", "+NAME;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_room = rs.getInt(1);
@@ -151,5 +154,47 @@ public class RoomDAO extends DAO<Room> {
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return rooms;		
+	}
+	
+	/**
+	 * retourne la liste des salles d'un étage donné
+	 * @param id_floor
+	 * @return
+	 */
+	public List<Room> readAllRoomsOfFloor(int id_floor) {
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = null;
+		try {			
+			String requete = "SELECT * FROM " + TABLE +" WHERE "+FLOOR+"="+id_floor;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_room = rs.getInt(1);
+				room = RoomDAO.getInstance().read(id_room);
+				rooms.add(room);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return rooms;
+	}
+	
+	/**
+	 * retourne le nombre de salles du musée
+	 * @return
+	 */
+	public int getRoomCount() {
+		int roomCount = 0;
+		try {			
+			String requete = "SELECT COUNT(*) FROM " + TABLE;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				roomCount = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return roomCount;
 	}
  }

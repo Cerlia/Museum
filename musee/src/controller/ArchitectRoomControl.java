@@ -136,7 +136,6 @@ public class ArchitectRoomControl {
 	 */
 	public void setMainControl(Main mainController) {
 		this.mainController = mainController;
-		refreshData();
 	}
 	
 	/**
@@ -239,18 +238,15 @@ public class ArchitectRoomControl {
 	 * @param surfaceNb numéro de la surface dont il faut afficher les infos
 	 */
 	private void showSurfaceInfo(int surfaceNb) {
-		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-		List<Surface> surfaces = mainController.getRoomSurfaces(selectedRoom.getId_room());
-		if (surfaceNb == 0) {
-			lblSurfaceName.setText(surfaces.get(surfaceNb).getSurface_type().getName());
+		if (this.selectedRoomLine > -1) {
+			Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
+			List<Surface> surfaces = selectedRoom.getSurfaces();
+			lblSurfaceName.setText(surfaces.get(surfaceNb).getName());
+			lblSurfaceX.setText(surfaces.get(surfaceNb).getDim_x()+"");
+			lblSurfaceY.setText(surfaces.get(surfaceNb).getDim_y()+"");
+			lblSurfaceZ.setText(surfaces.get(surfaceNb).getDim_z()+"");
+			pneSurfaceInfo.setVisible(true);
 		}
-		else {
-			lblSurfaceName.setText(surfaces.get(surfaceNb).getSurface_type().getName() + " " + surfaceNb);
-		}
-		lblSurfaceX.setText(surfaces.get(surfaceNb).getDim_x()+"");
-		lblSurfaceY.setText(surfaces.get(surfaceNb).getDim_y()+"");
-		lblSurfaceZ.setText(surfaces.get(surfaceNb).getDim_z()+"");
-		pneSurfaceInfo.setVisible(true);
 	}
 	
 	
@@ -444,10 +440,19 @@ public class ArchitectRoomControl {
 	}
 	
 	/**
-	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée
+	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleRoomTableAction(MouseEvent event) {
+		selectedRoomLine = roomTable.getSelectionModel().getSelectedIndex();
+		showRoomInfo();
+	}
+	
+	/**
+	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleRoomTableKeyPressed(ActionEvent event) {
 		selectedRoomLine = roomTable.getSelectionModel().getSelectedIndex();
 		showRoomInfo();
 	}

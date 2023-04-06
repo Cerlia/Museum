@@ -113,7 +113,7 @@ public class AuthorDAO extends DAO<Author> {
 		List<Author> authors = new ArrayList<Author>();
 		Author author = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
+			String requete = "SELECT * FROM " + TABLE + " ORDER BY "+NOM;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_author = rs.getInt(1);
