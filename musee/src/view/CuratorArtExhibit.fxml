@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1417.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtExhibitControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtExhibitControl">
    <children>
       <AnchorPane layoutX="-2.0" layoutY="50.0" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="1427.0">
          <children>
             <Pane layoutX="8.0" layoutY="10.0" prefHeight="534.0" prefWidth="271.0" style="-fx-background-color: #EBEBEB;">
                <children>
-                  <Button fx:id="btnAddArt" layoutX="14.0" layoutY="438.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="243.0" text="Ajouter une œuvre" onAction="#handleBtnAddArtAction" />
+                  <Button fx:id="btnAddArt" layoutX="14.0" layoutY="438.0" mnemonicParsing="false" onAction="#handleBtnAddArtAction" prefHeight="66.0" prefWidth="243.0" text="Ajouter une œuvre" />
                   <Pane fx:id="pneRoomSurfaces" layoutX="14.0" layoutY="146.0" prefHeight="254.0" prefWidth="243.0" style="-fx-background-color: #ffffff;">
                      <children>
                         <Button fx:id="btnAllSurfaces" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="51.0" prefWidth="207.0" text="Toutes les surfaces" />
@@ -96,7 +96,7 @@
             </Pane>
          </children>
       </AnchorPane>
-      <Pane prefHeight="54.0" prefWidth="1417.0" style="-fx-background-color: #004024;">
+      <Pane prefHeight="54.0" prefWidth="1425.0" style="-fx-background-color: #004024;">
          <children>
             <Label alignment="CENTER" layoutX="288.0" layoutY="7.0" prefHeight="42.0" prefWidth="892.0" text="GESTION DES ŒUVRES EXPOSÉES" textAlignment="CENTER" textFill="WHITE">
                <font>
