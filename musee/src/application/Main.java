@@ -32,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,6 +43,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -131,6 +133,10 @@ public class Main extends Application {
 	private Menu curator_menu;
 	@FXML
 	private Menu architect_menu;
+	@FXML
+	private Line shpDvdLine;
+	@FXML
+	private Pane pneMainActions;
 
 
 	/**
@@ -592,8 +598,9 @@ public class Main extends Application {
 	public void addArt(String art_code, String art_title, String creation_date,
 			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
 			ArtStatus art_status, ArtType art_type, Display display) {
-		// par défaut, une œuvre est placée "En réserve" (id_art_status = 1)
+		// par défaut, une œuvre est "Possédée" (id_art_status = 1)
 		// et elle n'a pas de présentoir (display = null)
+		// TODO l'oeuvre pourrait avoir le statut "Prêté" ou "Emprunté"
 		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
 		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
 				author, artStatus, art_type, null);
@@ -728,6 +735,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		this.mainWindow = primaryStage;
+		this.mainWindow.setResizable(false);
 		this.mainWindow.setTitle("Gestion de musée");
 		// initialisation de la fenêtre principale
 		initWindowRoot();
@@ -749,10 +757,10 @@ public class Main extends Application {
 			// affichage de la fenêtre principale
 			double height = Screen.getPrimary().getBounds().getHeight();   
 			double width = Screen.getPrimary().getBounds().getWidth();   
-			Scene scene = new Scene(mainWindowRoot, width, height);
+			Scene scene = new Scene(mainWindowRoot, width, height);			
 			imgLogo.setImage(new Image("/img/logo_bandw.png"));
-			btnQuit.setLayoutX(width-150);
-			btnDisconnect.setLayoutX(btnQuit.getLayoutX()-150);
+			pneMainActions.setLayoutX(width-pneMainActions.getPrefWidth()-20);
+			shpDvdLine.setEndX(width);
 			mainWindow.setScene(scene);
 			mainWindow.show();
 		} catch (IOException e) {
