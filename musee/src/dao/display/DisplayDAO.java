@@ -153,4 +153,33 @@ public class DisplayDAO extends DAO<Display> {
 		}
 		return displays;
 	}
+	
+	/**
+	 * retourne la liste des présentoirs existant sur une surface et compatibles avec un type d'œuvre
+	 * @param id_surface
+	 * @param id_art_type
+	 * @return
+	 */
+	public List<Display> readAllExistingCompatibleDisplaysOfSurface(int id_surface, int id_art_type) {
+		List<Display> displays = new ArrayList<Display>();
+		Display display = null;
+		try {
+			String requete = "SELECT * FROM display d"
+					+ " JOIN display_model dm ON (d.ref_display_model = dm.id_display_model)"
+					+ " JOIN display_type dt ON (dm.ref_display_type = dt.id_display_type)"
+					+ " JOIN display_art_type dat ON (dt.id_display_type = dat.ref_display_type)"
+					+ " WHERE ref_surface =" + id_surface
+					+ " AND ref_art_type =" + id_art_type;	
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_display = rs.getInt(1);
+				display = DisplayDAO.getInstance().read(id_display);
+				displays.add(display);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return displays;
+	}
 }

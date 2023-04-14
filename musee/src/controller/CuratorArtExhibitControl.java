@@ -1,16 +1,21 @@
 package controller;
 
+import java.io.IOException;
+
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.art.Art;
 import museum.display.Display;
@@ -29,6 +34,8 @@ public class CuratorArtExhibitControl {
 	private int selectedRoomLine = -1;
 	private Stage notifWindow = new Stage();
 	private int selectedSurface = -1;
+	private Stage stgArtSelect = new Stage();
+	private CuratorArtSelectControl artSelectCtrl = null;
 	
 	private static final String SURF0 = "sol";
 	private static final String SURF1 = "mur 1";
@@ -50,6 +57,12 @@ public class CuratorArtExhibitControl {
 	@FXML
 	private Button btnAllSurfaces;
 	@FXML
+	private Button btnAddArt;
+	@FXML
+	private Button btnRemoveArt;
+	@FXML
+	private Button btnRemoveDisplay;
+	@FXML
 	private Button confirmArtSaved;
 	@FXML
 	private Label lblNotification;
@@ -59,6 +72,8 @@ public class CuratorArtExhibitControl {
 	private ChoiceBox<Room> chbRoom;
 	@FXML
 	private Pane pneRoomSurfaces;
+	@FXML
+	private Pane pneArtSelect;
 	@FXML
 	private TableView<Art> tblArtDisplay;
 	@FXML
@@ -257,5 +272,47 @@ public class CuratorArtExhibitControl {
 			showDisplays(room);
 			updateExhibitTitle();
 		}		
+	}
+	
+	/**
+	 * event listener du bouton "Retirer le présentoir"
+	 * @param e
+	 */
+	@FXML
+	private void handleBtnRemoveDisplayAction(ActionEvent event) {
+		// TODO vérifier si une ligne est sélectionnée (ou bien conditionner
+		// l'affichage du bouton à la sélection d'une ligne)
+		// TODO ouverture d'une fenêtre de confirmation : voulez-vous
+		// vraiment supprimer ce présentoir, les oeuvres associées seront
+		// remise dans la réserve
+	}
+	
+	/**
+	 * event listener du bouton "Ajouter une œuvre" : ouvre une nouvelle fenêtre
+	 * @param e
+	 */
+	@FXML
+	private void handleBtnAddArtAction(ActionEvent event) {
+		if (stgArtSelect.getModality() != Modality.APPLICATION_MODAL) {
+			stgArtSelect.initModality(Modality.APPLICATION_MODAL);
+		};		
+		try {
+			// lien avec la vue
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("../view/CuratorArtSelect.fxml"));
+			pneArtSelect = (Pane)loader.load();
+			// récupération du contrôleur de la vue
+			this.artSelectCtrl = loader.getController();
+			// passage du contrôleur principal au sous-contrôleur
+			this.artSelectCtrl.setMainControl(this.mainController);
+			// rafraîchissement des données de la sous-fenêtre
+			this.artSelectCtrl.refreshData();
+			// affichage de la fenêtre
+			Scene scene = new Scene(pneArtSelect);
+			stgArtSelect.setScene(scene);
+			stgArtSelect.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

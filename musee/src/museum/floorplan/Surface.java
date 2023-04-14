@@ -105,7 +105,6 @@ public class Surface {
 	
 	@Override
 	public String toString() {
-		return "Surface " + id_surface + ", dim_x=" + dim_x + ", dim_y=" + dim_y + ", nb=" + number +
-				", room=" + room.getName() + ", surface=" + surface_type.getName() + "]";
+		return this.getName();
 	}
 }

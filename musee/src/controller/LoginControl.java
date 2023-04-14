@@ -41,10 +41,10 @@ public class LoginControl {
 			mainControler.showArchitectMuseumPane();
 		}
 		else if (txtLogin.getText().equals("c")) {
-			mainControler.showCuratorArtMovementPane();
+			mainControler.showCuratorArtExhibitPane();
 		}
 		else {
-			mainControler.showCuratorArtMovementPane();
+			mainControler.showCuratorArtExhibitPane();
 		}			
 	}
 }

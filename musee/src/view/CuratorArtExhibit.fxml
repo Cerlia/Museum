@@ -15,19 +15,35 @@
    <children>
       <AnchorPane layoutX="-2.0" layoutY="50.0" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="1427.0">
          <children>
-            <Pane fx:id="pneRoomSurfaces" layoutX="26.0" layoutY="105.0" prefHeight="427.0" prefWidth="243.0" style="-fx-background-color: #ffffff;">
+            <Pane layoutX="8.0" layoutY="10.0" prefHeight="534.0" prefWidth="271.0" style="-fx-background-color: #EBEBEB;">
                <children>
-                  <Button fx:id="btnAllSurfaces" layoutX="19.0" layoutY="132.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="51.0" prefWidth="207.0" text="Toutes les surfaces" />
-                  <Button fx:id="btnWall1" layoutX="67.0" layoutY="229.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
-                  <Button fx:id="btnWall2" layoutX="137.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
-                  <Button fx:id="btnWall3" layoutX="67.0" layoutY="370.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
-                  <Button fx:id="btnWall4" layoutX="-3.0" layoutY="300.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
-                  <Button fx:id="btnFloor" layoutX="80.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" text="Sol" />
+                  <Button fx:id="btnAddArt" layoutX="14.0" layoutY="438.0" mnemonicParsing="false" prefHeight="66.0" prefWidth="243.0" text="Ajouter une œuvre" onAction="#handleBtnAddArtAction" />
+                  <Pane fx:id="pneRoomSurfaces" layoutX="14.0" layoutY="146.0" prefHeight="254.0" prefWidth="243.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <Button fx:id="btnAllSurfaces" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="51.0" prefWidth="207.0" text="Toutes les surfaces" />
+                        <Button fx:id="btnWall1" layoutX="67.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
+                        <Button fx:id="btnWall2" layoutX="137.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
+                        <Button fx:id="btnWall3" layoutX="67.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
+                        <Button fx:id="btnWall4" layoutX="-3.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
+                        <Button fx:id="btnFloor" layoutX="80.0" layoutY="115.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" text="Sol" />
+                     </children>
+                  </Pane>
+                  <ChoiceBox fx:id="chbRoom" layoutX="14.0" layoutY="51.0" onAction="#handleRoomListAction" prefHeight="26.0" prefWidth="243.0" />
+                  <Label layoutX="14.0" layoutY="15.0" prefHeight="27.0" prefWidth="243.0" text="SALLE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="14.0" layoutY="106.0" prefHeight="27.0" prefWidth="243.0" text="SURFACES">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
-            <Pane layoutX="295.0" layoutY="12.0" prefHeight="522.0" prefWidth="1106.0" style="-fx-background-color: #EBEBEB;">
+            <Pane layoutX="296.0" layoutY="10.0" prefHeight="534.0" prefWidth="1118.0" style="-fx-background-color: #EBEBEB;">
                <children>
-                  <TabPane layoutX="22.0" layoutY="68.0" prefHeight="440.0" prefWidth="902.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane layoutX="22.0" layoutY="68.0" prefHeight="440.0" prefWidth="1067.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="Par œuvres">
                         <content>
@@ -43,6 +59,7 @@
                                           <TableColumn fx:id="tclSurfaceArt" maxWidth="300.0" minWidth="4.0" prefWidth="110.0" text="Surface" />
                                       </columns>
                                     </TableView>
+                                    <Button fx:id="btnRemoveArt" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer l'œuvre" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -51,7 +68,7 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="tblDisplay" layoutX="20.0" layoutY="20.0" prefHeight="374.0" prefWidth="862.0">
+                                    <TableView fx:id="tblDisplay" layoutX="20.0" layoutY="20.0" prefHeight="367.0" prefWidth="865.0">
                                       <columns>
                                         <TableColumn fx:id="tclName" maxWidth="300.0" text="Nom" />
                                         <TableColumn fx:id="tclModel" maxWidth="400.0" minWidth="0.0" prefWidth="100.0" text="Modèle" />
@@ -63,30 +80,28 @@
                                         <TableColumn fx:id="tclSurfaceDisp" maxWidth="300.0" minWidth="0.0" prefWidth="105.0" text="Surface" />                                        
                                       </columns>
                                     </TableView>
+                                    <Button fx:id="btnRemoveDisplay" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer le présentoir" />
                                  </children>
                               </AnchorPane>
                         </content>
                       </Tab>
                     </tabs>
                   </TabPane>
+                  <Label fx:id="lblDisplayedArtPaneTitle" layoutX="22.0" layoutY="14.0" prefHeight="27.0" prefWidth="765.0" text="EXPOSITION">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children>
             </Pane>
-            <ChoiceBox fx:id="chbRoom" layoutX="26.0" layoutY="66.0" onAction="#handleRoomListAction" prefHeight="26.0" prefWidth="243.0" />
-            <Label layoutX="27.0" layoutY="29.0" prefHeight="27.0" prefWidth="243.0" text="SALLE">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblDisplayedArtPaneTitle" layoutX="316.0" layoutY="31.0" prefHeight="27.0" prefWidth="765.0" text="EXPOSITION">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
          </children>
       </AnchorPane>
-      <Pane layoutX="-5.0" layoutY="-6.0" prefHeight="58.0" prefWidth="1427.0" style="-fx-background-color: #DAE4E8;">
+      <Pane prefHeight="54.0" prefWidth="1417.0" style="-fx-background-color: #004024;">
          <children>
-            <Label alignment="TOP_LEFT" layoutX="22.0" layoutY="20.0" prefHeight="18.0" prefWidth="397.0" text="Interface conservateur - mouvements des oeuvres" />
+            <Label alignment="CENTER" layoutX="288.0" layoutY="7.0" prefHeight="42.0" prefWidth="892.0" text="GESTION DES ŒUVRES EXPOSÉES" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="26.0" />
+               </font></Label>
          </children>
       </Pane>
    </children>

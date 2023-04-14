@@ -168,8 +168,10 @@ public class ArtDAO extends DAO<Art> {
 				e.printStackTrace();
 			}
 			// TODO supprimer ce TEST du nombre de read, mis en place pour chercher cause de ralentissement au démarrage
+			/*
 			nbRead += 1;
 			System.out.println(nbRead + " (readFull)");
+			*/
 		}
 		return art;
 	}
@@ -211,10 +213,11 @@ public class ArtDAO extends DAO<Art> {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			// TODO à supprimer
 			// lignes test nombre de read d'une classe
+			/*
 			nbRead += 1;
-			System.out.println(nbRead + " (readLight) ");			
+			System.out.println(nbRead + " (readLight) ");
+			*/			
 		}	
 		return artLight;
 	}

@@ -18,6 +18,7 @@ import dao.art.ArtTypeDAO;
 import dao.art.AuthorDAO;
 import dao.display.DisplayArtTypeDAO;
 import dao.display.DisplayDAO;
+import dao.display.DisplayModelDAO;
 import dao.display.DisplayTypeDAO;
 import dao.floorplan.FloorDAO;
 import dao.floorplan.MuseumDAO;
@@ -52,6 +53,7 @@ import museum.art.ArtType;
 import museum.art.Author;
 import museum.display.Display;
 import museum.display.DisplayArtType;
+import museum.display.DisplayModel;
 import museum.display.DisplayType;
 import museum.floorplan.Floor;
 import museum.floorplan.Museum;
@@ -108,6 +110,9 @@ public class Main extends Application {
 	private ObservableList<Art> roomArtsData = FXCollections.observableArrayList();
 	private ObservableList<Display> surfaceDisplaysData = FXCollections.observableArrayList();
 	private ObservableList<Display> roomDisplaysData = FXCollections.observableArrayList();
+	private ObservableList<Surface> roomSurfacesData = FXCollections.observableArrayList();
+	private ObservableList<Display> compatibleExistingDisplays = FXCollections.observableArrayList();
+	private ObservableList<DisplayModel> compatibleDisplayModels = FXCollections.observableArrayList();
 	
 	// éléments de la vue
 	@FXML
@@ -370,6 +375,41 @@ public class Main extends Application {
 			roomDisplaysData.add(display);
 		}
 		return roomDisplaysData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param room
+	 * @return
+	 */
+	public ObservableList<Surface> getAllSurfacesOfRoom(Room room) {
+		roomSurfacesData = FXCollections.observableArrayList();
+		List<Surface> surfaces = room.getSurfaces();
+		for (Surface surface : surfaces) {
+			roomSurfacesData.add(surface);
+		}
+		return roomSurfacesData;
+	}
+	
+	
+	public ObservableList<Display> getAllCompatibleExistingDisplays(Surface surface, Art art) {
+		compatibleExistingDisplays = FXCollections.observableArrayList();
+		List<Display> displays = DisplayDAO.getInstance().
+				readAllExistingCompatibleDisplaysOfSurface(surface.getId_surface(), art.getArt_type().getId_Art_type());
+		for (Display display : displays) {
+			compatibleExistingDisplays.add(display);
+		}
+		return compatibleExistingDisplays;
+	}
+	
+	public ObservableList<DisplayModel> getAllCompatibleDisplayModels(Surface surface, Art art) {
+		compatibleDisplayModels = FXCollections.observableArrayList();
+		List<DisplayModel> displayModels = DisplayModelDAO.getInstance().
+				readAllCompatibleDisplayModels(surface.getSurface_type().getId_surface_type(), art.getArt_type().getId_Art_type());
+		for (DisplayModel displayModel : displayModels) {
+			compatibleDisplayModels.add(displayModel);
+		}
+		return compatibleDisplayModels;
 	}
 	
 	/**
