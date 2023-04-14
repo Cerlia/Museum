@@ -26,6 +26,7 @@ public class DisplayModel {
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
 		this.dim_z = dim_z;
+		this.display_multiple = display_multiple;
 		this.display_type = display_type;		
 	}
 

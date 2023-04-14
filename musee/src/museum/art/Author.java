@@ -8,7 +8,7 @@ public class Author {
 	private String dates;
 	
 	/**
-	 * constructor for Author
+	 * constructor for Author if id_author is known
 	 * @param id_author
 	 * @param last_name
 	 * @param first_name
@@ -22,9 +22,27 @@ public class Author {
 		this.additional_name = additional_name;
 		this.dates = dates;
 	}
+	
+	/**
+	 * constructor for Author if id_author is unknown
+	 * @param last_name
+	 * @param first_name
+	 * @param additional_name
+	 * @param dates
+	 */
+	public Author(String last_name, String first_name, String additional_name, String dates) {
+		this.last_name = last_name;
+		this.first_name = first_name;
+		this.additional_name = additional_name;
+		this.dates = dates;
+	}
 
 	public int getId_author() {
 		return id_author;
+	}
+	
+	public void setId_author(int id) {
+		this.id_author = id;		
 	}
 
 	public String getLast_name() {
@@ -43,9 +61,16 @@ public class Author {
 		return dates;
 	}
 	
+	public String getFullName() {
+		String fullName = this.last_name + " " + this.first_name;
+		if (!this.additional_name.equals("")) {
+			fullName += ", dit " + this.additional_name;
+		}
+		return fullName;
+	}
+	
 	@Override
 	public String toString() {
-		return "Author [id=" + id_author + ", nom=" + last_name + ", prénom=" + first_name +
-				", surnom=" + additional_name + ", dates=" + dates + "]";
+		return last_name + " " + first_name;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import dao.Connect;
 import dao.DAO;
+import museum.display.Display;
 import museum.display.DisplayModel;
 import museum.display.DisplayType;
 
@@ -95,5 +96,34 @@ public class DisplayModelDAO extends DAO<DisplayModel> {
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return display_models;
+	}
+	
+	/**
+	 * retourne la liste des modèles de présentoir compatibles avec un type de surface et un type d'œuvre
+	 * @param id_surface_type
+	 * @param id_art_type
+	 * @return
+	 */
+	public List<DisplayModel> readAllCompatibleDisplayModels(int id_surface_type, int id_art_type) {
+		List<DisplayModel> displayModels = new ArrayList<DisplayModel>();
+		DisplayModel displayModel = null;
+		try {
+			String requete = "select * from display_model dm"
+					+ " join display_type dt on (dm.ref_display_type = dt.id_display_type)\r\n"
+					+ " join display_art_type dat on (dt.id_display_type = dat.ref_display_type)\r\n"
+					+ " join display_surface_type dst on (dat.ref_display_type = dst.id_display_surface_type)\r\n"
+					+ " where dat.ref_art_type = " + id_art_type
+					+ " and dst.ref_surface_type = " + id_surface_type;	
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_display_model = rs.getInt(1);
+				displayModel = DisplayModelDAO.getInstance().read(id_display_model);
+				displayModels.add(displayModel);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return displayModels;
 	}
 }

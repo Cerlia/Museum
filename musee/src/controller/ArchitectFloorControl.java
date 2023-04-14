@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -29,7 +30,7 @@ public class ArchitectFloorControl {
 	 * 
 	 *  --------------------------- */
 	
-	private Main mainControler;
+	private Main mainController;
 	// ligne sélectionnée dans la table des salles, par défaut aucune
 	private int selectedFloorLine = -1;
 	private Stage notifWindow = new Stage();
@@ -41,6 +42,8 @@ public class ArchitectFloorControl {
 	private TableView<Floor> floorTable;
 	@FXML
 	private TableColumn<Floor, String> nameColumn;
+	@FXML
+	private TableColumn<Floor, String> nbRoomColumn;
 	@FXML
 	private AnchorPane pneFloorCreatEdit;
 	@FXML
@@ -90,17 +93,16 @@ public class ArchitectFloorControl {
 	 * définit le contrôleur principal
 	 * @param mainControler
 	 */
-	public void setMainControl(Main mainControler) {
-		this.mainControler = mainControler;
-		refreshData();		
+	public void setMainControl(Main mainController) {
+		this.mainController = mainController;	
 	}
 	
 	/**
 	 * récupère les dernières infos de la BD
 	 */
 	public void refreshData() {
-		floorTable.setItems(mainControler.getFloorData());
-		lblMuseumName.setText(mainControler.getCurrentMuseum().getMuseum_name());
+		floorTable.setItems(mainController.getFloorData());
+		lblMuseumName.setText(mainController.getCurrentMuseum().getMuseum_name());
 		showFloorInfo();
 	}
 	
@@ -112,9 +114,9 @@ public class ArchitectFloorControl {
 			String floorName = txtFloorName.getText();
 			int floorDimX = Integer.parseInt(txtFloorDimX.getText());
 			int floorDimY = Integer.parseInt(txtFloorDimY.getText());
-			mainControler.addFloor(floorName, floorDimX, floorDimY);
+			mainController.addFloor(floorName, floorDimX, floorDimY);
 		} catch (Exception e) {
-			mainControler.notifyFail();
+			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}
 	}
 	
@@ -128,9 +130,9 @@ public class ArchitectFloorControl {
 			String floorName = txtFloorName.getText();
 			int floorDimX = Integer.parseInt(txtFloorDimX.getText());
 			int floorDimY = Integer.parseInt(txtFloorDimY.getText());
-			mainControler.updateFloor(id_floor, floorName, floorDimX, floorDimY);
+			mainController.updateFloor(id_floor, floorName, floorDimX, floorDimY);
 		} catch (Exception e) {
-			mainControler.notifyFail();
+			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}		
 	}
 	
@@ -195,14 +197,13 @@ public class ArchitectFloorControl {
 	/**
 	 * à la demande du contrôleur principal, affiche une notification
 	 */
-	public void notifyFloorSaved(String message) {
+	public void notifyFloorSaved(String title, String body) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Confirmation de modification");
 		};		
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifFloor.fxml"));
+			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
 			loader.setController(this);
 			dialogFloorSaved = (Pane)loader.load();
 			// désactivation de la zone d'édition d'étage
@@ -214,7 +215,8 @@ public class ArchitectFloorControl {
 			updatingFloor = false;
 			// affichage de la fenêtre pop-up
 			Scene scene = new Scene(dialogFloorSaved);
-			lblNotification.setText(message);
+			notifWindow.setTitle(title);
+			lblNotification.setText(body);
 			notifWindow.setScene(scene);
 			notifWindow.show();
 			// rafraîchissement des données
@@ -237,6 +239,7 @@ public class ArchitectFloorControl {
 	@FXML
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor_name()));
+		nbRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRooms().size()+""));
 	}
 	
 	/**
@@ -246,7 +249,7 @@ public class ArchitectFloorControl {
 	@FXML
 	private void handleFloorAddition(ActionEvent e) {
 		addingFloor = true;
-		floorFormTitle.setText("Création d'étage");
+		floorFormTitle.setText("Créer un nouvel étage");
 		floorTable.setDisable(true);
 		showFloorEditingPane();
 		hideFloorInfo();
@@ -260,7 +263,7 @@ public class ArchitectFloorControl {
 	private void handleFloorUpdate(ActionEvent event) {
 		Floor selectedFloor = floorTable.getItems().get(selectedFloorLine);
 		updatingFloor = true;
-		floorFormTitle.setText("Modification d'étage");
+		floorFormTitle.setText("Modifier un étage existant");
 		chbIgnoreFloorDim.setSelected(false);
 		txtFloorName.setText(selectedFloor.getFloor_name());
 		txtFloorDimX.setText(selectedFloor.getDim_x()+"");
@@ -310,7 +313,7 @@ public class ArchitectFloorControl {
 				updateFloor();
 			}
 		} else {
-			mainControler.notifyFail();
+			mainController.notifyFail(null);
 		}				
 	}
 	
@@ -332,16 +335,25 @@ public class ArchitectFloorControl {
 	 * @param e
 	 */
 	@FXML
-	private void confirmFloorCreated(ActionEvent e) {
+	private void confirm(ActionEvent e) {
 		notifWindow.close();
 	}
 	
 	/**
-	 * event listener de la liste d'étages, récupère la ligne sélectionnée et affiche les données
+	 * event listener de la liste d'étages, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
 	private void handleFloorTableAction(MouseEvent event) {
 		selectedFloorLine = floorTable.getSelectionModel().getSelectedIndex();
 		showFloorInfo();
-	}	
+	}
+	
+	/**
+	 * event listener de la liste d'étages, permet de récupérer la ligne sélectionnée (bouton)
+	 */
+	@FXML
+	private void handleFloorTableKeyPressed(KeyEvent event) {
+		selectedFloorLine = floorTable.getSelectionModel().getSelectedIndex();
+		showFloorInfo();	
+	}
 }

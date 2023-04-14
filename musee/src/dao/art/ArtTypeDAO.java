@@ -71,7 +71,7 @@ public class ArtTypeDAO extends DAO<ArtType> {
 		List<ArtType> art_types = new ArrayList<ArtType>();
 		ArtType art_type = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
+			String requete = "SELECT * FROM " + TABLE+ " ORDER BY "+NAME;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art_type = rs.getInt(1);

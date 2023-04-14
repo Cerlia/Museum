@@ -1,42 +1,14 @@
 package application;
 	
-import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.List;
 
-import museum.Role;
-import museum.User;
-import museum.art.Art;
-import museum.art.ArtStatus;
-import museum.art.ArtType;
-import museum.art.Author;
-import museum.display.Display;
-import museum.display.DisplayArtType;
-import museum.display.DisplayType;
-import museum.floorplan.Door;
-import museum.floorplan.Floor;
-import museum.floorplan.Museum;
-import museum.floorplan.Room;
-import museum.floorplan.Surface;
-import museum.floorplan.SurfaceType;
 import controller.ArchitectFloorControl;
 import controller.ArchitectMuseumControl;
 import controller.ArchitectRoomControl;
+import controller.CuratorArtDataControl;
+import controller.CuratorArtExhibitControl;
+import controller.CuratorArtMovementControl;
 import controller.LoginControl;
 import dao.RoleDAO;
 import dao.UserDAO;
@@ -46,13 +18,48 @@ import dao.art.ArtTypeDAO;
 import dao.art.AuthorDAO;
 import dao.display.DisplayArtTypeDAO;
 import dao.display.DisplayDAO;
+import dao.display.DisplayModelDAO;
 import dao.display.DisplayTypeDAO;
-import dao.floorplan.DoorDAO;
 import dao.floorplan.FloorDAO;
 import dao.floorplan.MuseumDAO;
 import dao.floorplan.RoomDAO;
 import dao.floorplan.SurfaceDAO;
 import dao.floorplan.SurfaceTypeDAO;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import museum.Role;
+import museum.User;
+import museum.art.Art;
+import museum.art.ArtStatus;
+import museum.art.ArtType;
+import museum.art.Author;
+import museum.display.Display;
+import museum.display.DisplayArtType;
+import museum.display.DisplayModel;
+import museum.display.DisplayType;
+import museum.floorplan.Floor;
+import museum.floorplan.Museum;
+import museum.floorplan.Room;
+import museum.floorplan.Surface;
+import museum.floorplan.SurfaceType;
 
 public class Main extends Application {
 	
@@ -62,17 +69,28 @@ public class Main extends Application {
 	private Stage notifWindow = new Stage();   // "stage" des fenêtres de notification
 	private Pane dialogFail;
 	
+	private final String NTF_TITLE_FORM_NG = "Échec de l'enregistrement";
+	private final String NTF_BODY_FORM_NG = "Enregistrement impossible : les champs ne sont pas "
+			+ "correctement remplis. Vérifiez les données saisies, puis réessayez.";
+	private final String NTF_TITLE_SAVE_OK = "Confirmation d'enregistrement";
+	
 	// sous-fenêtres
 	private AnchorPane loginPane = null;
 	private AnchorPane architectMuseumPane = null;
 	private AnchorPane architectFloorPane = null;
 	private AnchorPane architectRoomPane = null;
+	private AnchorPane curatorArtDataPane = null;
+	private AnchorPane curatorArtMovementPane = null;
+	private AnchorPane curatorArtExhibitPane = null;
 	
 	// sous-contrôleurs des différentes sous-fenêtres
 	private LoginControl loginCtrl = null;
 	private ArchitectMuseumControl architectMuseumCtrl = null;
 	private ArchitectFloorControl architectFloorCtrl = null;
 	private ArchitectRoomControl architectRoomCtrl = null;
+	private CuratorArtDataControl curatorArtDataCtrl = null;
+	private CuratorArtMovementControl curatorArtMovementCtrl = null;
+	private CuratorArtExhibitControl curatorArtExhibitCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -82,29 +100,44 @@ public class Main extends Application {
 	private ObservableList<DisplayArtType> displayArtTypeData = FXCollections.observableArrayList();
 	private ObservableList<Display> displayData = FXCollections.observableArrayList();
 	private ObservableList<DisplayType> displayTypeData = FXCollections.observableArrayList();
-	private ObservableList<Door> doorData = FXCollections.observableArrayList();
 	private ObservableList<Floor> floorData = FXCollections.observableArrayList();
 	private ObservableList<Museum> museumData = FXCollections.observableArrayList();
 	private ObservableList<Role> roleData = FXCollections.observableArrayList();
 	private ObservableList<Room> roomData = FXCollections.observableArrayList();
 	private ObservableList<User> userData = FXCollections.observableArrayList();	
-	private ObservableList<Surface> zoneData = FXCollections.observableArrayList();
+	private ObservableList<Surface> surfaceData = FXCollections.observableArrayList();
+	private ObservableList<Art> surfaceArtsData = FXCollections.observableArrayList();
+	private ObservableList<Art> roomArtsData = FXCollections.observableArrayList();
+	private ObservableList<Display> surfaceDisplaysData = FXCollections.observableArrayList();
+	private ObservableList<Display> roomDisplaysData = FXCollections.observableArrayList();
+	private ObservableList<Surface> roomSurfacesData = FXCollections.observableArrayList();
+	private ObservableList<Display> compatibleExistingDisplays = FXCollections.observableArrayList();
+	private ObservableList<DisplayModel> compatibleDisplayModels = FXCollections.observableArrayList();
 	
 	// éléments de la vue
 	@FXML
+	private Button btnQuit;
+	@FXML
+	private Button btnDisconnect;
+	@FXML
+	private ImageView imgLogo;
+	@FXML
 	private Label lblNotification;
+	@FXML
+	private Label lblRoleStatus;
 	@FXML
 	private MenuBar menu_bar;
 	@FXML
-	private Menu art_menu;
-	
+	private Menu curator_menu;
+	@FXML
+	private Menu architect_menu;
+
+
 	/**
 	 * constructeur du contrôleur principal 
 	 */
 	public Main() {
 		super();
-		// TODO pourquoi les lignes ci-dessous, déjà ?
-		// ah, parce que je vais en avoir besoin pour tester les login/mdp entrés dans Login
 		this.roleData = getRoleData();
 		this.userData = getUserData();
 	}
@@ -210,19 +243,6 @@ public class Main extends Application {
 	 * construit une liste d'observables exploitable par une vue JavaFX
 	 * @return
 	 */
-	public ObservableList<Door> getDoorData() {
-		doorData = FXCollections.observableArrayList();
-		List<Door> doors = DoorDAO.getInstance().readAll();
-		for (Door door : doors) {
-			doorData.add(door);
-		}
-		return doorData;
-	}
-	
-	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
-	 * @return
-	 */
 	public ObservableList<Floor> getFloorData() {
 		floorData = FXCollections.observableArrayList();
 		List<Floor> floors = FloorDAO.getInstance().readAll();
@@ -288,13 +308,108 @@ public class Main extends Application {
 	 * construit une liste d'observables exploitable par une vue JavaFX
 	 * @return
 	 */
-	public ObservableList<Surface> getzoneData() {
-		zoneData = FXCollections.observableArrayList();
-		List<Surface> zones = SurfaceDAO.getInstance().readAll();
-		for (Surface zone : zones) {
-			zoneData.add(zone);
+	public ObservableList<Surface> getsurfaceData() {
+		surfaceData = FXCollections.observableArrayList();
+		List<Surface> surfaces = SurfaceDAO.getInstance().readAll();
+		for (Surface surface : surfaces) {
+			surfaceData.add(surface);
 		}
-		return zoneData;
+		return surfaceData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param surface
+	 * @return
+	 */
+	public ObservableList<Art> getAllArtsOfSurface(Room room, int surfaceNb) {
+		surfaceArtsData = FXCollections.observableArrayList();
+		List<Surface> roomSurfaces = SurfaceDAO.getInstance().readAllSurfacesOfRoom(room.getId_room());
+		Surface surface = roomSurfaces.get(surfaceNb);
+		List<Art> arts = ArtDAO.getInstance().readAllArtsOfSurface(surface.getId_surface());
+		for (Art art : arts) {
+			surfaceArtsData.add(art);
+		}
+		return surfaceArtsData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param room
+	 * @return
+	 */
+	public ObservableList<Art> getAllArtsOfRoom(Room room) {
+		roomArtsData = FXCollections.observableArrayList();
+		List<Art> arts = ArtDAO.getInstance().readAllArtsOfRoom(room.getId_room());
+		for (Art art : arts) {
+			roomArtsData.add(art);
+		}
+		return roomArtsData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param room
+	 * @return
+	 */
+	public ObservableList<Display> getAllDisplaysOfSurface(Room room, int surfaceNb) {
+		surfaceDisplaysData = FXCollections.observableArrayList();
+		List<Surface> roomSurfaces = SurfaceDAO.getInstance().readAllSurfacesOfRoom(room.getId_room());
+		Surface surface = roomSurfaces.get(surfaceNb);
+		List<Display> displays = DisplayDAO.getInstance().readAllDisplaysOfSurface(surface.getId_surface());
+		for (Display display : displays) {
+			surfaceDisplaysData.add(display);
+		}
+		return surfaceDisplaysData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param room
+	 * @return
+	 */
+	public ObservableList<Display> getAllDisplaysOfRoom(Room room) {
+		roomDisplaysData = FXCollections.observableArrayList();
+		List<Display> displays = DisplayDAO.getInstance().readAllDisplaysOfRoom(room.getId_room());
+		for (Display display : displays) {
+			roomDisplaysData.add(display);
+		}
+		return roomDisplaysData;
+	}
+	
+	/**
+	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * @param room
+	 * @return
+	 */
+	public ObservableList<Surface> getAllSurfacesOfRoom(Room room) {
+		roomSurfacesData = FXCollections.observableArrayList();
+		List<Surface> surfaces = room.getSurfaces();
+		for (Surface surface : surfaces) {
+			roomSurfacesData.add(surface);
+		}
+		return roomSurfacesData;
+	}
+	
+	
+	public ObservableList<Display> getAllCompatibleExistingDisplays(Surface surface, Art art) {
+		compatibleExistingDisplays = FXCollections.observableArrayList();
+		List<Display> displays = DisplayDAO.getInstance().
+				readAllExistingCompatibleDisplaysOfSurface(surface.getId_surface(), art.getArt_type().getId_Art_type());
+		for (Display display : displays) {
+			compatibleExistingDisplays.add(display);
+		}
+		return compatibleExistingDisplays;
+	}
+	
+	public ObservableList<DisplayModel> getAllCompatibleDisplayModels(Surface surface, Art art) {
+		compatibleDisplayModels = FXCollections.observableArrayList();
+		List<DisplayModel> displayModels = DisplayModelDAO.getInstance().
+				readAllCompatibleDisplayModels(surface.getSurface_type().getId_surface_type(), art.getArt_type().getId_Art_type());
+		for (DisplayModel displayModel : displayModels) {
+			compatibleDisplayModels.add(displayModel);
+		}
+		return compatibleDisplayModels;
 	}
 	
 	/**
@@ -302,7 +417,11 @@ public class Main extends Application {
 	 * @return l'objet Musée correspondant au musée actuel
 	 */
 	public Museum getCurrentMuseum() {
-		return currentMuseum;
+		try {
+			return currentMuseum;
+		} catch (Exception e){
+			return null;
+		}
 	}
 	
 	/**
@@ -319,35 +438,80 @@ public class Main extends Application {
 	}
 	
 	/**
+	 * retourne les informations détaillées d'une œuvre (inclut image)
+	 * @param id_art
+	 * @return
+	 */
+	public Art getFullArtData(int id_art) {
+		Art fullArt = ArtDAO.getInstance().read(id_art);
+		return fullArt;
+	}
+	
+	/**
+	 * retourne le nombre d'étages dans le musée
+	 * @return
+	 */
+	public int getFloorCount() {
+		int floorCount = FloorDAO.getInstance().getFloorCount();
+		return floorCount;
+	}
+	
+	/**
+	 * retourne le nombre de salle dans le musée
+	 * @return
+	 */
+	public int getRoomCount() {
+		int roomCount = RoomDAO.getInstance().getRoomCount();
+		return roomCount;
+	}
+	
+	/**
 	 * à la demande d'un des sous-contrôleurs, affiche une notification
 	 */
-	public void notifyFail() {
+	public void notifyFail(String body) {
 		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
 			notifWindow.initModality(Modality.APPLICATION_MODAL);
-			notifWindow.setTitle("Échec de l'enregistrement");
 		};		
 		try {
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotifFail.fxml"));
+			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
 			// passage de ce contrôleur à la vue
 			loader.setController(this);
 			dialogFail = (Pane)loader.load();
 			// affichage de la fenêtre pop-up
 			Scene scene = new Scene(dialogFail);
+			notifWindow.setTitle(NTF_TITLE_FORM_NG);
+			String message = NTF_BODY_FORM_NG;
+			if (body != null) {
+				message = body;
+			}
+			lblNotification.setText(message);
 			notifWindow.setScene(scene);
 			notifWindow.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * transmet à curatorArtDataCtrl la demande de curatorAuthorSelectCtrl de mettre à jour l'auteur d'une œuvre 
+	 * @param author
+	 */
+	public void setAuthor(Author author) {
+		curatorArtDataCtrl.setAuthor(author);
+	}
 		
 	/// Méthodes d'ajout dans la base (add)
 	
+	/**
+	 * demande à la DAO d'ajouter un musée dans la base
+	 * @param name
+	 */
 	public void addMuseum(String name) {
 		Museum museum = new Museum(name);
 		if (MuseumDAO.getInstance().create(museum)) {
-			architectMuseumCtrl.notifyMuseumSaved("Le musée été créé.");
+			architectMuseumCtrl.notifyMuseumSaved(NTF_TITLE_SAVE_OK, "Le musée été créé.");
 			setCurrentMuseum();
 		} else {
 			// TODO gérer ça avec une exception, ou je sais pas, à voir
@@ -355,38 +519,55 @@ public class Main extends Application {
 		}
 	}
 	
+	/**
+	 * demande à la DAO d'ajouter un étage dans la base
+	 * @param name
+	 * @param dim_x
+	 * @param dim_y
+	 */
 	public void addFloor(String name, int dim_x, int dim_y) {
-		Floor floor = new Floor(name, dim_x, dim_y);
+		Floor floor = new Floor(name, dim_x, dim_y, null);
 		if (FloorDAO.getInstance().create(floor)) {
-			architectFloorCtrl.notifyFloorSaved("L'étage a été créé.");
+			architectFloorCtrl.notifyFloorSaved(NTF_TITLE_SAVE_OK, "L'étage a été créé.");
 		} else {
 			// TODO gérer ça avec une exception, ou je sais pas, à voir
 			System.out.println("Impossible de créer l'étage");
 		}
 	}
 	
+	// TODO revoir la logique de création des surfaces liées à la salle
+	/**
+	 * demande à la DAO d'ajouter une salle dans la base
+	 * @param name
+	 * @param floor
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param pos_x
+	 * @param pos_y
+	 */
 	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);
+		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, null);
 		try {
 			if (RoomDAO.getInstance().create(room)) {
 				// création de la surface de type Sol
-				// TODO je sais que c'est le type 2, mais un enum serait sûrement préférable
-				// pour récupérer l'info
+				// TODO je sais que c'est le type 2, mais ça manque de transparence
 				SurfaceType surfaceType = SurfaceTypeDAO.getInstance().read(2);
-				Surface surface = new Surface(room, dim_x, dim_y, 0, surfaceType, 0);
+				Surface surface = new Surface(room, "sol", dim_x, dim_y, 0, surfaceType, 0, null);
 				if (SurfaceDAO.getInstance().create(surface)) {
 					// si la création du sol a réussi, création des surfaces Mur
 					for (int i = 1; i < 5; i++) {
 						surfaceType = SurfaceTypeDAO.getInstance().read(1);
+						String nom = "mur " + i;
 						if (i%2 == 1) { // mur impair 
-							surface = new Surface(room, dim_x, 0, dim_z, surfaceType, i);
+							surface = new Surface(room, nom, dim_x, 0, dim_z, surfaceType, i, null);
 						}
 						else {          // mur pair
-							surface = new Surface(room, dim_y, 0, dim_z, surfaceType, i);
+							surface = new Surface(room, nom, dim_y, 0, dim_z, surfaceType, i, null);
 						}
 						SurfaceDAO.getInstance().create(surface);
 					}
-					architectRoomCtrl.notifyRoomSaved("La salle été créée.");
+					architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle été créée.");
 				}
 			}			
 		} catch (Exception e) {
@@ -394,54 +575,126 @@ public class Main extends Application {
 		}		
 	}
 	
+	/**
+	 * demande à la DAO d'ajouter une œuvre dans la base
+	 * @param art_code
+	 * @param art_title
+	 * @param creation_date
+	 * @param materials
+	 * @param dim_x
+	 * @param dim_y
+	 * @param dim_z
+	 * @param image
+	 * @param author
+	 * @param art_status
+	 * @param art_type
+	 */
+	public void addArt(String art_code, String art_title, String creation_date,
+			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
+			ArtStatus art_status, ArtType art_type, Display display) {
+		// par défaut, une œuvre est placée "En réserve" (id_art_status = 1)
+		// et elle n'a pas de présentoir (display = null)
+		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
+		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
+				author, artStatus, art_type, null);
+		if (ArtDAO.getInstance().create(art)) {
+			curatorArtDataCtrl.notifyArtSaved(NTF_TITLE_SAVE_OK, "L'œuvre a été ajoutée à la base de données");
+		}		
+	}
+		
+	/**
+	 * demande à la DAO d'ajouter un auteur dans la base
+	 * @param last_name
+	 * @param first_name
+	 * @param additional_name
+	 * @param dates
+	 */
+	public void addAuthor(String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().create(author)) {
+			curatorArtDataCtrl.notifyAuthorSaved(NTF_TITLE_SAVE_OK, "L'auteur a été enregistré");
+		}		
+	}
+		
 	
 	/// Méthodes de modification de la base (update)
 	
 	public void updateMuseum(int id_museum, String museum_name) {
 		Museum museum = new Museum(id_museum, museum_name);
 		if (MuseumDAO.getInstance().update(museum)) {
-			architectMuseumCtrl.notifyMuseumSaved("Le nom du musée a été modifié");
+			architectMuseumCtrl.notifyMuseumSaved(NTF_TITLE_SAVE_OK, "Le nom du musée a été modifié");
 			// mise à jour du musée actuel avec les dernières infos
 			setCurrentMuseum();
 		}
 	}
 	
 	public void updateFloor(int id_floor, String name, int dim_x, int dim_y) {
-		Floor floor = new Floor(id_floor, name, dim_x, dim_y);
+		Floor floor = new Floor(id_floor, name, dim_x, dim_y, null);
 		if (FloorDAO.getInstance().update(floor)) {
-			architectFloorCtrl.notifyFloorSaved("L'étage a été modifié");
+			architectFloorCtrl.notifyFloorSaved(NTF_TITLE_SAVE_OK, "L'étage a été modifié");
 		}	
 	}
 	
-	public void updateRoom(int id_room, String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
+	public boolean updateRoomSurfaces(int id_room, int newDim_x, int newDim_y, int newDim_z) {
 		try {
-			Room room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor);		
-			if (RoomDAO.getInstance().update(room)) {
-				List<Surface> surfaces = SurfaceDAO.getInstance().readRoomSurfaces(id_room);
-				Surface newSurface = null;
-				for (Surface oldSurface : surfaces) {
-					// si c'est un sol
-					if (oldSurface.getSurface_type().getId_surface_type() == 2) {
-						newSurface = new Surface(oldSurface.getId_surface(), room, dim_x, dim_y, 0, oldSurface.getSurface_type(), oldSurface.getNumber());
+			Room room = RoomDAO.getInstance().read(id_room);
+			List<Surface> roomSurfaces = room.getSurfaces();
+			Surface newSurface = null;
+			for (Surface oldSurface : roomSurfaces) {
+				// si c'est un sol
+				if (oldSurface.getSurface_type().getId_surface_type() == 2) {
+					newSurface = new Surface(oldSurface.getId_surface(), room, oldSurface.getName(),
+							newDim_x, newDim_y, 0, oldSurface.getSurface_type(), oldSurface.getNumber(), null);
+				}
+				// si c'est un mur					
+				else {
+					int wallNb = oldSurface.getNumber();
+					if (wallNb %2 == 1) {  // mur impair
+						newSurface = new Surface(oldSurface.getId_surface(), room, oldSurface.getName(),
+								newDim_x, 0, newDim_z, oldSurface.getSurface_type(), oldSurface.getNumber(), null);
 					}
-					// si c'est un mur					
 					else {
-						int wallNb = oldSurface.getNumber();
-						if (wallNb %2 == 1) {  // mur impair
-							newSurface = new Surface(oldSurface.getId_surface(), room, dim_x, 0, dim_z, oldSurface.getSurface_type(),
-									oldSurface.getNumber());
-						}
-						else {
-							newSurface = new Surface(oldSurface.getId_surface(), room, dim_y, 0, dim_z, oldSurface.getSurface_type(),
-									oldSurface.getNumber());
-						}						
-					}
-					SurfaceDAO.getInstance().update(newSurface);
-				}				
-				architectRoomCtrl.notifyRoomSaved("La salle a été modifiée");
+						newSurface = new Surface(oldSurface.getId_surface(), room, oldSurface.getName(),
+								newDim_y, 0, newDim_z, oldSurface.getSurface_type(), oldSurface.getNumber(), null);
+					}						
+				}
+				SurfaceDAO.getInstance().update(newSurface);
+			}
+		return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;			
+		}		
+	}
+	
+	public void updateRoom(int id_room, String name, Floor floor, int dim_x, int dim_y, int dim_z,
+			int pos_x, int pos_y) {
+		try {
+			// on essaye d'abord de mettre à jour les surfaces
+			if (this.updateRoomSurfaces(id_room, dim_x, dim_y, dim_z)) {
+				List<Surface> newSurfaces = SurfaceDAO.getInstance().readAllSurfacesOfRoom(id_room);
+				Room room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, newSurfaces);
+				RoomDAO.getInstance().update(room);
+				architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle a été modifiée");
 			}
 		} catch (Exception e) {
 			System.out.println("Impossible de modifier la salle");
+		}		
+	}
+	
+	public void updateArt(int art_id, String art_code, String art_title, String creation_date, String materials, int dim_x,
+			int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status, ArtType art_type, Display display) {
+		Art art = new Art(art_id, art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
+				author, art_status, art_type, display);
+		if (ArtDAO.getInstance().update(art)) {
+			curatorArtDataCtrl.notifyArtSaved(NTF_TITLE_SAVE_OK, "L'œuvre a été modifiée");
+		}		
+	}
+	
+	public void updateAuthor(int id_author, String last_name, String first_name, String additional_name, String dates) {
+		Author author = new Author(id_author, last_name, first_name, additional_name, dates);
+		if (AuthorDAO.getInstance().update(author)) {
+			curatorArtDataCtrl.notifyAuthorSaved(NTF_TITLE_SAVE_OK, "L'auteur a été enregistré");
 		}		
 	}
 	
@@ -457,9 +710,11 @@ public class Main extends Application {
 		// TODO
 	}
 	public void deleteRoom(int id_room) {
+		// TODO à terme, regarder si la salle contient des oeuvres;
+		// Si oui, avertir que les oeuvres retourneront dans la réserve
 		Room room = RoomDAO.getInstance().read(id_room);
 		if (RoomDAO.getInstance().delete(room)) {
-			architectRoomCtrl.notifyRoomSaved("La salle a été supprimée");
+			architectRoomCtrl.notifyRoomSaved(NTF_TITLE_SAVE_OK, "La salle a été supprimée");
 		}
 	}
 
@@ -492,7 +747,12 @@ public class Main extends Application {
 			loader.setController(this);
 			mainWindowRoot = (BorderPane)loader.load();
 			// affichage de la fenêtre principale
-			Scene scene = new Scene(mainWindowRoot);
+			double height = Screen.getPrimary().getBounds().getHeight();   
+			double width = Screen.getPrimary().getBounds().getWidth();   
+			Scene scene = new Scene(mainWindowRoot, width, height);
+			imgLogo.setImage(new Image("/img/logo_bandw.png"));
+			btnQuit.setLayoutX(width-150);
+			btnDisconnect.setLayoutX(btnQuit.getLayoutX()-150);
 			mainWindow.setScene(scene);
 			mainWindow.show();
 		} catch (IOException e) {
@@ -514,8 +774,12 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.loginCtrl.setMainControl(this);
 			}
+			// définition des menus accessibles
+			menu_bar.setVisible(false);
+			menu_bar.prefWidthProperty().bind(mainWindow.widthProperty());			
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(loginPane);
+			lblRoleStatus.setText("Non connecté");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -537,14 +801,15 @@ public class Main extends Application {
 			}
 			// définition du musée courant
 			setCurrentMuseum();
+			// rafraîchissement des données de la sous-fenêtre
+			this.architectMuseumCtrl.refreshData();
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
-			// rafraîchissement des données pour cette sous-fenêtre
-			architectMuseumCtrl.refreshData();
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectMuseumPane);
-
+			lblRoleStatus.setText("Connecté avec le rôle Architecte");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -564,14 +829,14 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.architectFloorCtrl.setMainControl(this);
 			}
+			// rafraîchissement des données de la sous-fenêtre
+			this.architectFloorCtrl.refreshData();
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectFloorPane);
-			// rafraîchissement des données
-			architectFloorCtrl.refreshData();
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -591,12 +856,97 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.architectRoomCtrl.setMainControl(this);
 			}
+			// rafraîchissement des données de la sous-fenêtre
+			this.architectRoomCtrl.refreshData();
 			// définition des menus accessibles
 			menu_bar.setVisible(true);
-			art_menu.setVisible(false);
+			architect_menu.setVisible(true);
+			curator_menu.setVisible(false);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectRoomPane);
-
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre ArtData du rôle "conservateur"
+	 */
+	public void showCuratorArtDataPane() {
+		try {
+			if (curatorArtDataPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/CuratorArtData.fxml"));
+				curatorArtDataPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.curatorArtDataCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.curatorArtDataCtrl.setMainControl(this);
+			}
+			// rafraîchissement des données de la sous-fenêtre
+			this.curatorArtDataCtrl.refreshData();
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(curatorArtDataPane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre ArtMovement du rôle "conservateur"
+	 */
+	public void showCuratorArtMovementPane() {
+		try {
+			if (curatorArtMovementPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/CuratorArtMovement.fxml"));
+				curatorArtMovementPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.curatorArtMovementCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.curatorArtMovementCtrl.setMainControl(this);
+			}
+			// rafraîchissement des données de la sous-fenêtre
+			this.curatorArtMovementCtrl.refreshData();
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(curatorArtMovementPane);
+			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre ArtExhibit du rôle "conservateur"
+	 */
+	public void showCuratorArtExhibitPane() {
+		try {
+			if (curatorArtExhibitPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/CuratorArtExhibit.fxml"));
+				curatorArtExhibitPane = (AnchorPane)loader.load();
+				// récupération du contrôleur de la vue
+				this.curatorArtExhibitCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.curatorArtExhibitCtrl.setMainControl(this);
+			}
+			// rafraîchissement des données de la sous-fenêtre
+			this.curatorArtExhibitCtrl.refreshData();
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(curatorArtExhibitPane);
+			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -607,8 +957,26 @@ public class Main extends Application {
 	 * @param e
 	 */
 	@FXML
-	private void confirmFail(ActionEvent e) {
+	private void confirm(ActionEvent e) {
 		notifWindow.close();
+	}
+	
+	/**
+	 * event listener du bouton "Quitter" de la bannière
+	 * @param e
+	 */
+	@FXML
+	private void handleQuit(ActionEvent e) {
+		Platform.exit();
+	}
+	
+	/**
+	 * event listener du bouton "Se déconnecter" de la bannière
+	 * @param e
+	 */
+	@FXML
+	private void handleDisconnect(ActionEvent e) {
+		this.showLoginPane();
 	}
 			
 	/**

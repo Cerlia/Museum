@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
@@ -17,7 +18,7 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleRoomTableAction" prefHeight="450.0" prefWidth="350.0">
+      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onMouseClicked="#handleRoomTableAction" onKeyReleased="#handleRoomTableKeyPressed" prefHeight="450.0" prefWidth="350.0">
         <columns>
           <TableColumn fx:id="nameColumn" prefWidth="122.39999389648438" text="Nom" />
           <TableColumn fx:id="floorColumn" prefWidth="156.0000457763672" text="Étage" />
@@ -68,11 +69,23 @@
             <Label fx:id="lblPosX" layoutX="145.0" layoutY="244.0" prefHeight="18.0" prefWidth="191.0" />
             <Label alignment="CENTER_RIGHT" layoutX="60.0" layoutY="93.0" prefHeight="18.0" prefWidth="75.0" text="Étage" />
             <Label fx:id="lblFloorName" layoutX="149.0" layoutY="93.0" prefHeight="18.0" prefWidth="191.0" />
-            <Button layoutX="410.0" layoutY="45.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
-            <Button layoutX="481.0" layoutY="116.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
-            <Button layoutX="410.0" layoutY="186.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
-            <Button layoutX="339.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
-            <Button layoutX="424.0" layoutY="87.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="83.0" text="Sol" />
+            <Button fx:id="btnWall1" layoutX="410.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 1" />
+            <Button fx:id="btnWall2" layoutX="481.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" text="Mur 2" />
+            <Button fx:id="btnWall3" layoutX="410.0" layoutY="186.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" text="Mur 3" />
+            <Button fx:id="btnWall4" layoutX="339.0" layoutY="115.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" text="Mur 4" />
+            <Button fx:id="btnFloor" layoutX="424.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" text="Sol" />
+            <Pane fx:id="pneSurfaceInfo" layoutX="344.0" layoutY="238.0" prefHeight="202.0" prefWidth="250.0" visible="false">
+               <children>
+                  <Label layoutX="96.0" layoutY="15.0" text="Nom" />
+                  <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="46.0" prefHeight="17.0" prefWidth="110.0" text="Longueur (x) en cm" />
+                  <Label alignment="CENTER_RIGHT" layoutX="25.0" layoutY="76.0" prefHeight="17.0" prefWidth="99.0" text="Largeur (y) en cm" />
+                  <Label alignment="CENTER_RIGHT" layoutX="25.0" layoutY="108.0" prefHeight="17.0" prefWidth="99.0" text="Hauteur (z) en cm" />
+                  <Label fx:id="lblSurfaceName" layoutX="139.0" layoutY="15.0" prefHeight="17.0" prefWidth="83.0" />
+                  <Label fx:id="lblSurfaceX" layoutX="139.0" layoutY="46.0" prefHeight="17.0" prefWidth="90.0" />
+                  <Label fx:id="lblSurfaceY" layoutX="139.0" layoutY="76.0" prefHeight="17.0" prefWidth="90.0" />
+                  <Label fx:id="lblSurfaceZ" layoutX="139.0" layoutY="108.0" prefHeight="17.0" prefWidth="83.0" />
+               </children>
+            </Pane>
          </children>
       </AnchorPane>
    </children>

@@ -6,7 +6,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="243.0" prefWidth="423.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="lblNotification" alignment="CENTER" contentDisplay="CENTER" layoutX="37.0" layoutY="88.0" prefHeight="17.0" prefWidth="348.0" text="" textAlignment="CENTER" />
-      <Button layoutX="195.0" layoutY="130.0" mnemonicParsing="false" onAction="#confirmFloorCreated" text="OK" />
+      <Label fx:id="lblNotification" alignment="CENTER" contentDisplay="CENTER" layoutX="11.0" layoutY="68.0" prefHeight="56.0" prefWidth="399.0" text="" textAlignment="CENTER" wrapText="true" />
+      <Button layoutX="195.0" layoutY="149.0" mnemonicParsing="false" onAction="#confirm" text="OK" />
    </children>
 </Pane>
