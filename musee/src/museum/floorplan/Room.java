@@ -6,13 +6,41 @@ public class Room {
 	private int id_room;
 	private String name;
 	private int dim_x;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
+	public void setDim_z(int dim_z) {
+		this.dim_z = dim_z;
+	}
+
+	public void setPos_x(int pos_x) {
+		this.pos_x = pos_x;
+	}
+
+	public void setPos_y(int pos_y) {
+		this.pos_y = pos_y;
+	}
+
+	public void setFloor(Floor floor) {
+		this.floor = floor;
+	}
+
 	private int dim_y;
 	private int dim_z;
 	private int pos_x;
 	private int pos_y;
 	private Floor floor;
 	private List<Surface> surfaces;
-	
+
 	/**
 	 * constructor for Room if id_room is known
 	 * @param id_room
@@ -99,6 +127,10 @@ public class Room {
 	
 	public List<Surface> getSurfaces() {
 		return surfaces;
+	}
+	
+	public void setSurfaces(List<Surface> surfaces) {
+		this.surfaces = surfaces;
 	}
 	
 	@Override

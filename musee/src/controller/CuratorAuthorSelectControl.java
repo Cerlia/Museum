@@ -1,13 +1,9 @@
 package controller;
 
-import java.io.IOException;
-
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -15,8 +11,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.art.Author;
 
@@ -31,10 +25,8 @@ public class CuratorAuthorSelectControl {
 	private Main mainController;
 	// ligne sélectionnée dans la table des salles, par défaut la première
 	private int selectedAuthorLine = 0;
-	private Stage notifWindow = new Stage();
 	private boolean updatingAuthor = false;
 	private boolean addingAuthor = false;
-	private Pane dialogAuthorSaved;
 	
 	@FXML
 	private Button btnAddAuthor;
@@ -52,8 +44,6 @@ public class CuratorAuthorSelectControl {
 	private Button btnCancelSelectAuthor;
 	@FXML
 	private Label lblAuthorCreatEditTitle;
-	@FXML
-	private Label lblNotification;
 	@FXML
 	private AnchorPane pneAuthorCreatEdit;
 	@FXML
@@ -104,11 +94,20 @@ public class CuratorAuthorSelectControl {
 	/**
 	 * réinitialise la zone de création/modification d'auteur
 	 */
-	private void resetAuthorCreateEdit() {
+	public void resetAuthorCreateEdit() {
+		// rafraîchissement des données
+		refreshData();
+		// réinitialisation des drapeaux d'ajout/modification
+		addingAuthor = false;						
+		updatingAuthor = false;
 		txtAuthorName.setText("");
 		txtAuthorFirstName.setText("");
 		txtAuthorAddName.setText("");
 		txtAuthorDates.setText("");
+		// réinitialisation des champs de la zone d'édition d'auteur
+		resetAuthorCreateEdit();
+		// masquage de la fenêtre de modif
+		hideAuthorEditingPane();
 	}
 	
 	/**
@@ -161,12 +160,11 @@ public class CuratorAuthorSelectControl {
 	 */
 	public void updateAuthor() {
 		Author selectedAuthor = authorTable.getItems().get(selectedAuthorLine);
-		int id_author = selectedAuthor.getId_author();
-		String lastName = txtAuthorName.getText();
-		String firstName = txtAuthorFirstName.getText();
-		String additionalName = txtAuthorAddName.getText();
-		String authorDates = txtAuthorDates.getText();
-		mainController.updateAuthor(id_author, lastName, firstName, additionalName, authorDates);
+		selectedAuthor.setLast_name(txtAuthorName.getText());
+		selectedAuthor.setFirst_name(txtAuthorFirstName.getText());
+		selectedAuthor.setAdditional_name(txtAuthorAddName.getText());
+		selectedAuthor.setDates(txtAuthorDates.getText());
+		mainController.updateAuthor(selectedAuthor);
 	}
 	
 	/**
@@ -178,34 +176,6 @@ public class CuratorAuthorSelectControl {
 		int id_room = selectedRoom.getId_room();
 		mainControler.deleteRoom(id_room);
 		*/
-	}
-	
-	/**
-	 * à la demande du contrôleur principal, affiche une notification
-	 */
-	public void notifyAuthorSaved(String title, String body) {
-		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
-			notifWindow.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			FXMLLoader loader = new FXMLLoader();		// lien avec la vue
-			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));			
-			loader.setController(this);		            // passage de ce contrôleur à la vue
-			dialogAuthorSaved = (Pane)loader.load();			
-			resetAuthorCreateEdit();					// réinitialisation des champs de la zone d'édition d'auteur
-			addingAuthor = false;						// réinitialisation des drapeaux d'ajout/modification
-			updatingAuthor = false;
-			hideAuthorEditingPane();					// masquage de la fenêtre de modif
-			// affichage de la fenêtre pop-up					    
-			Scene scene = new Scene(dialogAuthorSaved);
-			notifWindow.setTitle(title);
-			lblNotification.setText(body);	
-			notifWindow.setScene(scene);
-			notifWindow.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		refreshData();									// récupération de la table mise à jour
 	}
 		
 	
@@ -302,16 +272,6 @@ public class CuratorAuthorSelectControl {
 		else {
 			mainController.notifyFail(null);
 		}	
-	}
-	
-	/**
-	 * event listener du bouton "OK" du pop-up de notification
-	 * @param e
-	 */
-	@FXML
-	private void confirm(ActionEvent e) {
-		activateAuthorControls();
-		notifWindow.close();
 	}
 		
 	/**

@@ -13,6 +13,14 @@ public class ArtStatus {
 		return id_art_status;
 	}
 
+	public void setId_art_status(int id_art_status) {
+		this.id_art_status = id_art_status;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getName() {
 		return name;
 	}

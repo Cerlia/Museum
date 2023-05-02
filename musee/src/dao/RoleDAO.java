@@ -11,7 +11,7 @@ public class RoleDAO extends DAO<Role> {
 	
 	private static final String TABLE = "role";
 	private static final String PK = "id_role";
-	private static final String NAME = "name";
+	private static final String NAME = "role_name";
 	
 	private static RoleDAO instance=null;
 

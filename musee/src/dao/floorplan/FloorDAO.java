@@ -47,9 +47,9 @@ public class FloorDAO extends DAO<Floor> {
 			ResultSet rs = pst.getGeneratedKeys();
 			if (rs.next()) {
 				floor.setId_floor(rs.getInt(1));
+				floor.setRooms(RoomDAO.getInstance().readAllRoomsOfFloor(rs.getInt(1)));
 			}
 			data.put(floor.getId_floor(), floor);
-
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -85,7 +85,6 @@ public class FloorDAO extends DAO<Floor> {
 			pst.setInt(3, floor.getDim_y());
 			pst.setInt(4, floor.getId_floor());
 			pst.executeUpdate();
-			data.put(floor.getId_floor(), floor);
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -107,15 +106,13 @@ public class FloorDAO extends DAO<Floor> {
 				String name = rs.getString(NAME);
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
-				// TODO
-				// revoir cette partie et la commenter dans le compte-rendu d'activité
 				// on crée une liste de salles, vide
 				List<Room> rooms = new ArrayList<Room>();
-				// on crée l'objet Floor, avec cette liste (vide)
+				// on crée l'objet Floor, avec cette liste vide en tant que liste de salles
 				floor = new Floor(id, name, dim_x, dim_y, rooms);		
-				// on stocker l'objet dans la hashmap, ou plus précisément son adresse !
+				// on stocke l'objet dans la hashmap, ou plus précisément son adresse
 				data.put(id, floor);
-				// dans l'objet room (référence à son adresse en mémoire, plus exactement),
+				// dans l'objet rooms (référence à son adresse en mémoire plus exactement),
 				// on ajoute toutes les salles présentes dans cet étage.
 				// Pas besoin de refaire un put ! Ce sont des références qui sont stockées
 				// dans la hashmap. La référence n'a pas changé, seulement le contenu de rooms
@@ -143,24 +140,5 @@ public class FloorDAO extends DAO<Floor> {
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return floors;	
-	}
-
-	/**
-	 * retourne le nombre d'étages du musée
-	 * @return
-	 */
-	public int getFloorCount() {
-		int floorCount = 0;
-		try {			
-			String requete = "SELECT COUNT(*) FROM " + TABLE;
-			ResultSet rs = Connect.executeQuery(requete);
-			while(rs.next()) {
-				floorCount = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			// e.printStackTrace();
-			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
-		}
-		return floorCount;
 	}
 }

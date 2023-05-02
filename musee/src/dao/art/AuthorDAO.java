@@ -77,7 +77,6 @@ public class AuthorDAO extends DAO<Author> {
 			pst.setString(4, author.getDates());
 			pst.setInt(5, author.getId_author());
 			pst.executeUpdate();
-			data.put(author.getId_author(), author);
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();

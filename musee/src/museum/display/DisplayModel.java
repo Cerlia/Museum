@@ -3,6 +3,30 @@ package museum.display;
 public class DisplayModel {
 	private int id_display_model;
 	private String name;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
+	public void setDim_z(int dim_z) {
+		this.dim_z = dim_z;
+	}
+
+	public void setDisplay_multiple(boolean display_multiple) {
+		this.display_multiple = display_multiple;
+	}
+
+	public void setDisplay_type(DisplayType display_type) {
+		this.display_type = display_type;
+	}
+
 	private int dim_x;
 	private int dim_y;
 	private int dim_z;

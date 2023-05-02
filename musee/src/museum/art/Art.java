@@ -13,6 +13,54 @@ public class Art {
 	private int dim_z;
 	private byte[] image;
 	private Author author;
+	public void setArt_code(String art_code) {
+		this.art_code = art_code;
+	}
+
+	public void setArt_title(String art_title) {
+		this.art_title = art_title;
+	}
+
+	public void setCreation_date(String creation_date) {
+		this.creation_date = creation_date;
+	}
+
+	public void setMaterials(String materials) {
+		this.materials = materials;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
+	public void setDim_z(int dim_z) {
+		this.dim_z = dim_z;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public void setAuthor(Author author) {
+		this.author = author;
+	}
+
+	public void setArt_status(ArtStatus art_status) {
+		this.art_status = art_status;
+	}
+
+	public void setArt_type(ArtType art_type) {
+		this.art_type = art_type;
+	}
+
+	public void setDisplay(Display display) {
+		this.display = display;
+	}
+
 	private ArtStatus art_status;
 	private ArtType art_type;
 	private Display display;

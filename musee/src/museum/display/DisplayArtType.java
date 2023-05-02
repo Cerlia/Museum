@@ -4,6 +4,18 @@ import museum.art.ArtType;
 
 public class DisplayArtType {
 	private int id_display_art;
+	public void setId_display_art(int id_display_art) {
+		this.id_display_art = id_display_art;
+	}
+
+	public void setDisplay_type(DisplayType display_type) {
+		this.display_type = display_type;
+	}
+
+	public void setArt_type(ArtType art_type) {
+		this.art_type = art_type;
+	}
+
 	private DisplayType display_type;
 	private ArtType art_type;
 	

@@ -17,7 +17,7 @@ public class RoomDAO extends DAO<Room> {
 	
 	private static final String TABLE = "room";
 	private static final String PK = "id_room";
-	private static final String NAME = "name";
+	private static final String NAME = "room_name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
@@ -57,6 +57,7 @@ public class RoomDAO extends DAO<Room> {
 			ResultSet rs = pst.getGeneratedKeys();
 			if (rs.next()) {
 				room.setId_room(rs.getInt(1));
+				room.setSurfaces(SurfaceDAO.getInstance().readAllSurfacesOfRoom(rs.getInt(1)));
 			}
 			data.put(room.getId_room(), room);
 
@@ -100,7 +101,7 @@ public class RoomDAO extends DAO<Room> {
 			pst.setInt(7, room.getPos_y());
 			pst.setInt(8, room.getId_room());
 			pst.executeUpdate();
-			data.put(room.getId_room(), room);
+			room.setSurfaces(SurfaceDAO.getInstance().reloadSurfacesOfRoom(room.getId_room()));
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -177,24 +178,5 @@ public class RoomDAO extends DAO<Room> {
 			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
 		}
 		return rooms;
-	}
-	
-	/**
-	 * retourne le nombre de salles du musée
-	 * @return
-	 */
-	public int getRoomCount() {
-		int roomCount = 0;
-		try {			
-			String requete = "SELECT COUNT(*) FROM " + TABLE;
-			ResultSet rs = Connect.executeQuery(requete);
-			while(rs.next()) {
-				roomCount = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			// e.printStackTrace();
-			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
-		}
-		return roomCount;
 	}
  }

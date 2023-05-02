@@ -4,6 +4,22 @@ public class Author {
 	private int id_author;
 	private String last_name;
 	private String first_name;
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
+	}
+
+	public void setFirst_name(String first_name) {
+		this.first_name = first_name;
+	}
+
+	public void setAdditional_name(String additional_name) {
+		this.additional_name = additional_name;
+	}
+
+	public void setDates(String dates) {
+		this.dates = dates;
+	}
+
 	private String additional_name;
 	private String dates;
 	

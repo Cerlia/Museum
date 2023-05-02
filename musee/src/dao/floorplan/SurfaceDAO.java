@@ -20,7 +20,7 @@ public class SurfaceDAO extends DAO<Surface> {
 	private static final String TABLE = "surface";
 	private static final String PK = "id_surface";
 	private static final String ROOM = "ref_room";
-	private static final String NAME = "name";
+	private static final String NAME = "surface_name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";
@@ -69,9 +69,11 @@ public class SurfaceDAO extends DAO<Surface> {
 		return success;
 	}
 
+	/**
+	 * not used
+	 */
 	@Override
 	public boolean delete(Surface surface) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -91,7 +93,6 @@ public class SurfaceDAO extends DAO<Surface> {
 			pst.setInt(7, surface.getSurface_type().getId_surface_type());
 			pst.setInt(8, surface.getId_surface());
 			pst.executeUpdate();
-			data.put(surface.getId_surface(), surface);
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -106,29 +107,37 @@ public class SurfaceDAO extends DAO<Surface> {
 			surface=data.get(id_surface);
 		}
 		else {
-			try {
-				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_surface;
-				ResultSet rs = Connect.executeQuery(requete);
-				rs.next();
-				int ref_room = rs.getInt(ROOM);				
-				int ref_surface_type = rs.getInt(TYPE);
-				String name = rs.getString(NAME);
-				int dim_x = rs.getInt(DIMX);
-				int dim_y = rs.getInt(DIMY);
-				int dim_z = rs.getInt(DIMZ);
-				int number = rs.getInt(NB);
-				Room room = RoomDAO.getInstance().read(ref_room);
-				SurfaceType surface_type = SurfaceTypeDAO.getInstance().read(ref_surface_type);
-				List<Display> displays = new ArrayList<Display>();
-				surface = new Surface(id_surface, room, name, dim_x, dim_y, dim_z, surface_type, number, displays);
-				data.put(id_surface, surface);				
-				displays.addAll(DisplayDAO.getInstance().readAllDisplaysOfSurface(id_surface));				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			surface=readFromDB(id_surface);
 		}
 		return surface;
 	}
+
+	private Surface readFromDB(int id_surface) {
+		Surface surface = null;
+		try {
+			String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_surface;
+			ResultSet rs = Connect.executeQuery(requete);
+			rs.next();
+			int ref_room = rs.getInt(ROOM);				
+			int ref_surface_type = rs.getInt(TYPE);
+			String name = rs.getString(NAME);
+			int dim_x = rs.getInt(DIMX);
+			int dim_y = rs.getInt(DIMY);
+			int dim_z = rs.getInt(DIMZ);
+			int number = rs.getInt(NB);
+			Room room = RoomDAO.getInstance().read(ref_room);
+			SurfaceType surface_type = SurfaceTypeDAO.getInstance().read(ref_surface_type);
+			List<Display> displays = new ArrayList<Display>();
+			surface = new Surface(id_surface, room, name, dim_x, dim_y, dim_z, surface_type, number, displays);
+			data.put(id_surface, surface);				
+			displays.addAll(DisplayDAO.getInstance().readAllDisplaysOfSurface(id_surface));				
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return surface;
+	}
+	
+	
 	
 	public List<Surface> readAll() {
 		List<Surface> surfaces = new ArrayList<Surface>();
@@ -162,6 +171,29 @@ public class SurfaceDAO extends DAO<Surface> {
 			while(rs.next()) {
 				int id_surface = rs.getInt(1);
 				surface = SurfaceDAO.getInstance().read(id_surface);
+				surfaces.add(surface);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return surfaces;
+	}
+	
+	/**
+	 * retourne la liste de surfaces d'une salle donnée
+	 * @param id_room
+	 * @return
+	 */
+	public List<Surface> reloadSurfacesOfRoom(int id_room) {
+		List<Surface> surfaces = new ArrayList<Surface>();
+		Surface surface = null;
+		try {
+			String requete = "SELECT * FROM " + TABLE + " WHERE " + ROOM + "= " + id_room;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_surface = rs.getInt(1);
+				surface = SurfaceDAO.getInstance().readFromDB(id_surface);
 				surfaces.add(surface);
 			}
 		} catch (SQLException e) {

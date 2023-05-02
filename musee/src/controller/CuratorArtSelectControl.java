@@ -1,6 +1,7 @@
 package controller;
 
 import application.Main;
+import dao.art.ArtDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -276,11 +277,13 @@ public class CuratorArtSelectControl {
 		Surface surface = chbSurfaceChoice.getItems().get(selectedSurfaceLine);
 		Art art = artTable.getItems().get(selectedArtLine);
 		if (event.getSource().equals(rdoExistingDisplay)) {
+			newDisplay = false;
 			selectedNewDisplayLine = -1;
 			pneExistingDisplay.setVisible(true);			
 			tblExistingDisplay.setItems(mainController.getAllCompatibleExistingDisplays(surface, art));
 			pneNewDisplay.setVisible(false);
 		} else if (event.getSource().equals(rdoNewDisplay)) {
+			newDisplay = true;
 			selectedExistingDisplayLine = -1;
 			pneNewDisplay.setVisible(true);
 			tblNewDisplay.setItems(mainController.getAllCompatibleDisplayModels(surface, art));
@@ -295,7 +298,7 @@ public class CuratorArtSelectControl {
 	 * @param e
 	 */
 	@FXML
-	private void handleCancelSelectArt(ActionEvent e) {
+	private void handleCancelSelectArt(ActionEvent event) {
 		Stage stage = (Stage)btnCancelSelectArt.getScene().getWindow();
 		stage.close();
 	}
@@ -323,6 +326,29 @@ public class CuratorArtSelectControl {
 		DisplayModel displayModel = tblNewDisplay.getItems().get(selectedNewDisplayLine);
 		lblDisplaySelected.setText(displayModel.getName() + " - " +
 				displayModel.getDisplay_type().getName());
+	}
+	
+	public void handleBtnConfirmExhibit(ActionEvent event) {
+		Art selectedArt = artTable.getItems().get(selectedArtLine);;
+		// SI l'œuvre est déjà exposée dans un présentoir pour 1 seule œuvre
+		if (selectedArt.getDisplay() != null && selectedArt.getDisplay().getDisplay_model().isDisplay_multiple() == false) {
+			mainController.deleteDisplay(selectedArt.getDisplay());
+		};
+		Display display = null;
+		// SI le présentoir choisi existe déjà
+		if (newDisplay == false) {
+			display = tblExistingDisplay.getItems().get(selectedExistingDisplayLine);
+		}				
+		// SI le présentoir choisi est nouveau
+		if (newDisplay == true) {
+			Surface surface = chbSurfaceChoice.getItems().get(selectedSurfaceLine);
+			DisplayModel dispMod = tblNewDisplay.getItems().get(selectedNewDisplayLine);
+			display = mainController.addDisplay(selectedArt, dispMod, surface, txtDisplayName.getText());
+		};
+		// Dans tous les cas, update de l'œuvre avec la référence du présentoir
+		selectedArt.setDisplay(display);
+		display.setArts(ArtDAO.getInstance().reloadArtsOfDisplay(selectedArt.getDisplay().getId_display()));
+		mainController.updateArt(selectedArt, "artExhibit");		
 	}
 	
 	/**

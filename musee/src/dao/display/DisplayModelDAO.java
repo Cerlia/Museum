@@ -15,7 +15,7 @@ public class DisplayModelDAO extends DAO<DisplayModel> {
 	
 	private static final String TABLE = "display_model";
 	private static final String PK = "id_display_model";
-	private static final String NAME = "name";
+	private static final String NAME = "display_model_name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
 	private static final String DIMZ = "dim_z";

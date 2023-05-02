@@ -4,6 +4,10 @@ public class Museum {
 	private int id_museum;
 	private String museum_name;
 	
+	public void setMuseum_name(String museum_name) {
+		this.museum_name = museum_name;
+	}
+
 	/**
 	 * constructor for Museum if id_museum is known
 	 * @param id_museum

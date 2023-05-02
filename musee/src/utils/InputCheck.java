@@ -26,7 +26,7 @@ public class InputCheck {
 	 * check if file size does not exceed given size (in bytes)
 	 * @param file
 	 * @param size
-	 * @return true is file does not exceed given size
+	 * @return true if file does not exceed given size
 	 */
 	public static boolean CheckFileSize(File file, int size) {
 		boolean result = false;

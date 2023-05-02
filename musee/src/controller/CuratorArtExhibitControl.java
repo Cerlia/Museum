@@ -32,7 +32,6 @@ public class CuratorArtExhibitControl {
 	private Main mainController;
 	// ligne sélectionnée dans la table des salles, par défaut aucune
 	private int selectedRoomLine = -1;
-	private Stage notifWindow = new Stage();
 	private int selectedSurface = -1;
 	private Stage stgArtSelect = new Stage();
 	private CuratorArtSelectControl artSelectCtrl = null;
@@ -65,9 +64,9 @@ public class CuratorArtExhibitControl {
 	@FXML
 	private Button confirmArtSaved;
 	@FXML
-	private Label lblNotification;
-	@FXML
 	private Label lblDisplayedArtPaneTitle;
+	@FXML
+	private Label lblPaneTitle;
 	@FXML
 	private ChoiceBox<Room> chbRoom;
 	@FXML
@@ -222,15 +221,6 @@ public class CuratorArtExhibitControl {
 	}
 	
 	/**
-	 * event listener du bouton "OK" du pop-up de notification
-	 * @param e
-	 */
-	@FXML
-	private void confirm(ActionEvent e) {
-		notifWindow.close();
-	}
-	
-	/**
 	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée
 	 */
 	@FXML
@@ -314,5 +304,9 @@ public class CuratorArtExhibitControl {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void closeArtSelectStage() {
+		stgArtSelect.close();
 	}
 }

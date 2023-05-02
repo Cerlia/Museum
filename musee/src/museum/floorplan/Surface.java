@@ -7,6 +7,38 @@ import museum.display.Display;
 public class Surface {
 	private int id_surface;
 	private Room room;
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
+	public void setSurface_type(SurfaceType surface_type) {
+		this.surface_type = surface_type;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
+	public void setDim_z(int dim_z) {
+		this.dim_z = dim_z;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	public void setDisplays(List<Display> displays) {
+		this.displays = displays;
+	}
+
 	private SurfaceType surface_type;
 	private String name;
 	private int dim_x;

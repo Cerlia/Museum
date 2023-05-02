@@ -8,18 +8,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<FlowPane columnHalignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtExhibitControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtExhibitControl">
    <children>
-      <Label fx:id="lblPaneTitle" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="43.0" prefWidth="1426.0" style="-fx-background-color: #004024;" text="GESTION DES ŒUVRES EXPOSÉES" textAlignment="JUSTIFY" textFill="WHITE">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
-      <AnchorPane layoutX="-2.0" layoutY="53.0" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="1426.0">
+      <AnchorPane layoutX="-2.0" layoutY="53.0" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="1426.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="53.0">
          <children>
             <Pane layoutX="8.0" layoutY="10.0" prefHeight="534.0" prefWidth="271.0" style="-fx-background-color: #EBEBEB;">
                <children>
@@ -102,5 +96,13 @@
             </Pane>
          </children>
       </AnchorPane>
+      <Pane prefHeight="51.0" prefWidth="1426.0" style="-fx-background-color: #004024;" AnchorPane.bottomAnchor="569.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" layoutX="288.0" layoutY="7.0" prefHeight="42.0" prefWidth="892.0" text="GESTION DES ŒUVRES EXPOSÉES" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="26.0" />
+               </font></Label>
+         </children>
+      </Pane>
    </children>
-</FlowPane>
+</AnchorPane>
