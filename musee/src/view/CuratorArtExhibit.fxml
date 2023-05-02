@@ -47,7 +47,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane layoutX="296.0" layoutY="10.0" prefHeight="534.0" prefWidth="1118.0" style="-fx-background-color: #EBEBEB;">
+            <Pane fx:id="pneExhibit" layoutX="296.0" layoutY="10.0" prefHeight="534.0" prefWidth="1118.0" style="-fx-background-color: #EBEBEB;">
                <children>
                   <TabPane layoutX="22.0" layoutY="68.0" prefHeight="440.0" prefWidth="1067.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -55,7 +55,7 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TableView fx:id="tblArtDisplay" layoutX="20.0" layoutY="20.0" prefHeight="367.0" prefWidth="865.0">
+                                    <TableView fx:id="tblArtDisplay" onMouseClicked="#handleTableArtAction" layoutX="20.0" layoutY="20.0" prefHeight="367.0" prefWidth="865.0">
                                       <columns>
                                         <TableColumn fx:id="tclTitle" maxWidth="600.0" prefWidth="240.0" text="Titre" />
                                         <TableColumn fx:id="tclCode" maxWidth="400.0" minWidth="4.0" prefWidth="100.0" text="Code" />
@@ -65,7 +65,7 @@
                                           <TableColumn fx:id="tclSurfaceArt" maxWidth="300.0" minWidth="4.0" prefWidth="110.0" text="Surface" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btnRemoveArt" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer l'œuvre" />
+                                    <Button fx:id="btnRemoveArt" onAction="#handleBtnRemoveArtAction" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer l'œuvre" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -86,7 +86,6 @@
                                         <TableColumn fx:id="tclSurfaceDisp" maxWidth="300.0" minWidth="0.0" prefWidth="105.0" text="Surface" />                                        
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btnRemoveDisplay" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer le présentoir" />
                                  </children>
                               </AnchorPane>
                         </content>

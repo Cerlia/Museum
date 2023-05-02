@@ -14,7 +14,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import museum.floorplan.Floor;
-import museum.floorplan.Room;
 import utils.MeasureConversion;
 
 public class ArchitectFloorControl {
@@ -97,7 +96,14 @@ public class ArchitectFloorControl {
 	 */
 	public void refreshData() {
 		floorTable.setItems(mainController.getFloorData());
-		showFloorInfo();
+		if (mainController.getFloorData().size() > 0) {
+			selectedFloorLine = 0;
+			floorTable.getSelectionModel().select(0);
+			showFloorInfo();
+		} else {
+			selectedFloorLine = -1;
+			hideFloorInfo();
+		}		
 	}
 	
 	/**
@@ -133,12 +139,14 @@ public class ArchitectFloorControl {
 	 * demande au contrôleur principal de supprimer un étage
 	 */
 	public void deleteFloor() {
-		// TODO en prenant en compte le fait qu'il faut supprimer les salles associées, etc
-		/*
-		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-		int id_room = selectedRoom.getId_room();
-		mainControler.deleteRoom(id_room);
-		*/
+		Floor floor = floorTable.getItems().get(selectedFloorLine);
+		if (mainController.getAllArtsOfFloor(floor).size() > 0) {
+			mainController.notifyInfo("Impossible de supprimer un étage comportant "
+					+ "des œuvres en exposition");
+		} else {
+			mainController.notifyConfirmDelete("Suppression d'étage", "Voulez-vous vraiment "
+					+ "supprimer cet étage et toutes les salles qu'il contient ?", floor);
+		}
 	}
 	
 	/**

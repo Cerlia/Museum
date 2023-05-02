@@ -2,6 +2,7 @@ package application;
 	
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import controller.ArchitectFloorControl;
 import controller.ArchitectMuseumControl;
@@ -35,6 +36,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -76,6 +78,11 @@ public class Main extends Application {
 			"Vérifiez les données saisies, puis réessayez.";
 	private final String NTF_TITLE_SAVE_OK = "Confirmation d'enregistrement";
 	private final String NTF_BODY_SAVE_OK = "Les données ont bien été enregistrées";
+	private final String NTF_TITLE_INFO = "Action impossible";
+	private final String NTF_BODY_INFO = "Une ligne doit être sélectionnée";
+	private final String NTF_TITLE_CONFIRM = "Demande de confirmation";
+	private final String APPICON = "/img/icon2.png";
+
 	
 	// sous-fenêtres
 	private AnchorPane loginPane = null;
@@ -316,7 +323,7 @@ public class Main extends Application {
 	 * construit une liste d'observables exploitable par une vue JavaFX
 	 * @return
 	 */
-	public ObservableList<Surface> getsurfaceData() {
+	public ObservableList<Surface> getSurfaceData() {
 		surfaceData = FXCollections.observableArrayList();
 		List<Surface> surfaces = SurfaceDAO.getInstance().readAll();
 		for (Surface surface : surfaces) {
@@ -522,6 +529,7 @@ public class Main extends Application {
 	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
 		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, null);	
 		if (RoomDAO.getInstance().create(room)) {
+			floor.setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(floor.getId_floor()));
 			this.notifySuccess("La salle a été créée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -636,6 +644,9 @@ public class Main extends Application {
 				curatorArtExhibitCtrl.refreshData();
 				curatorArtExhibitCtrl.closeArtSelectStage();
 				break;
+			case "artRemoval":
+				this.notifySuccess("L'œuvre a été replacée dans la réserve.");
+				curatorArtExhibitCtrl.refreshData();
 			}
 		} else {
 			this.notifyFail("Impossible de modifier l'œuvre");
@@ -658,13 +669,20 @@ public class Main extends Application {
 		this.currentMuseum = null;
 	}
 	
-	public void deleteFloor() {
-		// TODO
+	public void deleteFloor(Floor floor) {
+		if (FloorDAO.getInstance().delete(floor)) {
+			this.notifySuccess("L'étage a été supprimé.");
+			architectFloorCtrl.resetFloorCreateEdit();
+		} else {
+		this.notifyFail("Impossible de supprimer l'étage");
+		}
 	}
 	
 	public void deleteRoom(int id_room) {
 		Room room = RoomDAO.getInstance().read(id_room);
-		if (RoomDAO.getInstance().delete(room)) {
+		Floor floor = room.getFloor();
+		if (RoomDAO.getInstance().delete(room)) {	
+			floor.setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(floor.getId_floor()));
 			this.notifySuccess("La salle a été supprimée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -672,10 +690,17 @@ public class Main extends Application {
 		}
 	}
 	
-	public boolean deleteDisplay(Display display) {
-		return DisplayDAO.getInstance().delete(display);
+	public void deleteDisplay(Display display) {
+		Surface surface = display.getSurface();
+		if (DisplayDAO.getInstance().delete(display)) {
+			surface.setDisplays(DisplayDAO.getInstance().readAllDisplaysOfSurface(surface.getId_surface()));
+			this.notifySuccess("Le présentoir a été supprimé");
+			curatorArtExhibitCtrl.refreshData();
+		} else {
+			this.notifyFail("Impossible de supprimer le présentoir");
+		}
 	}
-
+	
 	
 	/*  ---------------------------
 	 * 
@@ -687,7 +712,8 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		this.mainWindow = primaryStage;
 		this.mainWindow.setResizable(false);
-		this.mainWindow.setTitle("Gestion de musée");
+		this.mainWindow.setTitle("GEMU - Gestionnaire de musée");
+		this.mainWindow.getIcons().add(new Image(APPICON));
 		// initialisation de la fenêtre principale
 		initWindowRoot();
 		// affichage de la sous-fenêtre de connexion
@@ -866,6 +892,8 @@ public class Main extends Application {
 			if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
 				stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
 			}			
+			// rafraîchissement des données de la sous-fenêtre
+			this.authorSelectCtrl.refreshData();
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(Main.class.getResource("../view/CuratorAuthorSelect.fxml"));
@@ -874,8 +902,6 @@ public class Main extends Application {
 			this.authorSelectCtrl = loader.getController();
 			// passage du contrôleur principal au sous-contrôleur
 			this.authorSelectCtrl.setMainControl(this);
-			// rafraîchissement des données de la sous-fenêtre
-			this.authorSelectCtrl.refreshData();
 			// affichage de la fenêtre
 			Scene scene = new Scene(curatorAuthorSelectPane);
 			stgAuthorSelect.setScene(scene);
@@ -947,6 +973,8 @@ public class Main extends Application {
 	public void notifyFail(String body) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle(NTF_TITLE_FORM_NG);
+		Stage notifyStage = (Stage)alert.getDialogPane().getScene().getWindow();
+		notifyStage.getIcons().add(new Image(APPICON));
 		String message;
 		if (body != null) {
 			message = body;
@@ -963,6 +991,8 @@ public class Main extends Application {
 	public void notifySuccess(String body) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(NTF_TITLE_SAVE_OK);
+		Stage notifyStage = (Stage)alert.getDialogPane().getScene().getWindow();
+		notifyStage.getIcons().add(new Image(APPICON));
 		String message;
 		if (body != null) {
 			message = body;
@@ -971,6 +1001,53 @@ public class Main extends Application {
 		}
 		alert.setHeaderText(message);
 		alert.showAndWait();
+	}
+	
+	/**
+	 * affiche une information
+	 */
+	public void notifyInfo(String body) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(NTF_TITLE_INFO);
+		Stage notifyStage = (Stage)alert.getDialogPane().getScene().getWindow();
+		notifyStage.getIcons().add(new Image(APPICON));
+		String message;
+		if (body != null) {
+			message = body;
+		} else {
+			message = NTF_BODY_INFO;
+		}
+		alert.setHeaderText(message);
+		alert.showAndWait();
+	}
+	
+	/**
+	 * affiche une demande de confirmation
+	 */
+	public void notifyConfirmDelete(String header, String body, Object object) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(NTF_TITLE_CONFIRM);
+		Stage notifyStage = (Stage)alert.getDialogPane().getScene().getWindow();
+		notifyStage.getIcons().add(new Image(APPICON));
+		alert.setHeaderText(header);
+		alert.setContentText(body);
+		Optional<ButtonType> result = alert.showAndWait();
+		// si l'utilisateur choisit OK
+		if (result.get() == ButtonType.OK){
+			String objectType = object.getClass().getName();
+			switch (objectType) {
+			// TODO supprimer, display plus utilisé
+			case "museum.display.Display":
+				deleteDisplay((Display)object);
+				break;
+			case "museum.floorplan.Floor":
+				deleteFloor((Floor)object);
+				break;
+			}
+		// si l'utilisateur annule ou ferme la fenêtre
+		} else {
+		    alert.close();
+		}
 	}
 	
 	/**

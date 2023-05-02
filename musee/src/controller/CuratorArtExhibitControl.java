@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 
 import application.Main;
+import dao.art.ArtDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,6 +35,7 @@ public class CuratorArtExhibitControl {
 	// ligne sélectionnée dans la table des salles, par défaut aucune
 	private int selectedRoomLine = -1;
 	private int selectedSurface = -1;
+	private int selectedArtLine = -1;
 	private Stage stgArtSelect = new Stage();
 	private CuratorArtSelectControl artSelectCtrl = null;
 	
@@ -60,8 +63,6 @@ public class CuratorArtExhibitControl {
 	@FXML
 	private Button btnRemoveArt;
 	@FXML
-	private Button btnRemoveDisplay;
-	@FXML
 	private Button confirmArtSaved;
 	@FXML
 	private Label lblDisplayedArtPaneTitle;
@@ -73,6 +74,8 @@ public class CuratorArtExhibitControl {
 	private Pane pneRoomSurfaces;
 	@FXML
 	private Pane pneArtSelect;
+	@FXML
+	private Pane pneExhibit;
 	@FXML
 	private TableView<Art> tblArtDisplay;
 	@FXML
@@ -136,6 +139,7 @@ public class CuratorArtExhibitControl {
 			this.updateExhibitTitle();
 			chbRoom.setValue(chbRoom.getItems().get(selectedRoomLine));
 		}
+		pneExhibit.setVisible(false);
 	}
 	
 	public void showSurfaces(Room room) {
@@ -228,6 +232,7 @@ public class CuratorArtExhibitControl {
 		selectedRoomLine = chbRoom.getSelectionModel().getSelectedIndex();
 		if (selectedRoomLine != -1) {
 			Room room = chbRoom.getItems().get(selectedRoomLine);
+			pneExhibit.setVisible(true);
 			showSurfaces(room);
 			showDisplayedArts(room);
 			showDisplays(room);
@@ -258,6 +263,7 @@ public class CuratorArtExhibitControl {
 			}
 			this.selectedSurface = surfaceNb;
 			Room room = chbRoom.getItems().get(selectedRoomLine);
+			pneExhibit.setVisible(true);
 			showDisplayedArts(room);
 			showDisplays(room);
 			updateExhibitTitle();
@@ -265,16 +271,25 @@ public class CuratorArtExhibitControl {
 	}
 	
 	/**
-	 * event listener du bouton "Retirer le présentoir"
+	 * event listener du bouton "Retirer l'œuvre"
 	 * @param e
 	 */
 	@FXML
-	private void handleBtnRemoveDisplayAction(ActionEvent event) {
-		// TODO vérifier si une ligne est sélectionnée (ou bien conditionner
-		// l'affichage du bouton à la sélection d'une ligne)
-		// TODO ouverture d'une fenêtre de confirmation : voulez-vous
-		// vraiment supprimer ce présentoir, les oeuvres associées seront
-		// remise dans la réserve
+	private void handleBtnRemoveArtAction(ActionEvent event) {
+		if (selectedArtLine != -1) {
+			int art_id = tblArtDisplay.getItems().get(selectedArtLine).getId_art();
+			Art art = mainController.getFullArtData(art_id);
+			Display display = art.getDisplay();
+			// si le présentoir actuel ne contient qu'une œuvre, il faut le supprimer d'abord
+			if (display.getArts().size() == 1) {
+				mainController.deleteDisplay(display);
+			}
+			art.setDisplay(null);
+			mainController.updateArt(art, "artRemoval");
+		}
+		else {
+			mainController.notifyInfo("Une œuvre doit être sélectionné");
+		}
 	}
 	
 	/**
@@ -304,6 +319,15 @@ public class CuratorArtExhibitControl {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+		
+	/**
+	 * event listener de la table d'oeuvres actuellement en exposition
+	 * @param event
+	 */
+	@FXML
+	private void handleTableArtAction(MouseEvent event) {
+		selectedArtLine = tblArtDisplay.getSelectionModel().getSelectedIndex();
 	}
 	
 	public void closeArtSelectStage() {

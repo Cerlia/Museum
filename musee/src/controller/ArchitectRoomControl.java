@@ -42,6 +42,8 @@ public class ArchitectRoomControl {
 	@FXML
 	private TableColumn<Room, String> floorColumn;
 	@FXML
+	private TableColumn<Room, String> nbArtColumn;
+	@FXML
 	private Button btnEditRoom;
 	@FXML
 	private Button btnCreateRoom;
@@ -135,8 +137,15 @@ public class ArchitectRoomControl {
 	 */
 	public void refreshData() {
 		roomTable.setItems(mainController.getRoomData());
+		if (mainController.getRoomData().size() > 0) {
+			selectedRoomLine = 0;
+			roomTable.getSelectionModel().select(0);
+			showRoomInfo();
+		} else {
+			selectedRoomLine = -1;
+			hideRoomInfo();
+		}
 		cbbFloor.setItems(mainController.getFloorData());
-		showRoomInfo();
 	}
 	
 	/**
@@ -279,6 +288,8 @@ public class ArchitectRoomControl {
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
 		floorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor().getFloor_name()+""));
+		nbArtColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+				mainController.getAllArtsOfRoom(cellData.getValue()).size()+""));
 	}
 	
 	/**
@@ -330,7 +341,6 @@ public class ArchitectRoomControl {
 			deleteRoom();
 		}
 		else {
-			deleteRoom();
 			mainController.notifyFail("Vous ne pouvez pas supprimer une salle ayant des œuvres en exposition");
 		}		
 	}

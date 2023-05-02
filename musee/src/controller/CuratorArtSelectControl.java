@@ -193,13 +193,18 @@ public class CuratorArtSelectControl {
 	 */
 	@FXML
 	private void handleArtTableAction(MouseEvent event) {
-		selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
-		Art art = artTable.getItems().get(selectedArtLine);
-		lblArtSelected.setText(art.getArt_title());
-		chbRoomChoice.setItems(mainController.getRoomData());
-		chbSurfaceChoice.getItems().clear();
-		// quand une œuvre est sélectionnée, le bouton Suivant est activé
-		btnNextStep1.setDisable(false);
+		try {
+			selectedArtLine = artTable.getSelectionModel().getSelectedIndex();
+			Art art = artTable.getItems().get(selectedArtLine);
+			lblArtSelected.setText(art.getArt_title());
+			chbRoomChoice.setItems(mainController.getRoomData());
+			chbSurfaceChoice.getItems().clear();
+			// quand une œuvre est sélectionnée, le bouton Suivant est activé
+			btnNextStep1.setDisable(false);
+		} catch (Exception e) {
+			
+		}
+		
 	}
 	
 	/**
@@ -329,10 +334,11 @@ public class CuratorArtSelectControl {
 	}
 	
 	public void handleBtnConfirmExhibit(ActionEvent event) {
-		Art selectedArt = artTable.getItems().get(selectedArtLine);;
+		int art_id = artTable.getItems().get(selectedArtLine).getId_art();
+		Art art = mainController.getFullArtData(art_id);
 		// SI l'œuvre est déjà exposée dans un présentoir pour 1 seule œuvre
-		if (selectedArt.getDisplay() != null && selectedArt.getDisplay().getDisplay_model().isDisplay_multiple() == false) {
-			mainController.deleteDisplay(selectedArt.getDisplay());
+		if (art.getDisplay() != null && art.getDisplay().getDisplay_model().isDisplay_multiple() == false) {
+			mainController.deleteDisplay(art.getDisplay());
 		};
 		Display display = null;
 		// SI le présentoir choisi existe déjà
@@ -343,12 +349,12 @@ public class CuratorArtSelectControl {
 		if (newDisplay == true) {
 			Surface surface = chbSurfaceChoice.getItems().get(selectedSurfaceLine);
 			DisplayModel dispMod = tblNewDisplay.getItems().get(selectedNewDisplayLine);
-			display = mainController.addDisplay(selectedArt, dispMod, surface, txtDisplayName.getText());
+			display = mainController.addDisplay(art, dispMod, surface, txtDisplayName.getText());
 		};
 		// Dans tous les cas, update de l'œuvre avec la référence du présentoir
-		selectedArt.setDisplay(display);
-		display.setArts(ArtDAO.getInstance().reloadArtsOfDisplay(selectedArt.getDisplay().getId_display()));
-		mainController.updateArt(selectedArt, "artExhibit");		
+		art.setDisplay(display);
+		mainController.updateArt(art, "artExhibit");
+		display.setArts(ArtDAO.getInstance().reloadArtsOfDisplay(art.getDisplay().getId_display()));		
 	}
 	
 	/**

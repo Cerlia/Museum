@@ -69,8 +69,8 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(8, art.getDim_x());
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
-			pst.setNull(11, Types.INTEGER);
-			pst.setBytes(12, art.getImage());
+			pst.setBytes(11, art.getImage());
+			pst.setNull(12, Types.INTEGER);
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -131,7 +131,7 @@ public class ArtDAO extends DAO<Art> {
 	@Override
 	public Art read(int id) {
 		Art art = null;
-		if (data.containsKey(id)) {
+		if (data.containsKey(id) && data.get(id).getImage() != null) {
 			art=data.get(id);
 		}
 		else {

@@ -60,7 +60,6 @@ public class RoomDAO extends DAO<Room> {
 				room.setSurfaces(SurfaceDAO.getInstance().readAllSurfacesOfRoom(rs.getInt(1)));
 			}
 			data.put(room.getId_room(), room);
-
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -108,7 +107,7 @@ public class RoomDAO extends DAO<Room> {
 		}
 		return success;
 	}
-
+	
 	@Override
 	public Room read(int id_room) {
 		Room room = null;
@@ -116,25 +115,31 @@ public class RoomDAO extends DAO<Room> {
 			room=data.get(id_room);
 		}
 		else {
-			try {
-				String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_room;
-				ResultSet rs = Connect.executeQuery(requete);
-				rs.next();
-				String name = rs.getString(NAME);
-				int ref_floor = rs.getInt(FLOOR);
-				int dim_x = rs.getInt(DIMX);
-				int dim_y = rs.getInt(DIMY);
-				int dim_z = rs.getInt(DIMZ);
-				int pos_x = rs.getInt(POSX);
-				int pos_y = rs.getInt(POSY);
-				Floor floor = FloorDAO.getInstance().read(ref_floor);
-				List<Surface> surfaces = new ArrayList<Surface>();				
-				room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, surfaces);
-				data.put(id_room, room);
-				surfaces.addAll(SurfaceDAO.getInstance().readAllSurfacesOfRoom(id_room));
-			} catch (SQLException e) {
+			room=readFromDB(id_room);
+		}
+		return room;
+	}
+
+	public Room readFromDB(int id_room) {
+		Room room = null;
+		try {
+			String requete = "SELECT * FROM " + TABLE + " WHERE " + PK + " = " + id_room;
+			ResultSet rs = Connect.executeQuery(requete);
+			rs.next();
+			String name = rs.getString(NAME);
+			int ref_floor = rs.getInt(FLOOR);
+			int dim_x = rs.getInt(DIMX);
+			int dim_y = rs.getInt(DIMY);
+			int dim_z = rs.getInt(DIMZ);
+			int pos_x = rs.getInt(POSX);
+			int pos_y = rs.getInt(POSY);
+			Floor floor = FloorDAO.getInstance().read(ref_floor);
+			List<Surface> surfaces = new ArrayList<Surface>();				
+			room = new Room(id_room, name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, surfaces);
+			data.put(id_room, room);
+			surfaces.addAll(SurfaceDAO.getInstance().readAllSurfacesOfRoom(id_room));
+		} catch (SQLException e) {
 				e.printStackTrace();
-			}
 		}
 		return room;
 	}
@@ -171,6 +176,29 @@ public class RoomDAO extends DAO<Room> {
 			while(rs.next()) {
 				int id_room = rs.getInt(1);
 				room = RoomDAO.getInstance().read(id_room);
+				rooms.add(room);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return rooms;
+	}
+	
+	/**
+	 * recharge la liste des salles d'un étage donné
+	 * @param id_floor
+	 * @return
+	 */
+	public List<Room> reloadRoomsOfFloor(int id_floor) {
+		List<Room> rooms = new ArrayList<Room>();
+		Room room = null;
+		try {			
+			String requete = "SELECT * FROM " + TABLE +" WHERE "+FLOOR+"="+id_floor;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_room = rs.getInt(1);
+				room = RoomDAO.getInstance().readFromDB(id_room);
 				rooms.add(room);
 			}
 		} catch (SQLException e) {

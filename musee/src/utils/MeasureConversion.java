@@ -1,9 +1,5 @@
 package utils;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.ParseException;
-
 public class MeasureConversion {
 	
 	/**

@@ -135,9 +135,7 @@ public class SurfaceDAO extends DAO<Surface> {
 			e.printStackTrace();
 		}
 		return surface;
-	}
-	
-	
+	}	
 	
 	public List<Surface> readAll() {
 		List<Surface> surfaces = new ArrayList<Surface>();

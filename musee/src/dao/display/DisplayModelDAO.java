@@ -7,7 +7,6 @@ import java.util.List;
 
 import dao.Connect;
 import dao.DAO;
-import museum.display.Display;
 import museum.display.DisplayModel;
 import museum.display.DisplayType;
 

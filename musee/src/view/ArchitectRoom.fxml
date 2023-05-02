@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectRoomControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="1426.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectRoomControl">
    <children>
    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="43.0" prefWidth="1426.0" style="-fx-background-color: #004024;" text="GESTION DES SALLES" textAlignment="JUSTIFY" textFill="WHITE">
          <font>
@@ -22,14 +22,15 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onKeyReleased="#handleRoomTableKeyPressed" onMouseClicked="#handleRoomTableAction" prefHeight="450.0" prefWidth="350.0">
+      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onKeyReleased="#handleRoomTableKeyPressed" onMouseClicked="#handleRoomTableAction" prefHeight="450.0" prefWidth="529.0">
         <columns>
-          <TableColumn fx:id="nameColumn" prefWidth="122.39999389648438" text="Nom" />
-          <TableColumn fx:id="floorColumn" prefWidth="156.0000457763672" text="Étage" />
+          <TableColumn fx:id="nameColumn" maxWidth="500.0" prefWidth="230.0" text="Nom" />
+          <TableColumn fx:id="floorColumn" maxWidth="300.0" prefWidth="160.0" text="Étage" />
+            <TableColumn fx:id="nbArtColumn" maxWidth="300.0" prefWidth="130.0" text="Œuvres exposées" />
         </columns>
       </TableView>
-      <Button fx:id="btnCreateRoom" layoutX="272.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
-      <AnchorPane fx:id="pneRoomCreatEdit" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
+      <Button fx:id="btnCreateRoom" layoutX="451.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="26.0" prefWidth="90.0" text="Créer" />
+      <AnchorPane fx:id="pneRoomCreatEdit" layoutX="580.0" layoutY="100.0" prefHeight="450.0" prefWidth="350.0" style="-fx-background-color: #FFFFFF;" visible="false">
          <children>
             <Label fx:id="roomFormTitle" layoutX="89.0" layoutY="14.0" text="" />
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="22.0" layoutY="58.0" prefHeight="18.0" prefWidth="142.0" text="Nom" />
@@ -52,7 +53,7 @@
             <ComboBox fx:id="cbbFloor" layoutX="176.0" layoutY="87.0" prefWidth="150.0" />
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="pneRoomDisplay" disable="false" layoutX="380.0" layoutY="100.0" prefHeight="450.0" prefWidth="603.0" style="-fx-background-color: #FFFFFF;" visible="false">
+      <AnchorPane fx:id="pneRoomDisplay" disable="false" layoutX="580.0" layoutY="100.0" prefHeight="450.0" prefWidth="603.0" style="-fx-background-color: #FFFFFF;" visible="false">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="108.0" layoutY="14.0" prefHeight="18.0" prefWidth="142.0" text="Détails de la salle" textAlignment="CENTER" />
             <Label alignment="CENTER_RIGHT" layoutX="61.0" layoutY="58.0" prefHeight="18.0" prefWidth="90.0" text="Nom" />
