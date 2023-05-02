@@ -13,7 +13,7 @@ public class ArtStatusDAO extends DAO<ArtStatus> {
 	
 	private static final String TABLE = "art_status";
 	private static final String PK = "id_art_status";
-	private static final String NOM = "name";
+	private static final String NOM = "art_status_name";
 	
 	private static ArtStatusDAO instance=null;
 	

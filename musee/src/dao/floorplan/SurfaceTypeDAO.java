@@ -11,7 +11,7 @@ public class SurfaceTypeDAO extends DAO<SurfaceType> {
 	
 	private static final String TABLE = "surface_type";
 	private static final String PK = "id_surface_type";
-	private static final String NAME = "name";
+	private static final String NAME = "surface_type_name";
 	
 private static SurfaceTypeDAO instance=null;
 	

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtSelectControl">
+   <children>
+      <Pane fx:id="pneStep1" prefHeight="464.0" prefWidth="900.0">
+         <children>
+            <TableView fx:id="artTable" layoutX="22.0" layoutY="77.0" onMouseClicked="#handleArtTableAction" prefHeight="322.0" prefWidth="852.0">
+              <columns>
+                <TableColumn fx:id="titleColumn" editable="false" maxWidth="700.0" minWidth="250.0" prefWidth="500.0" text="Titre" />
+                <TableColumn fx:id="codeColumn" maxWidth="500.0" minWidth="100.0" prefWidth="200.0" text="Code" />
+                <TableColumn fx:id="authorColumn" maxWidth="300.0" minWidth="150.0" prefWidth="250.0" text="Auteur" />
+                <TableColumn fx:id="exhStatusColumn" maxWidth="500.0" minWidth="100.0" prefWidth="120.0" text="Statut" />
+              </columns>
+                <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+            <Label layoutX="22.0" layoutY="31.0" prefHeight="17.0" prefWidth="454.0" text="Liste des oeuvres disponibles dans le musée" />
+            <Button fx:id="btnNextStep1" disable="true" layoutX="778.0" layoutY="413.0" mnemonicParsing="false" onAction="#handleBtnNextStep" prefHeight="36.0" prefWidth="96.0" text="Suivant" />
+         </children>
+      </Pane>
+      <Pane fx:id="pneStep2" prefHeight="464.0" prefWidth="900.0" visible="false">
+         <children>
+            <Label layoutX="62.0" layoutY="45.0" prefHeight="17.0" prefWidth="139.0" text="Choix de la salle" />
+            <Label layoutX="62.0" layoutY="88.0" prefHeight="17.0" prefWidth="139.0" text="Choix de la surface" />
+            <ChoiceBox fx:id="chbRoomChoice" layoutX="235.0" layoutY="41.0" onAction="#handleRoomChoiceAction" prefHeight="25.0" prefWidth="232.0" />
+            <ChoiceBox fx:id="chbSurfaceChoice" layoutX="235.0" layoutY="84.0" onAction="#handleSurfaceChoiceAction" prefHeight="25.0" prefWidth="232.0" />
+            <Button fx:id="btnNextStep2" disable="true" layoutX="763.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleBtnNextStep" prefHeight="36.0" prefWidth="96.0" text="Suivant" />
+            <Button fx:id="btnPreviousStep2" layoutX="648.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleBtnPreviousStep" prefHeight="36.0" prefWidth="96.0" text="Précédent" />
+         </children>
+      </Pane>
+      <Pane fx:id="pneStep3" prefHeight="464.0" prefWidth="900.0" visible="false">
+         <children>
+            <Label layoutX="42.0" layoutY="30.0" prefHeight="17.0" prefWidth="139.0" text="Choix du présentoir" />
+            <RadioButton fx:id="rdoExistingDisplay" layoutX="354.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleRadioButtonDisplay" text="Existant" />
+            <RadioButton fx:id="rdoNewDisplay" layoutX="223.0" layoutY="31.0" mnemonicParsing="false" onAction="#handleRadioButtonDisplay" text="Nouveau" />
+            <Button fx:id="btnPreviousStep3" layoutX="681.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleBtnPreviousStep" prefHeight="36.0" prefWidth="96.0" text="Précédent" />
+            <Pane fx:id="pneNewDisplay" layoutY="59.0" prefHeight="329.0" prefWidth="900.0" visible="false">
+               <children>
+                  <TableView fx:id="tblNewDisplay" layoutX="16.0" layoutY="17.0" onMouseClicked="#handleTableNewDisplayAction" prefHeight="241.0" prefWidth="867.0">
+                    <columns>
+                      <TableColumn fx:id="newDispModelColumn" maxWidth="500.0" prefWidth="140.0" text="Modèle" />
+                      <TableColumn fx:id="newDispTypeColumn" maxWidth="400.0" prefWidth="160.0" text="Type" />
+                        <TableColumn fx:id="newDispXColumn" maxWidth="200.0" prefWidth="140.0" text="Longueur (x)" />
+                        <TableColumn fx:id="newDispYColumn" maxWidth="200.0" prefWidth="140.0" text="Largeur (y)" />
+                        <TableColumn fx:id="newDispZColumn" maxWidth="200.0" prefWidth="140.0" text="Hauteur (z)" />
+                        <TableColumn fx:id="newDispMultipleColumn" maxWidth="324.5999755859375" prefWidth="162.4000244140625" text="Exposition multiple ?" />
+                    </columns>
+                  </TableView>
+                  <Label layoutX="14.0" layoutY="281.0" prefHeight="17.0" prefWidth="133.0" text="Nom du présentoir" />
+                  <TextField fx:id="txtDisplayName" layoutX="173.0" layoutY="277.0" onKeyPressed="#handleTxtDisplayNameAction" prefHeight="25.0" prefWidth="170.0" />
+               </children>
+            </Pane>
+            <Pane fx:id="pneExistingDisplay" layoutY="59.0" prefHeight="329.0" prefWidth="900.0" visible="false">
+               <children>
+                  <TableView fx:id="tblExistingDisplay" layoutX="17.0" layoutY="11.0" onMouseClicked="#handleTableExistingDisplayAction" prefHeight="308.0" prefWidth="867.0">
+                    <columns>
+                      <TableColumn fx:id="displayNameColumn" maxWidth="300.0" prefWidth="90.0" text="Nom" />
+                      <TableColumn fx:id="displayModelColumn" maxWidth="400.0" prefWidth="120.0" text="Modèle" />
+                      <TableColumn fx:id="displayTypeColumn" maxWidth="400.0" minWidth="100.0" prefWidth="150.0" text="Type" />
+                      <TableColumn fx:id="displayXColumn" maxWidth="300.0" prefWidth="90.0" text="Longueur (x)" />
+                      <TableColumn fx:id="displayYColumn" maxWidth="300.0" prefWidth="90.0" text="Largeur (y)" />
+                      <TableColumn fx:id="displayZColumn" maxWidth="300.0" prefWidth="90.0" text="Hauteur (z)" />
+                      <TableColumn fx:id="displayArtNbColumn" maxWidth="400.0" minWidth="20.0" prefWidth="100.0" text="Nbre d'œuvres" />
+                      <TableColumn fx:id="displayMultipleColumn" maxWidth="500.0" minWidth="50.0" prefWidth="130.0" text="Exposition multiple ?" />
+                    </columns>
+                  </TableView>
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+      <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="489.0" prefHeight="27.0" prefWidth="118.0" text="1. Oeuvre à exposer" />
+      <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="517.0" prefHeight="27.0" prefWidth="118.0" text="2. Salle/Surface" />
+      <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="546.0" prefHeight="27.0" prefWidth="118.0" text="3. Présentoir" />
+      <Label fx:id="lblArtSelected" layoutX="156.0" layoutY="494.0" prefHeight="17.0" prefWidth="346.0" text="-" />
+      <Label fx:id="lblRoomSurfaceSelected" layoutX="156.0" layoutY="521.0" prefHeight="17.0" prefWidth="346.0" text="-" />
+      <Label fx:id="lblDisplaySelected" layoutX="156.0" layoutY="551.0" prefHeight="17.0" prefWidth="346.0" text="-" />
+      <Button fx:id="btnConfirmExhibit" onAction="#handleBtnConfirmExhibit" disable="true" layoutX="735.0" layoutY="513.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="133.0" text="Exposer l'oeuvre" />
+   </children>
+</Pane>

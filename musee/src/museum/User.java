@@ -26,6 +26,30 @@ public class User {
 		this.role = role;
 	}
 
+	public void setId_user(int id_user) {
+		this.id_user = id_user;
+	}
+
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
+	}
+
+	public void setFirst_name(String first_name) {
+		this.first_name = first_name;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
 	public int getId_user() {
 		return id_user;
 	}

@@ -1,13 +1,9 @@
 package controller;
 
-import java.io.IOException;
-
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -17,10 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import museum.floorplan.Floor;
+import utils.MeasureConversion;
 
 public class ArchitectFloorControl {
 	
@@ -33,8 +27,6 @@ public class ArchitectFloorControl {
 	private Main mainController;
 	// ligne sélectionnée dans la table des salles, par défaut aucune
 	private int selectedFloorLine = -1;
-	private Stage notifWindow = new Stage();
-	private Pane dialogFloorSaved;
 	private boolean updatingFloor = false;
 	private boolean addingFloor = false;
 	
@@ -44,6 +36,8 @@ public class ArchitectFloorControl {
 	private TableColumn<Floor, String> nameColumn;
 	@FXML
 	private TableColumn<Floor, String> nbRoomColumn;
+	@FXML
+	private TableColumn<Floor, String> nbArtsColumn;
 	@FXML
 	private AnchorPane pneFloorCreatEdit;
 	@FXML
@@ -55,19 +49,19 @@ public class ArchitectFloorControl {
 	@FXML
 	private Button btnDeleteFloor;
 	@FXML
+	private Button btnShowRooms;
+	@FXML
 	private CheckBox chbIgnoreFloorDim;
 	@FXML
 	private Label floorFormTitle;
-	@FXML
-	private Label lblMuseumName;
-	@FXML
-	private Label lblNotification;
 	@FXML
 	private Label lblFloorName;
 	@FXML
 	private Label lblDimX;
 	@FXML
 	private Label lblDimY;
+	@FXML
+	private Label lblNbArts;
 	@FXML
 	private TextField txtFloorName;
 	@FXML
@@ -102,8 +96,14 @@ public class ArchitectFloorControl {
 	 */
 	public void refreshData() {
 		floorTable.setItems(mainController.getFloorData());
-		lblMuseumName.setText(mainController.getCurrentMuseum().getMuseum_name());
-		showFloorInfo();
+		if (mainController.getFloorData().size() > 0) {
+			selectedFloorLine = 0;
+			floorTable.getSelectionModel().select(0);
+			showFloorInfo();
+		} else {
+			selectedFloorLine = -1;
+			hideFloorInfo();
+		}		
 	}
 	
 	/**
@@ -112,8 +112,8 @@ public class ArchitectFloorControl {
 	public void addFloor() {
 		try {
 			String floorName = txtFloorName.getText();
-			int floorDimX = Integer.parseInt(txtFloorDimX.getText());
-			int floorDimY = Integer.parseInt(txtFloorDimY.getText());
+			int floorDimX = MeasureConversion.textToInt(txtFloorDimX.getText());
+			int floorDimY = MeasureConversion.textToInt(txtFloorDimY.getText());
 			mainController.addFloor(floorName, floorDimX, floorDimY);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
@@ -126,11 +126,10 @@ public class ArchitectFloorControl {
 	public void updateFloor() {
 		try {
 			Floor selectedFloor = floorTable.getItems().get(selectedFloorLine);
-			int id_floor = selectedFloor.getId_floor();
-			String floorName = txtFloorName.getText();
-			int floorDimX = Integer.parseInt(txtFloorDimX.getText());
-			int floorDimY = Integer.parseInt(txtFloorDimY.getText());
-			mainController.updateFloor(id_floor, floorName, floorDimX, floorDimY);
+			selectedFloor.setFloor_name(txtFloorName.getText());
+			selectedFloor.setDim_x(MeasureConversion.textToInt(txtFloorDimX.getText()));
+			selectedFloor.setDim_y(MeasureConversion.textToInt(txtFloorDimY.getText()));			
+			mainController.updateFloor(selectedFloor);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}		
@@ -140,12 +139,14 @@ public class ArchitectFloorControl {
 	 * demande au contrôleur principal de supprimer un étage
 	 */
 	public void deleteFloor() {
-		// TODO en prenant en compte le fait qu'il faut supprimer les salles associées, etc
-		/*
-		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-		int id_room = selectedRoom.getId_room();
-		mainControler.deleteRoom(id_room);
-		*/
+		Floor floor = floorTable.getItems().get(selectedFloorLine);
+		if (mainController.getAllArtsOfFloor(floor).size() > 0) {
+			mainController.notifyInfo("Impossible de supprimer un étage comportant "
+					+ "des œuvres en exposition");
+		} else {
+			mainController.notifyConfirmDelete("Suppression d'étage", "Voulez-vous vraiment "
+					+ "supprimer cet étage et toutes les salles qu'il contient ?", floor);
+		}
 	}
 	
 	/**
@@ -166,8 +167,9 @@ public class ArchitectFloorControl {
 			pneFloorDisplay.setVisible(true);
 			Floor selectedFloor = floorTable.getItems().get(selectedFloorLine);
 			lblFloorName.setText(selectedFloor.getFloor_name());
-			lblDimX.setText(selectedFloor.getDim_x()+"");
-			lblDimY.setText(selectedFloor.getDim_y()+"");
+			lblDimX.setText(MeasureConversion.intToString(selectedFloor.getDim_x()));
+			lblDimY.setText(MeasureConversion.intToString(selectedFloor.getDim_y()));
+			lblNbArts.setText(mainController.getAllArtsOfFloor(selectedFloor).size()+"");
 			pneFloorDisplay.setVisible(true);
 		}		
 	}
@@ -182,7 +184,12 @@ public class ArchitectFloorControl {
 	/**
 	 * réinitialise et masque la zone de création/modification d'étage
 	 */
-	private void resetFloorCreateEdit() {
+	public void resetFloorCreateEdit() {
+		// rafraîchissement des données
+		refreshData();
+		// désactivation des drapeaux Création et Modification d'étage
+		addingFloor = false;
+		updatingFloor = false;
 		floorFormTitle.setText("");
 		txtFloorName.setText("");
 		txtFloorDimX.setText("");
@@ -192,40 +199,8 @@ public class ArchitectFloorControl {
 		chbIgnoreFloorDim.setSelected(false);
 		pneFloorCreatEdit.setVisible(false);
 		btnCreateFloor.setDisable(false);
+		floorTable.setDisable(false);
 	}
-	
-	/**
-	 * à la demande du contrôleur principal, affiche une notification
-	 */
-	public void notifyFloorSaved(String title, String body) {
-		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
-			notifWindow.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
-			loader.setController(this);
-			dialogFloorSaved = (Pane)loader.load();
-			// désactivation de la zone d'édition d'étage
-			resetFloorCreateEdit();	
-			showFloorInfo();
-			floorTable.setDisable(false);
-			// désactivation des drapeaux Création et Modification d'étage
-			addingFloor = false;
-			updatingFloor = false;
-			// affichage de la fenêtre pop-up
-			Scene scene = new Scene(dialogFloorSaved);
-			notifWindow.setTitle(title);
-			lblNotification.setText(body);
-			notifWindow.setScene(scene);
-			notifWindow.show();
-			// rafraîchissement des données
-			refreshData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	/*  ---------------------------
 	 * 
@@ -240,6 +215,7 @@ public class ArchitectFloorControl {
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor_name()));
 		nbRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRooms().size()+""));
+		nbArtsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(mainController.getAllArtsOfFloor(cellData.getValue()).size()+""));
 	}
 	
 	/**
@@ -266,9 +242,9 @@ public class ArchitectFloorControl {
 		floorFormTitle.setText("Modifier un étage existant");
 		chbIgnoreFloorDim.setSelected(false);
 		txtFloorName.setText(selectedFloor.getFloor_name());
-		txtFloorDimX.setText(selectedFloor.getDim_x()+"");
+		txtFloorDimX.setText(MeasureConversion.intToString(selectedFloor.getDim_x()));
 		txtFloorDimX.setDisable(false);
-		txtFloorDimY.setText(selectedFloor.getDim_y()+"");
+		txtFloorDimY.setText(MeasureConversion.intToString(selectedFloor.getDim_y()));
 		txtFloorDimY.setDisable(false);
 		showFloorEditingPane();
 		hideFloorInfo();		
@@ -281,6 +257,15 @@ public class ArchitectFloorControl {
 	@FXML
 	private void handleFloorDeletion(ActionEvent e) {
 		deleteFloor();
+	}
+	
+	/**
+	 * event listener du bouton "Voir les salles" d'un étage
+	 * @param e
+	 */
+	@FXML
+	private void handleShowRooms(ActionEvent e) {
+		mainController.showArchitectRoomPane();
 	}
 	
 	/**
@@ -329,16 +314,7 @@ public class ArchitectFloorControl {
 			txtFloorDimY.setDisable(false);
 		}		
 	}
-	
-	/**
-	 * event listener du bouton "OK" du pop-up de notification
-	 * @param e
-	 */
-	@FXML
-	private void confirm(ActionEvent e) {
-		notifWindow.close();
-	}
-	
+		
 	/**
 	 * event listener de la liste d'étages, permet de récupérer la ligne sélectionnée (clic)
 	 */

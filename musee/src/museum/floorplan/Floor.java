@@ -8,7 +8,8 @@ public class Floor {
 	private int dim_x;
 	private int dim_y;
 	private List<Room> rooms;
-	
+
+
 	/**
 	 * constructor for Floor if id_floor is known
 	 * @param id_floor
@@ -42,6 +43,18 @@ public class Floor {
 		this.id_floor = id_floor;
 	}
 
+	public void setFloor_name(String floor_name) {
+		this.floor_name = floor_name;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
 	public String getFloor_name() {
 		return floor_name;
 	}
@@ -60,6 +73,10 @@ public class Floor {
 	
 	public int getRoom_nb() {
 		return getRooms().size();
+	}
+	
+	public void setRooms(List<Room> rooms) {
+		this.rooms = rooms;
 	}
 	
 	@Override

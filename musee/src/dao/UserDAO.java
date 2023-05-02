@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -75,12 +76,16 @@ public class UserDAO extends DAO<User> {
 		return user;
 	}
 	
-	public List<User> readAll() {
+	public List<User> readAll(String login, byte[] hash) {
 		List<User> users = new ArrayList<User>();
 		User user = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE;
-			ResultSet rs = Connect.executeQuery(requete);
+			String requete = "SELECT * FROM "+TABLE+" WHERE "+LOGIN+"=?"
+					+ " AND " +PASSWORD+"=?";
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete);
+			pst.setString(1, login);
+			pst.setBytes(2, hash);
+			ResultSet rs = pst.executeQuery();
 			while(rs.next()) {
 				int id_user = rs.getInt(1);
 				user = UserDAO.getInstance().read(id_user);

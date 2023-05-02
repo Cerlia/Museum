@@ -1,14 +1,11 @@
 package controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -18,12 +15,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 // TODO C'est bien normal que le contrôleur de la vue ait accès au modèle, oui ?
 import museum.floorplan.Floor;
 import museum.floorplan.Room;
 import museum.floorplan.Surface;
+import utils.MeasureConversion;
 
 public class ArchitectRoomControl {
 	
@@ -36,8 +32,6 @@ public class ArchitectRoomControl {
 	private Main mainController;
 	// ligne sélectionnée dans la table des salles, par défaut aucune
 	private int selectedRoomLine = -1;
-	private Stage notifWindow = new Stage();
-	private Pane dialogRoomSaved;
 	private boolean updatingRoom = false;
 	private boolean addingRoom = false;
 	
@@ -48,11 +42,15 @@ public class ArchitectRoomControl {
 	@FXML
 	private TableColumn<Room, String> floorColumn;
 	@FXML
+	private TableColumn<Room, String> nbArtColumn;
+	@FXML
 	private Button btnEditRoom;
 	@FXML
 	private Button btnCreateRoom;
 	@FXML
 	private Button btnDeleteRoom;
+	@FXML
+	private Button btnShowFloor;
 	@FXML
 	private Button btnWall1;
 	@FXML
@@ -71,8 +69,6 @@ public class ArchitectRoomControl {
 	private ComboBox<Floor> cbbFloor;
 	@FXML
 	private Label roomFormTitle;
-	@FXML
-	private Label lblMuseumName;
 	@FXML
 	private Label lblRoomName;
 	@FXML
@@ -113,8 +109,6 @@ public class ArchitectRoomControl {
 	private TextField txtRoomPosX;
 	@FXML
 	private TextField txtRoomPosY;
-	@FXML
-	private Label lblNotification;
 	
 	
 	/*  ---------------------------
@@ -143,9 +137,15 @@ public class ArchitectRoomControl {
 	 */
 	public void refreshData() {
 		roomTable.setItems(mainController.getRoomData());
+		if (mainController.getRoomData().size() > 0) {
+			selectedRoomLine = 0;
+			roomTable.getSelectionModel().select(0);
+			showRoomInfo();
+		} else {
+			selectedRoomLine = -1;
+			hideRoomInfo();
+		}
 		cbbFloor.setItems(mainController.getFloorData());
-		lblMuseumName.setText(mainController.getCurrentMuseum().getMuseum_name());
-		showRoomInfo();
 	}
 	
 	/**
@@ -155,9 +155,9 @@ public class ArchitectRoomControl {
 		try {
 			String roomName = txtRoomName.getText();
 			Floor floor = cbbFloor.getValue();
-			int roomDimX = Integer.parseInt(txtRoomDimX.getText());
-			int roomDimY = Integer.parseInt(txtRoomDimY.getText());
-			int roomDimZ = Integer.parseInt(txtRoomDimZ.getText());
+			int roomDimX = MeasureConversion.textToInt(txtRoomDimX.getText());
+			int roomDimY = MeasureConversion.textToInt(txtRoomDimY.getText());
+			int roomDimZ = MeasureConversion.textToInt(txtRoomDimZ.getText());
 			int roomPosX = Integer.parseInt(txtRoomPosX.getText());
 			int roomPosY = Integer.parseInt(txtRoomPosY.getText());
 			mainController.addRoom(roomName, floor, roomDimX, roomDimY, roomDimZ, roomPosX, roomPosY);
@@ -172,15 +172,14 @@ public class ArchitectRoomControl {
 	public void updateRoom() {
 		try {
 			Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-			int id_room = selectedRoom.getId_room();
-			String roomName = txtRoomName.getText();
-			Floor floor = cbbFloor.getValue();
-			int roomDimX = Integer.parseInt(txtRoomDimX.getText());
-			int roomDimY = Integer.parseInt(txtRoomDimY.getText());
-			int roomDimZ = Integer.parseInt(txtRoomDimZ.getText());
-			int roomPosX = Integer.parseInt(txtRoomPosX.getText());
-			int roomPosY = Integer.parseInt(txtRoomPosY.getText());
-			mainController.updateRoom(id_room, roomName, floor, roomDimX, roomDimY, roomDimZ, roomPosX, roomPosY);
+			selectedRoom.setName(txtRoomName.getText());
+			selectedRoom.setFloor(cbbFloor.getValue());
+			selectedRoom.setDim_x(MeasureConversion.textToInt(txtRoomDimX.getText()));
+			selectedRoom.setDim_y(MeasureConversion.textToInt(txtRoomDimY.getText()));
+			selectedRoom.setDim_z(MeasureConversion.textToInt(txtRoomDimZ.getText()));
+			selectedRoom.setPos_x(Integer.parseInt(txtRoomPosX.getText()));
+			selectedRoom.setPos_y(Integer.parseInt(txtRoomPosY.getText()));
+			mainController.updateRoom(selectedRoom);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de la salle");
 		}		
@@ -190,12 +189,9 @@ public class ArchitectRoomControl {
 	 * demande au contrôleur principal de supprimer une salle
 	 */
 	public void deleteRoom() {
-		// TODO à revoir, salle doit être supprimée avec tout ce qui en dépend
-		/*
 		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
 		int id_room = selectedRoom.getId_room();
-		mainControler.deleteRoom(id_room);
-		*/
+		mainController.deleteRoom(id_room);
 	}
 	
 	/**
@@ -215,9 +211,9 @@ public class ArchitectRoomControl {
 			Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
 			lblRoomName.setText(selectedRoom.getName());
 			lblFloorName.setText(selectedRoom.getFloor().getFloor_name());
-			lblDimX.setText(selectedRoom.getDim_x()+"");
-			lblDimY.setText(selectedRoom.getDim_y()+"");
-			lblDimZ.setText(selectedRoom.getDim_z()+"");
+			lblDimX.setText(MeasureConversion.intToString(selectedRoom.getDim_x()));
+			lblDimY.setText(MeasureConversion.intToString(selectedRoom.getDim_y()));
+			lblDimZ.setText(MeasureConversion.intToString(selectedRoom.getDim_z()));
 			lblPosX.setText(selectedRoom.getPos_x()+"");
 			lblPosY.setText(selectedRoom.getPos_y()+"");
 			pneRoomCreatEdit.setVisible(false);
@@ -242,9 +238,9 @@ public class ArchitectRoomControl {
 			Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
 			List<Surface> surfaces = selectedRoom.getSurfaces();
 			lblSurfaceName.setText(surfaces.get(surfaceNb).getName());
-			lblSurfaceX.setText(surfaces.get(surfaceNb).getDim_x()+"");
-			lblSurfaceY.setText(surfaces.get(surfaceNb).getDim_y()+"");
-			lblSurfaceZ.setText(surfaces.get(surfaceNb).getDim_z()+"");
+			lblSurfaceX.setText(MeasureConversion.intToString(surfaces.get(surfaceNb).getDim_x()));
+			lblSurfaceY.setText(MeasureConversion.intToString(surfaces.get(surfaceNb).getDim_y()));
+			lblSurfaceZ.setText(MeasureConversion.intToString(surfaces.get(surfaceNb).getDim_z()));
 			pneSurfaceInfo.setVisible(true);
 		}
 	}
@@ -253,7 +249,12 @@ public class ArchitectRoomControl {
 	/**
 	 * réinitialise et masque la zone de création/modification de salle
 	 */
-	private void resetRoomCreateEdit() {
+	public void resetRoomCreateEdit() {
+		// rafraîchissement des données
+		refreshData();
+		// désactivation des drapeaux Création et Modification de salle
+		addingRoom = false;
+		updatingRoom = false;	
 		roomFormTitle.setText("");
 		txtRoomName.setText("");
 		txtRoomDimX.setText("");
@@ -270,43 +271,9 @@ public class ArchitectRoomControl {
 		chbIgnoreRoomPos.setSelected(false);
 		pneRoomCreatEdit.setVisible(false);
 		btnCreateRoom.setDisable(false);
-	}
-	
-	
-	/**
-	 * à la demande du contrôleur principal, affiche une notification
-	 */
-	public void notifyRoomSaved(String title, String body) {
-		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
-			notifWindow.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			// lien avec la vue
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
-			// passage de ce contrôleur à la vue
-			loader.setController(this);
-			dialogRoomSaved = (Pane)loader.load();
-			// désactivation de la zone d'édition de salle
-			resetRoomCreateEdit();
-			showRoomInfo();
-			roomTable.setDisable(false);
-			// désactivation des drapeaux Création et Modification de salle
-			addingRoom = false;
-			updatingRoom = false;			
-			// affichage de la fenêtre pop-up
-			Scene scene = new Scene(dialogRoomSaved);
-			notifWindow.setTitle(title);
-			lblNotification.setText(body);
-			notifWindow.setScene(scene);
-			notifWindow.show();
-			// rafraîchissement des données
-			refreshData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-		
+		showRoomInfo();
+		roomTable.setDisable(false);
+	}		
 	
 	/*  ---------------------------
 	 * 
@@ -315,12 +282,14 @@ public class ArchitectRoomControl {
 	 *  --------------------------- */
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * à l'ouverture de la fenêtre, initialise les colonnes de la table
 	 */
 	@FXML
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
 		floorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor().getFloor_name()+""));
+		nbArtColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+				mainController.getAllArtsOfRoom(cellData.getValue()).size()+""));
 	}
 	
 	/**
@@ -341,18 +310,24 @@ public class ArchitectRoomControl {
 	 */
 	@FXML
 	private void handleRoomUpdate(ActionEvent event) {
-		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-		updatingRoom = true;
-		roomFormTitle.setText("Modifier une salle existante");
-		txtRoomName.setText(selectedRoom.getName());
-		cbbFloor.setValue(selectedRoom.getFloor());
-		txtRoomDimX.setText(selectedRoom.getDim_x()+"");
-		txtRoomDimY.setText(selectedRoom.getDim_y()+"");
-		txtRoomDimZ.setText(selectedRoom.getDim_z()+"");
-		txtRoomPosX.setText(selectedRoom.getPos_x()+"");
-		txtRoomPosY.setText(selectedRoom.getPos_y()+"");
-		showRoomEditingPane();
-		hideRoomInfo();
+		Room room = roomTable.getItems().get(selectedRoomLine);
+		if (mainController.getAllArtsOfRoom(room).size() == 0) {
+			Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
+			updatingRoom = true;
+			roomFormTitle.setText("Modifier une salle existante");
+			txtRoomName.setText(selectedRoom.getName());
+			cbbFloor.setValue(selectedRoom.getFloor());
+			txtRoomDimX.setText(MeasureConversion.intToString(selectedRoom.getDim_x()));
+			txtRoomDimY.setText(MeasureConversion.intToString(selectedRoom.getDim_y()));
+			txtRoomDimZ.setText(MeasureConversion.intToString(selectedRoom.getDim_z()));
+			txtRoomPosX.setText(selectedRoom.getPos_x()/100+"");
+			txtRoomPosY.setText(selectedRoom.getPos_y()/100+"");
+			showRoomEditingPane();
+			hideRoomInfo();
+		}
+		else {
+			mainController.notifyFail("Vous ne pouvez pas modifier une salle ayant des œuvres en exposition");
+		}
 	}
 	
 	/**
@@ -361,7 +336,22 @@ public class ArchitectRoomControl {
 	 */
 	@FXML
 	private void handleRoomDeletion(ActionEvent e) {
-		deleteRoom();
+		Room room = roomTable.getItems().get(selectedRoomLine);
+		if (mainController.getAllArtsOfRoom(room).size() == 0) {
+			deleteRoom();
+		}
+		else {
+			mainController.notifyFail("Vous ne pouvez pas supprimer une salle ayant des œuvres en exposition");
+		}		
+	}
+	
+	/**
+	 * event listener du bouton "Voir l'étage" d'une salle
+	 * @param e
+	 */
+	@FXML
+	private void handleShowFloor(ActionEvent e) {
+		mainController.showArchitectFloorPane();
 	}
 	
 	/**
@@ -431,15 +421,6 @@ public class ArchitectRoomControl {
 	}
 	
 	/**
-	 * event listener du bouton "OK" du pop-up de notification
-	 * @param e
-	 */
-	@FXML
-	private void confirm(ActionEvent e) {
-		notifWindow.close();
-	}
-	
-	/**
 	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée (clic)
 	 */
 	@FXML
@@ -464,15 +445,16 @@ public class ArchitectRoomControl {
 	private void handleBtnSurfaceAction(ActionEvent event) {
 		if (selectedRoomLine != -1) {
 			int surfaceNb = 0;
-			if (event.getSource().equals(btnFloor)) {
+			// TODO ici equals peut être remplacé par le plus simple ==, à vérifier
+			if (event.getSource() == btnFloor) {
 				surfaceNb = 0;
-			} else if (event.getSource().equals(btnWall1)) {
+			} else if (event.getSource() == btnWall1) {
 				surfaceNb = 1;
-			} else if (event.getSource().equals(btnWall2)) {
+			} else if (event.getSource() == btnWall2) {
 				surfaceNb = 2;
-			} else if (event.getSource().equals(btnWall3)) {
+			} else if (event.getSource() == btnWall3) {
 				surfaceNb = 3;
-			} else if (event.getSource().equals(btnWall4)) {
+			} else if (event.getSource() == btnWall4) {
 				surfaceNb = 4;
 			}
 			showSurfaceInfo(surfaceNb);

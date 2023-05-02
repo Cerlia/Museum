@@ -13,7 +13,7 @@ public class DisplayTypeDAO extends DAO<DisplayType> {
 	
 	private static final String TABLE = "display_type";
 	private static final String PK = "id_display_type";
-	private static final String NAME = "name";
+	private static final String NAME = "display_type_name";
 	
 	private static DisplayTypeDAO instance=null;
 

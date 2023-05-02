@@ -5,6 +5,14 @@ public class SurfaceType {
 	private int id_surface_type;
 	private String name;
 	
+	public void setId_surface_type(int id_surface_type) {
+		this.id_surface_type = id_surface_type;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * constructor for SurfaceType
 	 * @param id_surface_type

@@ -5,6 +5,14 @@ import museum.floorplan.SurfaceType;
 public class DisplaySurfaceType {
 	private int id_display_surface;
 	private SurfaceType surface_type;
+	public void setSurface_type(SurfaceType surface_type) {
+		this.surface_type = surface_type;
+	}
+
+	public void setDisplay_type(DisplayType display_type) {
+		this.display_type = display_type;
+	}
+
 	private DisplayType display_type;
 	
 	public DisplaySurfaceType(int id_display_surface, SurfaceType surface_type, DisplayType display_type) {

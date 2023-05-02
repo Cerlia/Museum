@@ -1,18 +1,12 @@
 package controller;
 
-import java.io.IOException;
-
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import museum.floorplan.Museum;
 
 public class ArchitectMuseumControl {
@@ -26,8 +20,6 @@ public class ArchitectMuseumControl {
 	private Main mainController;
 	// musée sur lequel on travaille actuellement
 	private Museum currentMuseum;
-	private Stage notifWindow = new Stage();
-	private Pane dialogMuseumCreated;
 	private boolean updatingMuseum = false;
 	private boolean addingMuseum = false;
 	
@@ -51,8 +43,6 @@ public class ArchitectMuseumControl {
 	private Button btnMuseumSave;
 	@FXML
 	private Button btnCancelSave;
-	@FXML
-	private Label lblNotification;
 
 	
 	
@@ -95,8 +85,8 @@ public class ArchitectMuseumControl {
 			this.currentMuseum = mainController.getCurrentMuseum();
 			addUpdateMuseumPane.setVisible(false);
 			lblMuseumName.setText(currentMuseum.getMuseum_name());
-			lblFloorNb.setText(mainController.getFloorCount()+"");
-			lblRoomNb.setText(mainController.getRoomCount()+"");
+			lblFloorNb.setText(mainController.getFloorData().size()+"");
+			lblRoomNb.setText(mainController.getRoomData().size()+"");
 			btnShowFloorPane.setVisible(true);
 			btnShowRoomPane.setVisible(true);
 		}
@@ -114,8 +104,8 @@ public class ArchitectMuseumControl {
 	 * demande au contrôleur principal de modifier le musée
 	 */
 	public void updateMuseum() {
-		String museumName = txtMuseumName.getText();
-		mainController.updateMuseum(currentMuseum.getId_museum(), museumName);
+		currentMuseum.setMuseum_name(txtMuseumName.getText());
+		mainController.updateMuseum(currentMuseum);
 	}
 	
 	/**
@@ -138,33 +128,14 @@ public class ArchitectMuseumControl {
 	}
 	
 	/**
-	 * à la demande du contrôleur principal, affiche une notification
+	 * 
 	 */
-	public void notifyMuseumSaved(String title, String body) {
-		if (notifWindow.getModality() != Modality.APPLICATION_MODAL) {
-			notifWindow.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			// lien avec la vue
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/NotificationWindow.fxml"));
-			// passage de ce contrôleur à la vue
-			loader.setController(this);
-			dialogMuseumCreated = (Pane)loader.load();
-			// rafraîchissement des infos à afficher
-			refreshData();
-			// désactivation des modes création/édition de musée
-			updatingMuseum = false;
-			addingMuseum = false;
-			// affichage de la fenêtre pop-up
-			Scene scene = new Scene(dialogMuseumCreated);
-			notifWindow.setTitle(title);
-			lblNotification.setText(body);
-			notifWindow.setScene(scene);
-			notifWindow.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void resetMuseumCreateEdit() {
+		// rafraîchissement des infos à afficher
+		refreshData();
+		// désactivation des modes création/édition de musée
+		updatingMuseum = false;
+		addingMuseum = false;		
 	}
 	
 	
@@ -217,18 +188,7 @@ public class ArchitectMuseumControl {
 	private void handleCancelSave(ActionEvent e) {
 		addUpdateMuseumPane.setVisible(false);
 	}
-	
-	/**
-	 * event listener du bouton "OK" du pop-up de notification
-	 * @param e
-	 */
-	@FXML
-	private void confirm(ActionEvent e) {
-		notifWindow.close();
-		// récupération des données mises à jour
-		refreshData();
-	}
-	
+		
 	/**
 	 * event listener du bouton pour afficher les étages
 	 */

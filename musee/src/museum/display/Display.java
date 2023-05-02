@@ -3,12 +3,43 @@ package museum.display;
 import java.util.List;
 
 import museum.art.Art;
-import museum.floorplan.Room;
 import museum.floorplan.Surface;
 
 public class Display {
 	private int id_display;
 	private String name;
+	public void setId_display(int id_display) {
+		this.id_display = id_display;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDim_x(int dim_x) {
+		this.dim_x = dim_x;
+	}
+
+	public void setDim_y(int dim_y) {
+		this.dim_y = dim_y;
+	}
+
+	public void setDim_z(int dim_z) {
+		this.dim_z = dim_z;
+	}
+
+	public void setSurface(Surface surface) {
+		this.surface = surface;
+	}
+
+	public void setDisplay_model(DisplayModel display_model) {
+		this.display_model = display_model;
+	}
+
+	public void setArts(List<Art> arts) {
+		this.arts = arts;
+	}
+
 	private int dim_x;
 	private int dim_y;
 	private int dim_z;

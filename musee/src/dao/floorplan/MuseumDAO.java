@@ -68,7 +68,6 @@ public class MuseumDAO extends DAO<Museum> {
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, museum.getMuseum_name());
 			pst.executeUpdate();
-			data.put(museum.getId_museum(), museum);
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();

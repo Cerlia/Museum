@@ -12,13 +12,11 @@ import java.util.List;
 import dao.Connect;
 import dao.DAO;
 import dao.display.DisplayDAO;
-import dao.floorplan.RoomDAO;
 import museum.art.Art;
 import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
 import museum.display.Display;
-import museum.floorplan.Room;
 
 public class ArtDAO extends DAO<Art> {
 	
@@ -71,8 +69,8 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(8, art.getDim_x());
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
-			pst.setNull(11, Types.INTEGER);
-			pst.setBytes(12, art.getImage());
+			pst.setBytes(11, art.getImage());
+			pst.setNull(12, Types.INTEGER);
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -120,7 +118,6 @@ public class ArtDAO extends DAO<Art> {
 			}
 			pst.setInt(13, art.getId_art());
 			pst.executeUpdate();
-			data.put(art.getId_art(), art);
 		} catch (SQLException e) {
 			success=false;
 			e.printStackTrace();
@@ -134,7 +131,7 @@ public class ArtDAO extends DAO<Art> {
 	@Override
 	public Art read(int id) {
 		Art art = null;
-		if (data.containsKey(id)) {
+		if (data.containsKey(id) && data.get(id).getImage() != null) {
 			art=data.get(id);
 		}
 		else {
@@ -167,9 +164,17 @@ public class ArtDAO extends DAO<Art> {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			// TODO supprimer ce TEST du nombre de read, mis en place pour chercher cause de ralentissement au démarrage
-			nbRead += 1;
-			System.out.println(nbRead + " (readFull)");
+		}
+		return art;
+	}
+	
+	public Art readLight(int id_art) {
+		Art art = null;
+		if (data.containsKey(id_art)) {
+			art=data.get(id_art);
+		}
+		else {
+			art=readLightFromDB(id_art);
 		}
 		return art;
 	}
@@ -177,7 +182,7 @@ public class ArtDAO extends DAO<Art> {
 	/**
 	 * lit une œuvre en BD en version allégée (sans l'image)
 	 */
-	public Art readLight(int id) {
+	public Art readLightFromDB(int id) {
 		Art artLight = null;
 		if (dataLight.containsKey(id)) {
 			artLight=dataLight.get(id);
@@ -210,11 +215,7 @@ public class ArtDAO extends DAO<Art> {
 				dataLight.put(id, artLight);
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			// TODO à supprimer
-			// lignes test nombre de read d'une classe
-			nbRead += 1;
-			System.out.println(nbRead + " (readLight) ");			
+			}		
 		}	
 		return artLight;
 	}
@@ -229,6 +230,55 @@ public class ArtDAO extends DAO<Art> {
 		Art art = null;
 		try {			
 			String requete = "SELECT * FROM " + TABLE +" WHERE "+DISPLAY+"="+id_display;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLight(id_art);
+				arts.add(art);
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return arts;
+	}
+	
+	/**
+	 * recharge la liste des œuvres d'un présentoir donné
+	 * @param id_room
+	 * @return
+	 */
+	public List<Art> reloadArtsOfDisplay(int id_display) {
+		List<Art> arts = new ArrayList<Art>();
+		Art art = null;
+		try {
+			String requete = "SELECT * FROM " + TABLE +" WHERE "+DISPLAY+"="+id_display;
+			ResultSet rs = Connect.executeQuery(requete);
+			while(rs.next()) {
+				int id_art = rs.getInt(1);
+				art = ArtDAO.getInstance().readLightFromDB(id_art);
+				arts.add(art);
+			}
+		} catch (SQLException e) {
+		// e.printStackTrace();
+		System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
+		}
+		return arts;
+	}
+	
+	/**
+	 * retourne la liste des œuvres d'un étage donné
+	 * @param id_floor
+	 * @return
+	 */
+	public List<Art> readAllArtsOfFloor(int id_floor) {
+		List<Art> arts = new ArrayList<Art>();
+		Art art = null;
+		try {			
+			String requete = "SELECT a."+PK+" FROM "+TABLE+" a JOIN display d ON (a.ref_display = d.id_display)"
+					+ " JOIN surface s ON (s.id_surface = d.ref_surface)"
+					+ " JOIN room r ON (r.id_room = s.ref_room)"
+					+ " WHERE r.ref_floor=" + id_floor;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_art = rs.getInt(1);
