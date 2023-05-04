@@ -19,6 +19,7 @@ public class FloorDAO extends DAO<Floor> {
 	private static final String NAME = "floor_name";
 	private static final String DIMX = "dim_x";
 	private static final String DIMY = "dim_y";
+	private static final String RANK = "rank";
 	
 	private static FloorDAO instance=null;
 
@@ -37,11 +38,12 @@ public class FloorDAO extends DAO<Floor> {
 	public boolean create(Floor floor) {
 		boolean success = true;
 		try {
-			String requete = "INSERT INTO "+TABLE+" ("+NAME+", "+DIMX+", "+DIMY+") VALUES (?, ?, ?)";
+			String requete = "INSERT INTO "+TABLE+" ("+NAME+", "+DIMX+", "+DIMY+", "+RANK+") VALUES (?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getFloor_name());
 			pst.setInt(2, floor.getDim_x());
 			pst.setInt(3, floor.getDim_y());
+			pst.setInt(4, floor.getRank());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -73,17 +75,33 @@ public class FloorDAO extends DAO<Floor> {
 		}
 		return success;
 	}
+	
+	public boolean deleteAll() {
+		boolean success = true;
+		try {
+			String requete = "DELETE FROM "+TABLE;
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete);
+			pst.executeUpdate();
+			data.clear();
+		} catch (SQLException e) {
+			success=false;
+			e.printStackTrace();
+		}
+		return success;
+	}
 
 	@Override
 	public boolean update(Floor floor) {
 		boolean success = true;
 		try {
-			String requete = "UPDATE "+TABLE+" SET "+NAME+"= ?,"+DIMX+"= ?,"+DIMY+"= ? WHERE "+PK+"= ?";
+			String requete = "UPDATE "+TABLE+" SET "+NAME+"= ?,"+DIMX+"= ?,"+
+					DIMY+"= ?,"+RANK+"= ? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setString(1, floor.getFloor_name());
 			pst.setInt(2, floor.getDim_x());
 			pst.setInt(3, floor.getDim_y());
-			pst.setInt(4, floor.getId_floor());
+			pst.setInt(4, floor.getRank());
+			pst.setInt(5, floor.getId_floor());
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			success=false;
@@ -106,10 +124,11 @@ public class FloorDAO extends DAO<Floor> {
 				String name = rs.getString(NAME);
 				int dim_x = rs.getInt(DIMX);
 				int dim_y = rs.getInt(DIMY);
+				int rank = rs.getInt(RANK);
 				// on crée une liste de salles, vide
 				List<Room> rooms = new ArrayList<Room>();
 				// on crée l'objet Floor, avec cette liste vide en tant que liste de salles
-				floor = new Floor(id, name, dim_x, dim_y, rooms);		
+				floor = new Floor(id, name, dim_x, dim_y, rank, rooms);		
 				// on stocke l'objet dans la hashmap, ou plus précisément son adresse
 				data.put(id, floor);
 				// dans l'objet rooms (référence à son adresse en mémoire plus exactement),
@@ -128,7 +147,7 @@ public class FloorDAO extends DAO<Floor> {
 		List<Floor> floors = new ArrayList<Floor>();
 		Floor floor = null;
 		try {			
-			String requete = "SELECT * FROM " + TABLE + " ORDER BY " + NAME;
+			String requete = "SELECT * FROM " + TABLE + " ORDER BY " + RANK;
 			ResultSet rs = Connect.executeQuery(requete);
 			while(rs.next()) {
 				int id_floor = rs.getInt(1);

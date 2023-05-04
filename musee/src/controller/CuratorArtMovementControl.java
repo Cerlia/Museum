@@ -58,7 +58,7 @@ public class CuratorArtMovementControl {
 	 *  --------------------------- */
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

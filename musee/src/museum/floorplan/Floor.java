@@ -7,6 +7,7 @@ public class Floor {
 	private String floor_name;
 	private int dim_x;
 	private int dim_y;
+	private int rank;
 	private List<Room> rooms;
 
 
@@ -14,24 +15,33 @@ public class Floor {
 	 * constructor for Floor if id_floor is known
 	 * @param id_floor
 	 * @param floor_name
+	 * @param dim_x
+	 * @param dim_y
+	 * @param rank
+	 * @param rooms
 	 */
-	public Floor(int id_floor, String floor_name, int dim_x, int dim_y, List<Room> rooms) {
+	public Floor(int id_floor, String floor_name, int dim_x, int dim_y, int rank, List<Room> rooms) {
 		this.setId_floor(id_floor);
 		this.floor_name = floor_name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
+		this.setRank(rank);
 		this.rooms = rooms;
 	}
 	
 	/**
 	 * constructor for Floor if id_floor is unknown
-	 * @param id_floor
 	 * @param floor_name
+	 * @param dim_x
+	 * @param dim_y
+	 * @param rank
+	 * @param rooms
 	 */
-	public Floor(String floor_name, int dim_x, int dim_y, List<Room> rooms) {
+	public Floor(String floor_name, int dim_x, int dim_y, int rank, List<Room> rooms) {
 		this.floor_name = floor_name;
 		this.dim_x = dim_x;
 		this.dim_y = dim_y;
+		this.setRank(rank);
 		this.rooms = rooms;
 	}
 
@@ -82,5 +92,13 @@ public class Floor {
 	@Override
 	public String toString() {
 		return floor_name;
+	}
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
 	}
 }

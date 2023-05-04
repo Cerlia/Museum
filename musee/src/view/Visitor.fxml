@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VisitorControl">
+   <children>
+      <Label fx:id="lblMuseum" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="1369.0" text="Musée XXX - Etage YYY">
+         <font>
+            <Font size="24.0" />
+         </font></Label>
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="43.0" layoutY="84.0" onMouseClicked="#handleImgFloorUpClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/arrow-up.png" />
+         </image>
+      </ImageView>
+      <ImageView onMouseClicked="#handleImgFloorDownClick" fitHeight="60.0" fitWidth="60.0" layoutX="43.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/arrow-dn.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="147.0" layoutY="84.0" prefHeight="27.0" prefWidth="422.0" text="Liste des salles">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ListView fx:id="lstRooms" layoutX="147.0" layoutY="120.0" prefHeight="163.0" prefWidth="222.0" />
+      <Label layoutX="147.0" layoutY="316.0" prefHeight="27.0" prefWidth="422.0" text="Œuvres en exposition">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tblArts" layoutX="147.0" layoutY="353.0" prefHeight="235.0" prefWidth="535.0">
+        <columns>
+          <TableColumn fx:id="colTitle" prefWidth="235.1999969482422" text="Titre" />
+          <TableColumn fx:id="colAuthor" minWidth="0.0" prefWidth="297.60003662109375" text="Auteur" />
+        </columns>
+      </TableView>
+      <AnchorPane layoutX="700.0" layoutY="84.0" prefHeight="505.0" prefWidth="687.0" style="-fx-background-color: #ffffff;" />
+   </children>
+</AnchorPane>

@@ -13,5 +13,6 @@
 	  <TextField fx:id="txtLogin" layoutX="433.0" layoutY="258.0" />
       <PasswordField fx:id="txtPassword" layoutX="433.0" layoutY="294.0" />      
       <Button layoutX="433.0" layoutY="341.0" mnemonicParsing="false" onAction="#handleConnectionClick" text="Connexion" />
+      <Label fx:id="lblInfoLogin" alignment="CENTER" layoutX="319.0" layoutY="412.0" prefHeight="18.0" prefWidth="307.0" style="-fx-text-fill: #ff1100;" textAlignment="CENTER" />
    </children>
 </AnchorPane>

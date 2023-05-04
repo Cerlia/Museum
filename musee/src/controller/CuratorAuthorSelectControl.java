@@ -152,7 +152,8 @@ public class CuratorAuthorSelectControl {
 		String firstName = txtAuthorFirstName.getText();
 		String additionalName = txtAuthorAddName.getText();
 		String authorDates = txtAuthorDates.getText();
-		mainController.addAuthor(lastName, firstName, additionalName, authorDates);
+		Author author = new Author(lastName, firstName, additionalName, authorDates);
+		mainController.addAuthor(author);
 	}
 	
 	/**
@@ -186,7 +187,7 @@ public class CuratorAuthorSelectControl {
 	 *  --------------------------- */
 	
 	/**
-	 * à l'ouverture de la fenêtre, initialise le contenu des colonnes
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

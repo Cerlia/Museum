@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="566.0" prefWidth="1426.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectRoomControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArchitectRoomControl">
    <children>
-   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="43.0" prefWidth="1426.0" style="-fx-background-color: #004024;" text="GESTION DES SALLES" textAlignment="JUSTIFY" textFill="WHITE">
+   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="43.0" prefWidth="1400.0" style="-fx-background-color: #004024;" text="GESTION DES SALLES" textAlignment="JUSTIFY" textFill="WHITE">
          <font>
             <Font size="26.0" />
          </font>
@@ -89,7 +89,7 @@
                   <Label fx:id="lblSurfaceZ" layoutX="145.0" layoutY="108.0" prefHeight="17.0" prefWidth="90.0" />
                </children>
             </Pane>
-            <Button fx:id="btnShowFloor" layoutX="65.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleShowFloor" prefHeight="26.0" prefWidth="222.0" text="Voir l'étage" />
+            <Button fx:id="btnShowFloor" layoutX="65.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleShowFloor" prefHeight="26.0" prefWidth="222.0" text="Voir les étages" />
          </children>
       </AnchorPane>
    </children>

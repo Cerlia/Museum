@@ -55,9 +55,20 @@ public class MuseumDAO extends DAO<Museum> {
 	}
 
 	@Override
-	public boolean delete(Museum obj) {
-		// le musée peut seulement être créé et modifié, pas supprimé
-		return false;
+	public boolean delete(Museum museum) {
+		boolean success = true;
+		try {
+			int id_museum = museum.getId_museum();
+			String requete = "DELETE FROM "+TABLE+" WHERE "+PK+" = ?";
+			PreparedStatement pst = Connect.getInstance().prepareStatement(requete);
+			pst.setInt(1, id_museum);
+			pst.executeUpdate();
+			data.remove(id_museum);
+		} catch (SQLException e) {
+			success=false;
+			e.printStackTrace();
+		}
+		return success;
 	}
 
 	@Override

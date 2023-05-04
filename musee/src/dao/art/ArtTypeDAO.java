@@ -28,21 +28,21 @@ public class ArtTypeDAO extends DAO<ArtType> {
 		super();
 	}
 
+	// Not used
 	@Override
 	public boolean create(ArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean delete(ArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean update(ArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

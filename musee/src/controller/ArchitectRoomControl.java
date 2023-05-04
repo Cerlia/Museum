@@ -137,6 +137,7 @@ public class ArchitectRoomControl {
 	 */
 	public void refreshData() {
 		roomTable.setItems(mainController.getRoomData());
+		roomTable.refresh();
 		if (mainController.getRoomData().size() > 0) {
 			selectedRoomLine = 0;
 			roomTable.getSelectionModel().select(0);
@@ -153,14 +154,15 @@ public class ArchitectRoomControl {
 	 */
 	public void addRoom() {
 		try {
-			String roomName = txtRoomName.getText();
+			String name = txtRoomName.getText();
 			Floor floor = cbbFloor.getValue();
-			int roomDimX = MeasureConversion.textToInt(txtRoomDimX.getText());
-			int roomDimY = MeasureConversion.textToInt(txtRoomDimY.getText());
-			int roomDimZ = MeasureConversion.textToInt(txtRoomDimZ.getText());
-			int roomPosX = Integer.parseInt(txtRoomPosX.getText());
-			int roomPosY = Integer.parseInt(txtRoomPosY.getText());
-			mainController.addRoom(roomName, floor, roomDimX, roomDimY, roomDimZ, roomPosX, roomPosY);
+			int dimX = MeasureConversion.textToInt(txtRoomDimX.getText());
+			int dimY = MeasureConversion.textToInt(txtRoomDimY.getText());
+			int dimZ = MeasureConversion.textToInt(txtRoomDimZ.getText());
+			int posX = Integer.parseInt(txtRoomPosX.getText());
+			int posY = Integer.parseInt(txtRoomPosY.getText());
+			Room room = new Room(name, dimX, dimY, dimZ, posX, posY, floor, null);	
+			mainController.addRoom(room);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de la salle");
 		}		
@@ -282,7 +284,7 @@ public class ArchitectRoomControl {
 	 *  --------------------------- */
 	
 	/**
-	 * à l'ouverture de la fenêtre, initialise les colonnes de la table
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

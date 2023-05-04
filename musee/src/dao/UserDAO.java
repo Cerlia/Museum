@@ -32,21 +32,21 @@ public class UserDAO extends DAO<User> {
 		super();
 	}	
 	
+	// Not used
 	@Override
 	public boolean create(User obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean delete(User obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean update(User obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

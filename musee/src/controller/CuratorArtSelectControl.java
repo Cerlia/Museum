@@ -149,6 +149,23 @@ public class CuratorArtSelectControl {
 	public void refreshData() {
 		artTable.setItems(mainController.getArtData());
 	}
+	
+	public Display addDisplay(String name, Art art) {
+		Surface surface = chbSurfaceChoice.getItems().get(selectedSurfaceLine);
+		DisplayModel dispMod = tblNewDisplay.getItems().get(selectedNewDisplayLine);
+		// par défaut, les dimensions du présentoir seront celles du modèle de présentoir
+		int dimX = dispMod.getDim_x();
+		int dimY = dispMod.getDim_y();
+		int dimZ = dispMod.getDim_z();
+		// ... sauf si c'est un modèle sans dimensions
+		if (dimX == 0) {
+			dimX = art.getDim_x();
+			dimY = art.getDim_y();
+			dimZ = art.getDim_z();
+		}		
+		Display display = new Display(name, dimX, dimY, dimZ, surface, dispMod, null);
+		return mainController.addDisplay(display);
+	}
 		
 	
 	/*  ---------------------------
@@ -158,7 +175,7 @@ public class CuratorArtSelectControl {
 	 *  --------------------------- */
 	
 	/**
-	 * à l'ouverture de la fenêtre, initialise le contenu des colonnes
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {
@@ -347,9 +364,8 @@ public class CuratorArtSelectControl {
 		}				
 		// SI le présentoir choisi est nouveau
 		if (newDisplay == true) {
-			Surface surface = chbSurfaceChoice.getItems().get(selectedSurfaceLine);
-			DisplayModel dispMod = tblNewDisplay.getItems().get(selectedNewDisplayLine);
-			display = mainController.addDisplay(art, dispMod, surface, txtDisplayName.getText());
+			String name = txtDisplayName.getText();
+			display = addDisplay(name, art);
 		};
 		// Dans tous les cas, update de l'œuvre avec la référence du présentoir
 		art.setDisplay(display);

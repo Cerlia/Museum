@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import application.Main;
+import dao.art.ArtStatusDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +27,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.art.Art;
+import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
 import utils.ImageConversion;
@@ -253,21 +255,26 @@ public class CuratorArtDataControl {
 	 */
 	private void addArt() {
 		try {
-			String artTitle = txtArtTitle.getText();
-			String artCode = txtArtCode.getText();
-			String artDates = txtArtDates.getText();
-			String artMaterials = txtMaterials.getText();			
-			int artDimX = Integer.parseInt(txtDimX.getText());
-			int artDimY = Integer.parseInt(txtDimY.getText());
-			int artDimZ = Integer.parseInt(txtDimZ.getText());
-			byte[] artImage = null;
+			String title = txtArtTitle.getText();
+			String code = txtArtCode.getText();
+			String date = txtArtDates.getText();
+			String materials = txtMaterials.getText();			
+			int dimX = Integer.parseInt(txtDimX.getText());
+			int dimY = Integer.parseInt(txtDimY.getText());
+			int dimZ = Integer.parseInt(txtDimZ.getText());
+			byte[] image = null;
 			if (this.file != null) {
-				artImage = ImageConversion.imageToByteArray(this.file);
+				image = ImageConversion.imageToByteArray(this.file);
 			}
 			Author author = cbbAuthor.getValue();
-			ArtType artType = cbbArtType.getValue();
-			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
-					artImage, author, null, artType, null);
+			ArtType type = cbbArtType.getValue();
+			// par défaut, une œuvre est "Possédée" (id_art_status = 1)
+			// et elle n'a pas de présentoir (display = null)
+			// TODO l'oeuvre pourrait avoir le statut "Prêté" ou "Emprunté"
+			ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
+			Art art = new Art(code, title, date, materials, dimX, dimY, dimZ, image,
+					author, artStatus, type, null);
+			mainController.addArt(art);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'œuvre");
 			e.printStackTrace();
@@ -309,7 +316,7 @@ public class CuratorArtDataControl {
 	 *  --------------------------- */
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

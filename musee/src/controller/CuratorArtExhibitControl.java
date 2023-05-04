@@ -3,7 +3,6 @@ package controller;
 import java.io.IOException;
 
 import application.Main;
-import dao.art.ArtDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -201,7 +200,7 @@ public class CuratorArtExhibitControl {
 	 *  --------------------------- */
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

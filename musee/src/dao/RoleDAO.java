@@ -26,21 +26,21 @@ public class RoleDAO extends DAO<Role> {
 		super();
 	}
 
+	// Not used
 	@Override
 	public boolean create(Role obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean delete(Role obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean update(Role obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
