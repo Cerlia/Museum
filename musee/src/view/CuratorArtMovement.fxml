@@ -5,7 +5,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtMovementControl">
    <children>
-      <Label alignment="CENTER" layoutX="510.0" layoutY="28.0" prefHeight="18.0" prefWidth="397.0" text="Interface conservateur - mouvements des oeuvres" textAlignment="CENTER" />
+      <Label layoutX="510.0" layoutY="28.0" prefHeight="18.0" prefWidth="397.0" styleClass="mainTitle" text="MOUVEMENTS DES ŒUVRES" />
       <AnchorPane layoutX="17.0" layoutY="78.0" minHeight="0.0" minWidth="0.0" prefHeight="510.0" prefWidth="1386.0" />
    </children>
 </AnchorPane>

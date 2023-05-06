@@ -211,11 +211,7 @@ public class CuratorArtDataControl {
 			lblArtX.setText(selectedArt.getDim_x()+"");
 			lblArtY.setText(selectedArt.getDim_y()+"");
 			lblArtZ.setText(selectedArt.getDim_z()+"");
-			String fullName = selectedArt.getAuthor().getLast_name() + " " + selectedArt.getAuthor().getFirst_name();
-			if (!selectedArt.getAuthor().getAdditional_name().equals("")) {
-				fullName += ", dit " + selectedArt.getAuthor().getAdditional_name();
-			}
-			lblAuthor.setText(fullName);
+			lblAuthor.setText(selectedArt.getAuthor().getFullName());
 			lblArtType.setText(selectedArt.getArt_type().getName());
 			lblArtStatus.setText(selectedArt.getArt_status().getName());			
 			// affiche l'illustration de cette oeuvre si elle existe

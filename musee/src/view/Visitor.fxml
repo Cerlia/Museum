@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.VisitorControl">
@@ -15,33 +16,60 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="43.0" layoutY="84.0" onMouseClicked="#handleImgFloorUpClick" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="19.0" layoutY="84.0" onMouseClicked="#handleImgFloorUpClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/arrow-up.png" />
          </image>
       </ImageView>
-      <ImageView onMouseClicked="#handleImgFloorDownClick" fitHeight="60.0" fitWidth="60.0" layoutX="43.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="19.0" layoutY="166.0" onMouseClicked="#handleImgFloorDownClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/arrow-dn.png" />
          </image>
       </ImageView>
-      <Label layoutX="147.0" layoutY="84.0" prefHeight="27.0" prefWidth="422.0" text="Liste des salles">
+      <Label layoutX="123.0" layoutY="84.0" prefHeight="27.0" prefWidth="422.0" text="Salles">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <ListView fx:id="lstRooms" layoutX="147.0" layoutY="120.0" prefHeight="163.0" prefWidth="222.0" />
-      <Label layoutX="147.0" layoutY="316.0" prefHeight="27.0" prefWidth="422.0" text="Œuvres en exposition">
+      <ListView fx:id="lstRooms" layoutX="123.0" layoutY="120.0" onKeyReleased="#handleRoomTableKeyPressed" onMouseClicked="#handleRoomTableAction" prefHeight="163.0" prefWidth="222.0" />
+      <Label fx:id="lblArtTitle" layoutX="123.0" layoutY="316.0" prefHeight="27.0" prefWidth="422.0" text="Œuvres en exposition">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TableView fx:id="tblArts" layoutX="147.0" layoutY="353.0" prefHeight="235.0" prefWidth="535.0">
+      <TableView fx:id="tblArts" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" layoutX="123.0" layoutY="353.0" prefHeight="235.0" prefWidth="535.0">
         <columns>
           <TableColumn fx:id="colTitle" prefWidth="235.1999969482422" text="Titre" />
           <TableColumn fx:id="colAuthor" minWidth="0.0" prefWidth="297.60003662109375" text="Auteur" />
         </columns>
       </TableView>
-      <AnchorPane layoutX="700.0" layoutY="84.0" prefHeight="505.0" prefWidth="687.0" style="-fx-background-color: #ffffff;" />
+      <AnchorPane fx:id="pneArtInfo" layoutX="670.0" layoutY="16.0" minWidth="400.0" prefHeight="572.0" prefWidth="717.0" style="-fx-background-color: #FFFFFF;">
+         <children>
+            <Label fx:id="lblArtTitle" alignment="TOP_LEFT" layoutX="24.0" layoutY="23.0" prefHeight="54.0" prefWidth="646.0" text="Titre" wrapText="true">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblArtDates" layoutX="24.0" layoutY="110.0" prefHeight="18.0" prefWidth="331.0" text="Dates">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblMaterials" layoutX="24.0" layoutY="142.0" prefHeight="18.0" prefWidth="232.0" text="Matériaux" />
+            <Label fx:id="lblArtDim" layoutX="24.0" layoutY="176.0" prefHeight="18.0" prefWidth="232.0" text="Dimensions" />
+            <Label fx:id="lblAuthor" layoutX="24.0" layoutY="80.0" prefHeight="20.0" prefWidth="422.0" text="Auteur">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblArtType" layoutX="24.0" layoutY="206.0" prefHeight="18.0" prefWidth="232.0" text="Type" />
+            <Pane layoutX="290.0" layoutY="170.0" prefHeight="382.0" prefWidth="400.0">
+               <children>
+                  <ImageView fx:id="imgArt" fitHeight="361.0" fitWidth="360.0" layoutX="22.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      
    </children>
 </AnchorPane>

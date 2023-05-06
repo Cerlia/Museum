@@ -184,27 +184,4 @@ public class RoomDAO extends DAO<Room> {
 		}
 		return rooms;
 	}
-	
-	/**
-	 * recharge la liste des salles d'un étage donné
-	 * @param id_floor
-	 * @return
-	 */
-	public List<Room> reloadRoomsOfFloor(int id_floor) {
-		List<Room> rooms = new ArrayList<Room>();
-		Room room = null;
-		try {			
-			String requete = "SELECT * FROM " + TABLE +" WHERE "+FLOOR+"="+id_floor;
-			ResultSet rs = Connect.executeQuery(requete);
-			while(rs.next()) {
-				int id_room = rs.getInt(1);
-				room = RoomDAO.getInstance().readFromDB(id_room);
-				rooms.add(room);
-			}
-		} catch (SQLException e) {
-			// e.printStackTrace();
-			System.out.println("Échec de la tentative d'interrogation Select * : " + e.getMessage()) ;
-		}
-		return rooms;
-	}
  }

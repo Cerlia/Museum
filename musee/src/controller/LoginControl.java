@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import museum.User;
 
 public class LoginControl {
@@ -77,5 +78,10 @@ public class LoginControl {
 		} else {
 			lblInfoLogin.setText("Les deux champs doivent être remplis");
 		}
+	}
+	
+	@FXML
+	private void handleTextfieldClick(MouseEvent event) {
+		lblInfoLogin.setText("");
 	}
 }

@@ -125,7 +125,18 @@ public class ArchitectFloorControl {
 			int floorDimY = MeasureConversion.textToInt(txtFloorDimY.getText());
 			int floorRank = (int)spnRank.getValue();
 			Floor floor = new Floor(floorName, floorDimX, floorDimY, floorRank, null);
+			// on vérifie que le rang n'a pas déjà été donné à un étage existant
+			boolean newRank = true;
+			for (Floor existingFloor : mainController.getFloorData()) {
+				if (existingFloor.getRank() == floor.getRank()) {
+					newRank = false;
+				}
+			}
+			if (newRank) {
 			mainController.addFloor(floor);
+			} else {
+				mainController.notifyFail("Un autre étage est déjà associé à ce rang");
+			}
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}
@@ -137,11 +148,22 @@ public class ArchitectFloorControl {
 	public void updateFloor() {
 		try {
 			Floor selectedFloor = floorTable.getItems().get(selectedFloorLine);
-			selectedFloor.setFloor_name(txtFloorName.getText());
-			selectedFloor.setDim_x(MeasureConversion.textToInt(txtFloorDimX.getText()));
-			selectedFloor.setDim_y(MeasureConversion.textToInt(txtFloorDimY.getText()));
-			selectedFloor.setRank((int)spnRank.getValue());
-			mainController.updateFloor(selectedFloor);
+			// on vérifie que le rang n'a pas déjà été donné à un étage existant
+			boolean newRank = true;
+			for (Floor existingFloor : mainController.getFloorData()) {
+				if (existingFloor.getRank() == (int)spnRank.getValue() && existingFloor != selectedFloor) {
+					newRank = false;
+				}
+			}
+			if (newRank) {
+				selectedFloor.setFloor_name(txtFloorName.getText());
+				selectedFloor.setDim_x(MeasureConversion.textToInt(txtFloorDimX.getText()));
+				selectedFloor.setDim_y(MeasureConversion.textToInt(txtFloorDimY.getText()));
+				selectedFloor.setRank((int)spnRank.getValue());			
+				mainController.updateFloor(selectedFloor);
+			} else {
+				mainController.notifyFail("Un autre étage est déjà associé à ce rang");
+			}
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}		

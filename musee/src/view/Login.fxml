@@ -5,14 +5,33 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginControl">
    <children>
-      <Label layoutX="367.0" layoutY="262.0" text="Identifiant" textAlignment="RIGHT" />
-      <Label layoutX="349.0" layoutY="298.0" text="Mot de passe" textAlignment="RIGHT" />
-	  <TextField fx:id="txtLogin" layoutX="433.0" layoutY="258.0" />
-      <PasswordField fx:id="txtPassword" layoutX="433.0" layoutY="294.0" />      
-      <Button layoutX="433.0" layoutY="341.0" mnemonicParsing="false" onAction="#handleConnectionClick" text="Connexion" />
-      <Label fx:id="lblInfoLogin" alignment="CENTER" layoutX="319.0" layoutY="412.0" prefHeight="18.0" prefWidth="307.0" style="-fx-text-fill: #ff1100;" textAlignment="CENTER" />
+      <Label layoutX="353.0" layoutY="263.0" text="Identifiant" textAlignment="RIGHT">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label layoutX="333.0" layoutY="305.0" text="Mot de passe" textAlignment="RIGHT">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+	  <TextField fx:id="txtLogin" layoutX="433.0" layoutY="258.0" onMouseClicked="#handleTextfieldClick">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <PasswordField fx:id="txtPassword" layoutX="433.0" layoutY="300.0" onMouseClicked="#handleTextfieldClick">
+         <font>
+            <Font size="14.0" />
+         </font></PasswordField>      
+      <Button layoutX="433.0" layoutY="354.0" mnemonicParsing="false" onAction="#handleConnectionClick" text="Connexion">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Label fx:id="lblInfoLogin" alignment="CENTER" layoutX="309.0" layoutY="433.0" prefHeight="20.0" prefWidth="335.0" style="-fx-text-fill: #ff1100;" textAlignment="CENTER" textFill="#a42c2c">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
    </children>
 </AnchorPane>

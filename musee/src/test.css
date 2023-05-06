@@ -1,0 +1,83 @@
+.button{
+    -fx-text-fill: #000000;
+    background-color: #b8cbc4;
+    -fx-background-color: #b8cbc4;
+    border-style: solid inside;
+    -fx-border-style: solid inside;
+    border-radius: 5;
+    -fx-border-radius: 5;
+    -fx-background-border-radius: 10;
+    border-width: 0px;
+    -fx-border-width: 0px;
+    border-color: #88a89c;
+    -fx-border-color: #88a89c;
+}
+
+.button:hover{
+    background-color: #88a89c;
+    -fx-background-color: #88a89c;
+}
+
+.buttonSurface {
+	border-width: 1px;
+    -fx-border-width: 1px;
+	background-color: #ffffff;
+    -fx-background-color: #ffffff;
+    border-color: #484848;
+    -fx-border-color: #484848;
+    border-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-border-radius: 0;
+}
+
+.buttonSurface:hover {
+	background-color: #ececec;
+    -fx-background-color: #ececec;
+}
+
+.cell:selected {
+	-fx-text-fill: #000000;
+	background-color: #bae2d0;
+    -fx-background-color: #bae2d0;
+}
+
+.cell {
+	-fx-text-fill: #000000;
+}
+
+.text-field {
+    -fx-focus-color: #a44500;
+    -fx-faint-focus-color: #a4450022;
+}
+
+.spinner {
+	font-size: 14px;
+	-fx-font-size: 14px;
+	-fx-focus-color: #a44500;
+    -fx-faint-focus-color: #a4450022;
+}
+
+.whitePane {
+	background-color: #ffffff;
+	-fx-background-color: #ffffff;
+	border-color: #cdcdcd;
+	-fx-border-color: #cdcdcd;	
+}
+
+.grayPane {
+	background-color: #ececec;
+	-fx-background-color: #ececec;
+}
+
+.mainTitle {
+	-fx-text-fill: #ffffff;
+	-fx-text-alignment: justify;
+	background-color: #004024;
+	-fx-background-color: #004024;
+	-fx-alignment: bottom-center;
+}
+
+.subTitle {
+	background-color: #bae2d0;
+	-fx-background-color: #bae2d0;
+}

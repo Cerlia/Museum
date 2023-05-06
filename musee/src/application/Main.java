@@ -532,22 +532,11 @@ public class Main extends Application {
 	 * @param floor
 	 */
 	public void addFloor(Floor floor) {
-		// on vérifie que le rang n'a pas déjà été donné à un étage existant
-		boolean newRank = true;
-		for (Floor existingFloor : this.getFloorData()) {
-			if (existingFloor.getRank() == floor.getRank()) {
-				newRank = false;
-			}
-		}
-		if (newRank) {
-			if (FloorDAO.getInstance().create(floor)) {
-				this.notifySuccess("L'étage a été créé.");
-				architectFloorCtrl.resetFloorCreateEdit();
-			} else {
-				this.notifyFail("Impossible de créer l'étage");
-			}
+		if (FloorDAO.getInstance().create(floor)) {
+			this.notifySuccess("L'étage a été créé.");
+			architectFloorCtrl.resetFloorCreateEdit();
 		} else {
-			this.notifyFail("Un autre étage est déjà associé à ce rang");
+			this.notifyFail("Impossible de créer l'étage");
 		}
 	}
 	
@@ -557,7 +546,7 @@ public class Main extends Application {
 	 */
 	public void addRoom(Room room) {		
 		if (RoomDAO.getInstance().create(room)) {
-			room.getFloor().setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(room.getFloor().getId_floor()));
+			room.getFloor().setRooms(RoomDAO.getInstance().readAllRoomsOfFloor(room.getFloor().getId_floor()));
 			this.notifySuccess("La salle a été créée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -617,11 +606,22 @@ public class Main extends Application {
 	}
 	
 	public void updateFloor(Floor floor) {
-		if (FloorDAO.getInstance().update(floor)) {
-			this.notifySuccess("L'étage a été modifié.");
-			architectFloorCtrl.resetFloorCreateEdit();
+		// on vérifie que le rang n'a pas déjà été donné à un étage existant
+		boolean newRank = true;
+		for (Floor existingFloor : this.getFloorData()) {
+			if (existingFloor.getRank() == floor.getRank() && existingFloor != floor) {
+				newRank = false;
+			}
+		}
+		if (newRank) {
+			if (FloorDAO.getInstance().update(floor)) {
+				this.notifySuccess("L'étage a été modifié.");
+				architectFloorCtrl.resetFloorCreateEdit();
+			} else {
+				this.notifyFail("Impossible de modifier l'étage");
+			}
 		} else {
-			this.notifyFail("Impossible de modifier l'étage");
+			this.notifyFail("Un autre étage est déjà associé à ce rang");
 		}
 	}
 	
@@ -689,7 +689,7 @@ public class Main extends Application {
 		Room room = RoomDAO.getInstance().read(id_room);
 		Floor floor = room.getFloor();
 		if (RoomDAO.getInstance().delete(room)) {	
-			floor.setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(floor.getId_floor()));
+			floor.setRooms(RoomDAO.getInstance().readAllRoomsOfFloor(floor.getId_floor()));
 			this.notifySuccess("La salle a été supprimée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -741,12 +741,15 @@ public class Main extends Application {
 			// affichage de la fenêtre principale
 			double height = Screen.getPrimary().getBounds().getHeight();   
 			double width = Screen.getPrimary().getBounds().getWidth();   
-			Scene scene = new Scene(mainWindowRoot, width, height);			
+			Scene scene = new Scene(mainWindowRoot, width, height);	
+			scene.getStylesheets().add("test.css");
 			imgLogo.setImage(new Image("/img/logo_bandw.png"));
 			pneMainActions.setLayoutX(width-pneMainActions.getPrefWidth()-20);
 			shpDvdLine.setEndX(width);
 			mainWindow.setScene(scene);
 			mainWindow.show();
+			// définition du musée courant
+			setCurrentMuseum();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -793,8 +796,6 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.architectMuseumCtrl.setMainControl(this);
 			}
-			// définition du musée courant
-			setCurrentMuseum();
 			// rafraîchissement des données de la sous-fenêtre
 			this.architectMuseumCtrl.refreshData();
 			// définition des menus accessibles
@@ -910,6 +911,8 @@ public class Main extends Application {
 			this.authorSelectCtrl.setMainControl(this);
 			// affichage de la fenêtre
 			Scene scene = new Scene(curatorAuthorSelectPane);
+			scene.getStylesheets().add("test.css");
+			stgAuthorSelect.setTitle("Sélection de l'auteur");
 			stgAuthorSelect.setScene(scene);
 			stgAuthorSelect.show();
 		} catch (IOException e) {
@@ -958,7 +961,7 @@ public class Main extends Application {
 				this.curatorArtExhibitCtrl = loader.getController();
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.curatorArtExhibitCtrl.setMainControl(this);				
-			}			
+			}
 			// rafraîchissement des données de la sous-fenêtre
 			this.curatorArtExhibitCtrl.refreshData();
 			// définition des menus accessibles
@@ -995,7 +998,7 @@ public class Main extends Application {
 			curator_menu.setVisible(true);
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(visitorPane);
-			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
+			lblRoleStatus.setText("Non connecté");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
