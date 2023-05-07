@@ -100,7 +100,7 @@ public class VisitorControl {
 			this.floors = mainController.getFloorData();
 			this.currentFloor = floors.get(0);
 			lblMuseum.setText(this.museum.getMuseum_name() + " - " + this.currentFloor.getFloor_name());
-			int currentFloorNb = 0;
+			this.currentFloorNb = 0;
 			floorMax = floors.size()-1;
 			showFloorInfo();
 		}

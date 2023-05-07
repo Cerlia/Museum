@@ -291,6 +291,7 @@ public class CuratorArtExhibitControl {
 		}
 	}
 	
+	// TODO à déplacer, normalement c'est main qui appelle les fenêtres
 	/**
 	 * event listener du bouton "Ajouter une œuvre" : ouvre une nouvelle fenêtre
 	 * @param e
@@ -313,6 +314,8 @@ public class CuratorArtExhibitControl {
 			this.artSelectCtrl.refreshData();
 			// affichage de la fenêtre
 			Scene scene = new Scene(pneArtSelect);
+			scene.getStylesheets().add("style.css");
+			stgArtSelect.setTitle("Exposer une œuvre");
 			stgArtSelect.setScene(scene);
 			stgArtSelect.show();
 		} catch (IOException e) {

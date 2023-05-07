@@ -1,3 +1,5 @@
+/* Classes JavaFX */
+
 .button{
     -fx-text-fill: #000000;
     background-color: #b8cbc4;
@@ -45,8 +47,8 @@
 	-fx-text-fill: #000000;
 }
 
-.text-field {
-    -fx-focus-color: #004024;
+.check-box {
+	-fx-focus-color: #004024;
     -fx-faint-focus-color: #00402422;
 }
 
@@ -56,6 +58,13 @@
 	-fx-focus-color: #004024;
     -fx-faint-focus-color: #00402422;
 }
+
+.text-field {
+    -fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
+}
+
+/* Classes personnelles */
 
 .whitePane {
 	background-color: #ffffff;

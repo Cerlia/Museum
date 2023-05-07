@@ -742,7 +742,7 @@ public class Main extends Application {
 			double height = Screen.getPrimary().getBounds().getHeight();   
 			double width = Screen.getPrimary().getBounds().getWidth();   
 			Scene scene = new Scene(mainWindowRoot, width, height);	
-			scene.getStylesheets().add("test.css");
+			scene.getStylesheets().add("style.css");
 			imgLogo.setImage(new Image("/img/logo_bandw.png"));
 			pneMainActions.setLayoutX(width-pneMainActions.getPrefWidth()-20);
 			shpDvdLine.setEndX(width);
@@ -911,7 +911,7 @@ public class Main extends Application {
 			this.authorSelectCtrl.setMainControl(this);
 			// affichage de la fenêtre
 			Scene scene = new Scene(curatorAuthorSelectPane);
-			scene.getStylesheets().add("test.css");
+			scene.getStylesheets().add("style.css");
 			stgAuthorSelect.setTitle("Sélection de l'auteur");
 			stgAuthorSelect.setScene(scene);
 			stgAuthorSelect.show();
