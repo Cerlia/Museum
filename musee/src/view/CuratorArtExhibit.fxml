@@ -19,7 +19,7 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <AnchorPane layoutX="-2.0" layoutY="53.0" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="1426.0">
+      <AnchorPane layoutX="-2.0" layoutY="53.0" minHeight="0.0" minWidth="0.0" prefHeight="571.0" prefWidth="1390.0">
          <children>
             <Pane layoutX="8.0" layoutY="10.0" prefHeight="534.0" prefWidth="271.0" styleClass="whitePane">
                <children>
@@ -28,9 +28,9 @@
                      <children>
                         <Button fx:id="btnAllSurfaces" layoutX="19.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="51.0" prefWidth="207.0" styleClass="buttonSurface" text="Toutes les surfaces" />
                         <Button fx:id="btnWall1" layoutX="67.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" text="Mur 1" />
-                        <Button fx:id="btnWall2" layoutX="137.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" rotate="90.0" text="Mur 2" />
+                        <Button fx:id="btnWall2" layoutX="137.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" styleClass="buttonSurface" text="Mur 2" />
                         <Button fx:id="btnWall3" layoutX="67.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" text="Mur 3" />
-                        <Button fx:id="btnWall4" layoutX="-3.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" rotate="-90.0" text="Mur 4" />
+                        <Button fx:id="btnWall4" layoutX="-3.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" styleClass="buttonSurface" text="Mur 4" />
                         <Button fx:id="btnFloor" layoutX="80.0" layoutY="115.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" styleClass="buttonSurface" text="Sol" />
                      </children>
                   </Pane>
@@ -47,7 +47,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="pneExhibit" layoutX="296.0" layoutY="10.0" prefHeight="534.0" prefWidth="1118.0" styleClass="whitePane">
+            <Pane fx:id="pneExhibit" layoutX="296.0" layoutY="10.0" prefHeight="534.0" prefWidth="1092.0" styleClass="whitePane">
                <children>
                   <TabPane layoutX="22.0" layoutY="68.0" prefHeight="440.0" prefWidth="1067.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -55,7 +55,7 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="whitePane">
                                  <children>
-                                    <TableView fx:id="tblArtDisplay" onMouseClicked="#handleTableArtAction" layoutX="20.0" layoutY="20.0" prefHeight="367.0" prefWidth="865.0">
+                                    <TableView fx:id="tblArtDisplay" layoutX="20.0" layoutY="20.0" onMouseClicked="#handleTableArtAction" prefHeight="367.0" prefWidth="865.0">
                                       <columns>
                                         <TableColumn fx:id="tclTitle" maxWidth="600.0" prefWidth="240.0" text="Titre" />
                                         <TableColumn fx:id="tclCode" maxWidth="400.0" minWidth="4.0" prefWidth="100.0" text="Code" />
@@ -65,7 +65,7 @@
                                           <TableColumn fx:id="tclSurfaceArt" maxWidth="300.0" minWidth="4.0" prefWidth="110.0" text="Surface" />
                                       </columns>
                                     </TableView>
-                                    <Button fx:id="btnRemoveArt" onAction="#handleBtnRemoveArtAction" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="130.0" text="Retirer l'œuvre" />
+                                    <Button fx:id="btnRemoveArt" layoutX="910.0" layoutY="50.0" mnemonicParsing="false" onAction="#handleBtnRemoveArtAction" prefHeight="26.0" prefWidth="130.0" text="Retirer l'œuvre" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -92,9 +92,9 @@
                       </Tab>
                     </tabs>
                   </TabPane>
-                  <Label fx:id="lblDisplayedArtPaneTitle" layoutX="22.0" layoutY="14.0" prefHeight="27.0" prefWidth="765.0" text="EXPOSITION">
+                  <Label fx:id="lblDisplayedArtPaneTitle" layoutX="1.0" layoutY="1.0" prefHeight="27.0" prefWidth="765.0" styleClass="subTitle" text="Exposition">
                      <font>
-                        <Font size="18.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
                </children>

@@ -37,8 +37,8 @@
 
 .cell:selected {
 	-fx-text-fill: #000000;
-	background-color: #bae2d0;
-    -fx-background-color: #bae2d0;
+	background-color: rgb(199, 214, 206);
+    -fx-background-color: rgb(199, 214, 206);
 }
 
 .cell {
@@ -46,15 +46,15 @@
 }
 
 .text-field {
-    -fx-focus-color: #a44500;
-    -fx-faint-focus-color: #a4450022;
+    -fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
 }
 
 .spinner {
 	font-size: 14px;
 	-fx-font-size: 14px;
-	-fx-focus-color: #a44500;
-    -fx-faint-focus-color: #a4450022;
+	-fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
 }
 
 .whitePane {
@@ -78,6 +78,9 @@
 }
 
 .subTitle {
-	background-color: #bae2d0;
-	-fx-background-color: #bae2d0;
+	background-color: rgb(199, 214, 206);
+	-fx-background-color: rgb(199, 214, 206);
+	-fx-alignment: bottom-center;
+	padding: 5px;
+	-fx-padding: 5px;
 }
