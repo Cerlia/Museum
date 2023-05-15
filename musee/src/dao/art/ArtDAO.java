@@ -34,6 +34,7 @@ public class ArtDAO extends DAO<Art> {
 	private static final String DIMZ = "dim_z";
 	private static final String IMAGE = "image";
 	private static final String DISPLAY = "ref_display";
+	private static final String OWNER = "owner";
 	
 	private static ArtDAO instance=null;
 	
@@ -57,7 +58,7 @@ public class ArtDAO extends DAO<Art> {
 		try {
 			String requete = "INSERT INTO "+TABLE+" ("+TYPE+", "+AUTHOR+", "+STATUS+", "+CODE+
 					", "+TITLE+", "+DATE+", "+ MATERIALS+", "+DIMX+", "+DIMY+", "+DIMZ+ ", "+
-					IMAGE +", "+DISPLAY+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					IMAGE +", "+DISPLAY+", "+OWNER+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -71,6 +72,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(10, art.getDim_z());
 			pst.setBytes(11, art.getImage());
 			pst.setNull(12, Types.INTEGER);
+			pst.setBoolean(13, art.isOwner());
 			pst.executeUpdate();
 			// on récupère la clé générée et on la pousse dans l'objet initial
 			ResultSet rs = pst.getGeneratedKeys();
@@ -98,7 +100,7 @@ public class ArtDAO extends DAO<Art> {
 		try {
 			String requete = "UPDATE "+TABLE+" SET "+ TYPE+"=?, "+AUTHOR+"=?, "+STATUS+
 					"=?, "+CODE+"=?, "+TITLE+"=?, "+DATE+"=?, "+MATERIALS+"=?, "+DIMX+"=?, "+
-					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+DISPLAY+"=? WHERE "+PK+"= ?";
+					DIMY+"=?, "+DIMZ+"=?, "+IMAGE+"=?, "+DISPLAY+"=?, "+OWNER+"=? WHERE "+PK+"= ?";
 			PreparedStatement pst = Connect.getInstance().prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
 			pst.setInt(1, art.getArt_type().getId_Art_type());
 			pst.setInt(2, art.getAuthor().getId_author());
@@ -111,6 +113,7 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
 			pst.setBytes(11, art.getImage());
+			pst.setBoolean(12, art.isOwner());
 			if (art.getDisplay() != null) {
 				pst.setInt(12, art.getDisplay().getId_display());
 			} else {
@@ -151,6 +154,7 @@ public class ArtDAO extends DAO<Art> {
 				int dim_z = rs.getInt(DIMZ);
 				byte[] image = rs.getBytes(IMAGE);
 				int ref_display = rs.getInt(DISPLAY);
+				boolean owner = rs.getBoolean(OWNER);
 				Display display = null;
 				if (ref_display != 0) {
 					display = DisplayDAO.getInstance().read(ref_display);
@@ -159,7 +163,7 @@ public class ArtDAO extends DAO<Art> {
 				Author author = AuthorDAO.getInstance().read(ref_author);
 				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
 				art = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
-						image, author, art_status, art_type, display);
+						image, author, art_status, art_type, display, owner);
 				data.put(id, art);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -203,6 +207,7 @@ public class ArtDAO extends DAO<Art> {
 				int dim_y = rs.getInt(DIMY);
 				int dim_z = rs.getInt(DIMZ);
 				int ref_display = rs.getInt(DISPLAY);
+				boolean owner = rs.getBoolean(OWNER);
 				Display display = null;
 				if (ref_display != 0) {
 					display = DisplayDAO.getInstance().read(ref_display);
@@ -211,7 +216,7 @@ public class ArtDAO extends DAO<Art> {
 				Author author = AuthorDAO.getInstance().read(ref_author);
 				ArtStatus art_status = ArtStatusDAO.getInstance().read(ref_art_status);
 				artLight = new Art(id, code, title, date, materials, dim_x, dim_y, dim_z,
-						null, author, art_status, art_type, display);
+						null, author, art_status, art_type, display, owner);
 				dataLight.put(id, artLight);
 			} catch (SQLException e) {
 				e.printStackTrace();

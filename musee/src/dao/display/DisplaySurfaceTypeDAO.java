@@ -32,21 +32,21 @@ public class DisplaySurfaceTypeDAO extends DAO<DisplaySurfaceType> {
 		super();
 	}
 
+	// Not used
 	@Override
 	public boolean create(DisplaySurfaceType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean delete(DisplaySurfaceType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean update(DisplaySurfaceType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

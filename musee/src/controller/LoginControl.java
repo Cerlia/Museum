@@ -8,7 +8,9 @@ import java.util.List;
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import museum.User;
 
 public class LoginControl {
@@ -19,6 +21,8 @@ public class LoginControl {
 	private TextField txtLogin;
 	@FXML
 	private TextField txtPassword;
+	@FXML
+	private Label lblInfoLogin;
 	
 	public LoginControl() {
 		super();
@@ -65,30 +69,19 @@ public class LoginControl {
 				} else if (txtLogin.getText().equals("c") && txtPassword.getText().equals("c")) {
 					mainController.showCuratorArtExhibitPane();
 				} else {
-					// TODO remplacer par un message moins intrusif qu'une pop-up
-					mainController.notifyFail("Identifiant et/ou mot de passe incorrect.");
+					lblInfoLogin.setText("Identifiant et/ou mot de passe incorrect");
 				}
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 				
 		} else {
-			mainController.notifyFail("Tous les champs ne sont pas remplis");
+			lblInfoLogin.setText("Les deux champs doivent être remplis");
 		}
-
-
-		/* Par défaut, j'utilise le rôle conservateur
-		
-		if (txtLogin.getText().equals("a")) {
-			mainController.showArchitectMuseumPane();
-		}
-		else if (txtLogin.getText().equals("c")) {
-			mainController.showCuratorArtExhibitPane();
-		}
-		else {
-			mainControler.showCuratorArtExhibitPane();
-		}		
-		*/	
+	}
+	
+	@FXML
+	private void handleTextfieldClick(MouseEvent event) {
+		lblInfoLogin.setText("");
 	}
 }

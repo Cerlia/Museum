@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="477.0" prefWidth="970.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorAuthorSelectControl">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="518.0" prefWidth="1005.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorAuthorSelectControl">
    <children>
-      <TableView fx:id="authorTable" layoutX="27.0" layoutY="65.0" onMouseClicked="#handleAuthorTableAction" prefHeight="338.0" prefWidth="454.0">
+      <TableView fx:id="authorTable" layoutX="12.0" layoutY="65.0" onMouseClicked="#handleAuthorTableAction" prefHeight="380.0" prefWidth="469.0">
         <columns>
           <TableColumn fx:id="lastNameColumn" editable="false" maxWidth="144.79998207092285" minWidth="113.5999698638916" prefWidth="113.5999698638916" text="Nom" />
           <TableColumn fx:id="firstNameColumn" minWidth="92.79998779296875" prefWidth="92.79998779296875" text="Prénom" />
@@ -22,20 +22,56 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="btnAddAuthor" layoutX="384.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAuthorAddition" prefHeight="25.0" prefWidth="97.0" text="Ajouter" />
-      <AnchorPane fx:id="pneAuthorCreatEdit" layoutX="500.0" layoutY="30.0" prefHeight="296.0" prefWidth="454.0" visible="false">
+      <Button fx:id="btnAddAuthor" layoutX="384.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAuthorAddition" prefHeight="25.0" prefWidth="97.0" text="Ajouter">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <AnchorPane fx:id="pneAuthorCreatEdit" layoutX="500.0" layoutY="30.0" prefHeight="305.0" prefWidth="485.0" styleClass="whitePane" visible="false">
          <children>
-            <Label fx:id="lblAuthorCreatEditTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="43.0" layoutY="24.0" prefHeight="17.0" prefWidth="348.0" text="Ajouter un nouvel artiste" textAlignment="CENTER" />
-            <Button fx:id="btnSaveAuthor" layoutX="264.0" layoutY="257.0" mnemonicParsing="false" onAction="#handleSaveAuthor" prefHeight="25.0" prefWidth="97.0" text="Sauvegarder" />
-            <Button fx:id="btnCancelAuthor" layoutX="137.0" layoutY="257.0" mnemonicParsing="false" onAction="#handleCancelAuthorEdit" prefHeight="25.0" prefWidth="97.0" text="Annuler" />
-            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="72.0" prefHeight="17.0" prefWidth="97.0" text="* Nom" />
-            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="109.0" prefHeight="17.0" prefWidth="97.0" text="Prénom" />
-            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="144.0" prefHeight="17.0" prefWidth="97.0" text="Nom additionnel" />
-            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="178.0" prefHeight="17.0" prefWidth="97.0" text="Dates" />
-            <TextField fx:id="txtAuthorName" layoutX="137.0" layoutY="68.0" prefHeight="25.0" prefWidth="253.0" />
-            <TextField fx:id="txtAuthorFirstName" layoutX="137.0" layoutY="105.0" prefHeight="25.0" prefWidth="253.0" />
-            <TextField fx:id="txtAuthorAddName" layoutX="137.0" layoutY="140.0" prefHeight="25.0" prefWidth="253.0" />
-            <TextField fx:id="txtAuthorDates" layoutX="137.0" layoutY="174.0" prefHeight="25.0" prefWidth="253.0" />
+            <Label fx:id="lblAuthorCreatEditTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="61.0" layoutY="14.0" prefHeight="17.0" prefWidth="348.0" text="Ajouter un nouvel artiste" textAlignment="CENTER">
+               <font>
+                  <Font size="18.0" />
+               </font></Label>
+            <Button fx:id="btnSaveAuthor" layoutX="264.0" layoutY="257.0" mnemonicParsing="false" onAction="#handleSaveAuthor" prefHeight="25.0" prefWidth="97.0" text="Sauvegarder">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button fx:id="btnCancelAuthor" layoutX="137.0" layoutY="257.0" mnemonicParsing="false" onAction="#handleCancelAuthorEdit" prefHeight="25.0" prefWidth="97.0" text="Annuler">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="72.0" prefHeight="20.0" prefWidth="167.0" text="* Nom">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="109.0" prefHeight="20.0" prefWidth="167.0" text="Prénom">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="144.0" prefHeight="20.0" prefWidth="167.0" text="Nom additionnel">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="178.0" prefHeight="20.0" prefWidth="167.0" text="Dates">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <TextField fx:id="txtAuthorName" layoutX="203.0" layoutY="68.0" prefHeight="25.0" prefWidth="253.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <TextField fx:id="txtAuthorFirstName" layoutX="203.0" layoutY="105.0" prefHeight="25.0" prefWidth="253.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <TextField fx:id="txtAuthorAddName" layoutX="203.0" layoutY="140.0" prefHeight="25.0" prefWidth="253.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <TextField fx:id="txtAuthorDates" layoutX="203.0" layoutY="174.0" prefHeight="25.0" prefWidth="253.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
             <Label layoutX="24.0" layoutY="215.0" prefHeight="17.0" prefWidth="367.0" text="* Champ obligatoire">
                <font>
                   <Font size="11.0" />
@@ -43,9 +79,17 @@
             </Label>
          </children>
       </AnchorPane>
-      <Button fx:id="btnUpdateAuthor" layoutX="384.0" layoutY="416.0" mnemonicParsing="false" onAction="#handleAuthorUpdate" prefHeight="25.0" prefWidth="97.0" text="Modifier" />
-      <Button fx:id="btnDeleteAuthor" layoutX="270.0" layoutY="416.0" mnemonicParsing="false" onAction="#handleAuthorDeletion" prefHeight="25.0" prefWidth="97.0" text="Supprimer" />
-      <Button fx:id="btnSelectAuthor" layoutX="671.0" layoutY="392.0" mnemonicParsing="false" onAction="#handleSelectAuthor" prefHeight="49.0" prefWidth="278.0" text="Attribuer l'œuvre à cet auteur" />
-      <Button fx:id="btnCancelSelectAuthor" layoutX="581.0" layoutY="392.0" mnemonicParsing="false" onAction="#handleCancelSelectAuthor" prefHeight="49.0" prefWidth="75.0" text="Annuler" />
+      <Button fx:id="btnUpdateAuthor" layoutX="274.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleAuthorUpdate" prefHeight="25.0" prefWidth="97.0" text="Modifier">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button fx:id="btnSelectAuthor" layoutX="203.0" layoutY="454.0" mnemonicParsing="false" onAction="#handleSelectAuthor" prefHeight="40.0" prefWidth="278.0" text="Attribuer l'œuvre à cet auteur">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <Button fx:id="btnCancelSelectAuthor" layoutX="12.0" layoutY="454.0" mnemonicParsing="false" onAction="#handleCancelSelectAuthor" prefHeight="40.0" prefWidth="75.0" text="Annuler">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
    </children>
 </Pane>

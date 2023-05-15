@@ -135,6 +135,6 @@ public class Room {
 	
 	@Override
 	public String toString() {
-		return name + " (" + floor.getFloor_name() + ")";
+		return name;
 	}
 }

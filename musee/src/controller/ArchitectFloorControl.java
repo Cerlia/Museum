@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -25,13 +26,15 @@ public class ArchitectFloorControl {
 	 *  --------------------------- */
 	
 	private Main mainController;
-	// ligne sélectionnée dans la table des salles, par défaut aucune
+	// ligne sélectionnée dans la table des étages, par défaut aucune
 	private int selectedFloorLine = -1;
 	private boolean updatingFloor = false;
 	private boolean addingFloor = false;
 	
 	@FXML
 	private TableView<Floor> floorTable;
+	@FXML
+	private TableColumn<Floor, String> rankColumn;
 	@FXML
 	private TableColumn<Floor, String> nameColumn;
 	@FXML
@@ -61,6 +64,8 @@ public class ArchitectFloorControl {
 	@FXML
 	private Label lblDimY;
 	@FXML
+	private Label lblRank;
+	@FXML
 	private Label lblNbArts;
 	@FXML
 	private TextField txtFloorName;
@@ -68,6 +73,8 @@ public class ArchitectFloorControl {
 	private TextField txtFloorDimX;
 	@FXML
 	private TextField txtFloorDimY;
+	@FXML
+	private Spinner<Integer> spnRank;
 	
 	
 	/*  ---------------------------
@@ -96,6 +103,8 @@ public class ArchitectFloorControl {
 	 */
 	public void refreshData() {
 		floorTable.setItems(mainController.getFloorData());
+		// rafraîchissement de la TableView pour obtenir les dernières données
+		floorTable.refresh();
 		if (mainController.getFloorData().size() > 0) {
 			selectedFloorLine = 0;
 			floorTable.getSelectionModel().select(0);
@@ -114,7 +123,20 @@ public class ArchitectFloorControl {
 			String floorName = txtFloorName.getText();
 			int floorDimX = MeasureConversion.textToInt(txtFloorDimX.getText());
 			int floorDimY = MeasureConversion.textToInt(txtFloorDimY.getText());
-			mainController.addFloor(floorName, floorDimX, floorDimY);
+			int floorRank = (int)spnRank.getValue();
+			Floor floor = new Floor(floorName, floorDimX, floorDimY, floorRank, null);
+			// on vérifie que le rang n'a pas déjà été donné à un étage existant
+			boolean newRank = true;
+			for (Floor existingFloor : mainController.getFloorData()) {
+				if (existingFloor.getRank() == floor.getRank()) {
+					newRank = false;
+				}
+			}
+			if (newRank) {
+			mainController.addFloor(floor);
+			} else {
+				mainController.notifyFail("Un autre étage est déjà associé à ce rang");
+			}
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}
@@ -126,10 +148,22 @@ public class ArchitectFloorControl {
 	public void updateFloor() {
 		try {
 			Floor selectedFloor = floorTable.getItems().get(selectedFloorLine);
-			selectedFloor.setFloor_name(txtFloorName.getText());
-			selectedFloor.setDim_x(MeasureConversion.textToInt(txtFloorDimX.getText()));
-			selectedFloor.setDim_y(MeasureConversion.textToInt(txtFloorDimY.getText()));			
-			mainController.updateFloor(selectedFloor);
+			// on vérifie que le rang n'a pas déjà été donné à un étage existant
+			boolean newRank = true;
+			for (Floor existingFloor : mainController.getFloorData()) {
+				if (existingFloor.getRank() == (int)spnRank.getValue() && existingFloor != selectedFloor) {
+					newRank = false;
+				}
+			}
+			if (newRank) {
+				selectedFloor.setFloor_name(txtFloorName.getText());
+				selectedFloor.setDim_x(MeasureConversion.textToInt(txtFloorDimX.getText()));
+				selectedFloor.setDim_y(MeasureConversion.textToInt(txtFloorDimY.getText()));
+				selectedFloor.setRank((int)spnRank.getValue());			
+				mainController.updateFloor(selectedFloor);
+			} else {
+				mainController.notifyFail("Un autre étage est déjà associé à ce rang");
+			}
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'étage");
 		}		
@@ -169,6 +203,7 @@ public class ArchitectFloorControl {
 			lblFloorName.setText(selectedFloor.getFloor_name());
 			lblDimX.setText(MeasureConversion.intToString(selectedFloor.getDim_x()));
 			lblDimY.setText(MeasureConversion.intToString(selectedFloor.getDim_y()));
+			lblRank.setText(selectedFloor.getRank()+"");
 			lblNbArts.setText(mainController.getAllArtsOfFloor(selectedFloor).size()+"");
 			pneFloorDisplay.setVisible(true);
 		}		
@@ -209,13 +244,14 @@ public class ArchitectFloorControl {
 	 *  --------------------------- */	
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {
 		nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFloor_name()));
 		nbRoomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRooms().size()+""));
 		nbArtsColumn.setCellValueFactory(cellData -> new SimpleStringProperty(mainController.getAllArtsOfFloor(cellData.getValue()).size()+""));
+		rankColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRank()+""));
 	}
 	
 	/**
@@ -246,6 +282,7 @@ public class ArchitectFloorControl {
 		txtFloorDimX.setDisable(false);
 		txtFloorDimY.setText(MeasureConversion.intToString(selectedFloor.getDim_y()));
 		txtFloorDimY.setDisable(false);
+		spnRank.getValueFactory().setValue(selectedFloor.getRank());
 		showFloorEditingPane();
 		hideFloorInfo();		
 	}

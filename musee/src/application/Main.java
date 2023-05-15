@@ -12,6 +12,7 @@ import controller.CuratorArtExhibitControl;
 import controller.CuratorArtMovementControl;
 import controller.CuratorAuthorSelectControl;
 import controller.LoginControl;
+import controller.VisitorControl;
 import dao.RoleDAO;
 import dao.UserDAO;
 import dao.art.ArtDAO;
@@ -82,7 +83,6 @@ public class Main extends Application {
 	private final String NTF_BODY_INFO = "Une ligne doit être sélectionnée";
 	private final String NTF_TITLE_CONFIRM = "Demande de confirmation";
 	private final String APPICON = "/img/icon2.png";
-
 	
 	// sous-fenêtres
 	private AnchorPane loginPane = null;
@@ -91,6 +91,7 @@ public class Main extends Application {
 	private AnchorPane architectRoomPane = null;
 	private AnchorPane curatorArtDataPane = null;
 	private AnchorPane curatorArtMovementPane = null;
+	private AnchorPane visitorPane = null;
 	private Pane curatorAuthorSelectPane = null;
 	private FlowPane curatorArtExhibitPane = null;
 	
@@ -101,6 +102,7 @@ public class Main extends Application {
 	private ArchitectRoomControl architectRoomCtrl = null;
 	private CuratorArtDataControl curatorArtDataCtrl = null;
 	private CuratorArtMovementControl curatorArtMovementCtrl = null;
+	private VisitorControl visitorCtrl = null;
 	private CuratorArtExhibitControl curatorArtExhibitCtrl = null;
 	private CuratorAuthorSelectControl authorSelectCtrl = null;
 	
@@ -149,7 +151,6 @@ public class Main extends Application {
 	@FXML
 	private Pane pneMainActions;
 
-
 	/**
 	 * constructeur du contrôleur principal 
 	 */
@@ -164,7 +165,7 @@ public class Main extends Application {
 	 *  --------------------------- */
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des œuvres
 	 * @return
 	 */
 	public ObservableList<Art> getArtData() {
@@ -177,7 +178,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des statuts des œuvres
 	 * @return
 	 */
 	public ObservableList<ArtStatus> getArtStatusData() {
@@ -190,7 +191,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des types d'œuvres
 	 * @return
 	 */
 	public ObservableList<ArtType> getArtTypeData() {
@@ -203,7 +204,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des auteurs
 	 * @return
 	 */
 	public ObservableList<Author> getAuthorData() {
@@ -216,7 +217,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des compatibilités entre types d'œuvres et de présentoirs
 	 * @return
 	 */
 	public ObservableList<DisplayArtType> getDisplayArtTypeData() {
@@ -229,7 +230,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des présentoirs
 	 * @return
 	 */
 	public ObservableList<Display> getDisplayData() {
@@ -242,7 +243,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des types de présentoirs
 	 * @return
 	 */
 	public ObservableList<DisplayType> getDisplayTypeData() {
@@ -255,7 +256,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des étages
 	 * @return
 	 */
 	public ObservableList<Floor> getFloorData() {
@@ -268,7 +269,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des musées
 	 * @return
 	 */
 	public ObservableList<Museum> getMuseumData() {
@@ -281,7 +282,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des rôles
 	 * @return
 	 */
 	public ObservableList<Role> getRoleData() {
@@ -294,7 +295,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des salles
 	 * @return
 	 */
 	public ObservableList<Room> getRoomData() {
@@ -307,7 +308,20 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des salles d'un étage
+	 * @return
+	 */
+	public ObservableList<Room> getRoomData(Floor floor) {
+		roomData = FXCollections.observableArrayList();
+		List<Room> rooms = RoomDAO.getInstance().readAllRoomsOfFloor(floor.getId_floor());
+		for (Room room : rooms) {
+			roomData.add(room);
+		}
+		return roomData;
+	}
+	
+	/**
+	 * liste d'observables des utilisateurs
 	 * @return
 	 */
 	public ObservableList<User> getUserData(String login, byte[] hash) {
@@ -320,7 +334,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des surfaces
 	 * @return
 	 */
 	public ObservableList<Surface> getSurfaceData() {
@@ -333,8 +347,9 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
-	 * @param surface
+	 * liste d'observables des œuvres liées à une surface
+	 * @param room
+	 * @param surfaceNb
 	 * @return
 	 */
 	public ObservableList<Art> getAllArtsOfSurface(Room room, int surfaceNb) {
@@ -349,7 +364,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des œuvres présentes dans une salle
 	 * @param room
 	 * @return
 	 */
@@ -363,8 +378,8 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
-	 * @param room
+	 * liste d'observables des œuvres liées à un étage
+	 * @param floor
 	 * @return
 	 */
 	public ObservableList<Art> getAllArtsOfFloor(Floor floor) {
@@ -377,8 +392,9 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des présentoirs liés à une surface
 	 * @param room
+	 * @param surfaceNb
 	 * @return
 	 */
 	public ObservableList<Display> getAllDisplaysOfSurface(Room room, int surfaceNb) {
@@ -393,7 +409,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des présentoirs liés à une salle
 	 * @param room
 	 * @return
 	 */
@@ -407,7 +423,7 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * construit une liste d'observables exploitable par une vue JavaFX
+	 * liste d'observables des surfaces d'une salle
 	 * @param room
 	 * @return
 	 */
@@ -420,7 +436,12 @@ public class Main extends Application {
 		return roomSurfacesData;
 	}
 	
-	
+	/**
+	 * liste d'observables des présentoirs existants compatibles avec une surface et une œuvre
+	 * @param surface
+	 * @param art
+	 * @return
+	 */
 	public ObservableList<Display> getAllCompatibleExistingDisplays(Surface surface, Art art) {
 		compatibleExistingDisplays = FXCollections.observableArrayList();
 		List<Display> displays = DisplayDAO.getInstance().
@@ -431,6 +452,12 @@ public class Main extends Application {
 		return compatibleExistingDisplays;
 	}
 	
+	/**
+	 * liste d'observables des modèles de présentoirs compatibles avec une surface et une œuvre
+	 * @param surface
+	 * @param art
+	 * @return
+	 */
 	public ObservableList<DisplayModel> getAllCompatibleDisplayModels(Surface surface, Art art) {
 		compatibleDisplayModels = FXCollections.observableArrayList();
 		List<DisplayModel> displayModels = DisplayModelDAO.getInstance().
@@ -459,7 +486,7 @@ public class Main extends Application {
 	public void setCurrentMuseum() {
 		List<Museum> museums = getMuseumData();
 		if (!museums.isEmpty()) {
-			// dans cette version, il ne peut y avoir qu'un musée
+			// il ne peut y avoir qu'un musée
 			this.currentMuseum = museums.get(0);
 		} else {
 			this.currentMuseum = null;
@@ -488,13 +515,13 @@ public class Main extends Application {
 	
 	/**
 	 * demande à la DAO d'ajouter un musée dans la base
-	 * @param name
+	 * @param museum
 	 */
-	public void addMuseum(String name) {
-		Museum museum = new Museum(name);
+	public void addMuseum(Museum museum) {
 		if (MuseumDAO.getInstance().create(museum)) {
+			this.setCurrentMuseum();
 			this.notifySuccess("Le musée a été créé.");
-			architectMuseumCtrl.resetMuseumCreateEdit();
+			architectMuseumCtrl.refreshData();
 		} else {
 			this.notifyFail("Impossible de créer le musée");
 		}
@@ -502,12 +529,9 @@ public class Main extends Application {
 	
 	/**
 	 * demande à la DAO d'ajouter un étage dans la base
-	 * @param name
-	 * @param dim_x
-	 * @param dim_y
+	 * @param floor
 	 */
-	public void addFloor(String name, int dim_x, int dim_y) {
-		Floor floor = new Floor(name, dim_x, dim_y, null);
+	public void addFloor(Floor floor) {
 		if (FloorDAO.getInstance().create(floor)) {
 			this.notifySuccess("L'étage a été créé.");
 			architectFloorCtrl.resetFloorCreateEdit();
@@ -518,18 +542,11 @@ public class Main extends Application {
 	
 	/**
 	 * demande à la DAO d'ajouter une salle dans la base
-	 * @param name
-	 * @param floor
-	 * @param dim_x
-	 * @param dim_y
-	 * @param dim_z
-	 * @param pos_x
-	 * @param pos_y
+	 * @param room
 	 */
-	public void addRoom(String name, Floor floor, int dim_x, int dim_y, int dim_z, int pos_x, int pos_y) {
-		Room room = new Room(name, dim_x, dim_y, dim_z, pos_x, pos_y, floor, null);	
+	public void addRoom(Room room) {		
 		if (RoomDAO.getInstance().create(room)) {
-			floor.setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(floor.getId_floor()));
+			room.getFloor().setRooms(RoomDAO.getInstance().readAllRoomsOfFloor(room.getFloor().getId_floor()));
 			this.notifySuccess("La salle a été créée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -539,27 +556,9 @@ public class Main extends Application {
 	
 	/**
 	 * demande à la DAO d'ajouter une œuvre dans la base
-	 * @param art_code
-	 * @param art_title
-	 * @param creation_date
-	 * @param materials
-	 * @param dim_x
-	 * @param dim_y
-	 * @param dim_z
-	 * @param image
-	 * @param author
-	 * @param art_status
-	 * @param art_type
+	 * @param art
 	 */
-	public void addArt(String art_code, String art_title, String creation_date,
-			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
-			ArtStatus art_status, ArtType art_type, Display display) {
-		// par défaut, une œuvre est "Possédée" (id_art_status = 1)
-		// et elle n'a pas de présentoir (display = null)
-		// TODO l'oeuvre pourrait avoir le statut "Prêté" ou "Emprunté"
-		ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
-		Art art = new Art(art_code, art_title, creation_date, materials, dim_x, dim_y, dim_z, image,
-				author, artStatus, art_type, null);
+	public void addArt(Art art) {
 		if (ArtDAO.getInstance().create(art)) {
 			this.notifySuccess("L'œuvre a été créée.");
 			curatorArtDataCtrl.resetArtCreateEdit();
@@ -570,56 +569,59 @@ public class Main extends Application {
 	
 	/**
 	 * crée un nouveau présentoir dans la BD
-	 * @param art
-	 * @param dispMod
-	 * @param surface
-	 * @param name
-	 * @return
+	 * @param display
 	 */
-	public Display addDisplay(Art art, DisplayModel dispMod, Surface surface, String name) {
-		Display display = new Display(name, dispMod.getDim_x(), dispMod.getDim_y(), dispMod.getDim_z(),
-			surface, dispMod, null);
+	public Display addDisplay(Display display) {
 		if (!DisplayDAO.getInstance().create(display)) {
 			display = null;
 		}
+		Surface surface = display.getSurface();
+		surface.setDisplays(DisplayDAO.getInstance().readAllDisplaysOfSurface(surface.getId_surface()));
 		return display;
 	}
 		
 	/**
 	 * demande à la DAO d'ajouter un auteur dans la base
-	 * @param last_name
-	 * @param first_name
-	 * @param additional_name
-	 * @param dates
+	 * @param author
 	 */
-	public void addAuthor(String last_name, String first_name, String additional_name, String dates) {
-		Author author = new Author(last_name, first_name, additional_name, dates);
+	public void addAuthor(Author author) {
 		if (AuthorDAO.getInstance().create(author)) {
 			this.notifySuccess("L'auteur a été créé.");
 			authorSelectCtrl.resetAuthorCreateEdit();
 		} else {
 			this.notifyFail("Impossible de créer l'auteur");
 		}		
-	}
-		
+	}		
 	
 	/// Méthodes de modification de la base (update)
 	
 	public void updateMuseum(Museum museum) {
 		if (MuseumDAO.getInstance().update(museum)) {
+			this.setCurrentMuseum();
 			this.notifySuccess("Le musée a été modifié.");
-			architectMuseumCtrl.resetMuseumCreateEdit();
+			architectMuseumCtrl.refreshData();
 		} else {
-			this.notifyFail("Impossible de créer le musée");
+			this.notifyFail("Impossible de modifier le musée");
 		}
 	}
 	
 	public void updateFloor(Floor floor) {
-		if (FloorDAO.getInstance().update(floor)) {
-			this.notifySuccess("L'étage a été modifié.");
-			architectFloorCtrl.resetFloorCreateEdit();
+		// on vérifie que le rang n'a pas déjà été donné à un étage existant
+		boolean newRank = true;
+		for (Floor existingFloor : this.getFloorData()) {
+			if (existingFloor.getRank() == floor.getRank() && existingFloor != floor) {
+				newRank = false;
+			}
+		}
+		if (newRank) {
+			if (FloorDAO.getInstance().update(floor)) {
+				this.notifySuccess("L'étage a été modifié.");
+				architectFloorCtrl.resetFloorCreateEdit();
+			} else {
+				this.notifyFail("Impossible de modifier l'étage");
+			}
 		} else {
-			this.notifyFail("Impossible de modifier l'étage");
+			this.notifyFail("Un autre étage est déjà associé à ce rang");
 		}
 	}
 	
@@ -664,9 +666,14 @@ public class Main extends Application {
 		
 	/// Méthodes de suppression dans la base (delete)
 	
-	public void deleteMuseum() {
-		// TODO
-		this.currentMuseum = null;
+	public void deleteAllFloors() {
+		if (FloorDAO.getInstance().deleteAll() && MuseumDAO.getInstance().delete(currentMuseum)) {
+			this.setCurrentMuseum();
+			this.notifySuccess("Le musée a été supprimé.");
+			architectMuseumCtrl.refreshData();
+		} else {
+			this.notifyFail("Impossible de supprimer le musée");
+		}		
 	}
 	
 	public void deleteFloor(Floor floor) {
@@ -682,7 +689,7 @@ public class Main extends Application {
 		Room room = RoomDAO.getInstance().read(id_room);
 		Floor floor = room.getFloor();
 		if (RoomDAO.getInstance().delete(room)) {	
-			floor.setRooms(RoomDAO.getInstance().reloadRoomsOfFloor(floor.getId_floor()));
+			floor.setRooms(RoomDAO.getInstance().readAllRoomsOfFloor(floor.getId_floor()));
 			this.notifySuccess("La salle a été supprimée.");
 			architectRoomCtrl.resetRoomCreateEdit();
 		} else {
@@ -734,13 +741,15 @@ public class Main extends Application {
 			// affichage de la fenêtre principale
 			double height = Screen.getPrimary().getBounds().getHeight();   
 			double width = Screen.getPrimary().getBounds().getWidth();   
-			Scene scene = new Scene(mainWindowRoot, width, height);			
+			Scene scene = new Scene(mainWindowRoot, width, height);	
+			scene.getStylesheets().add("style.css");
 			imgLogo.setImage(new Image("/img/logo_bandw.png"));
 			pneMainActions.setLayoutX(width-pneMainActions.getPrefWidth()-20);
 			shpDvdLine.setEndX(width);
 			mainWindow.setScene(scene);
-			// TODO tester de supprimer la taille des côtés Gauche et Droite
 			mainWindow.show();
+			// définition du musée courant
+			setCurrentMuseum();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -787,8 +796,6 @@ public class Main extends Application {
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.architectMuseumCtrl.setMainControl(this);
 			}
-			// définition du musée courant
-			setCurrentMuseum();
 			// rafraîchissement des données de la sous-fenêtre
 			this.architectMuseumCtrl.refreshData();
 			// définition des menus accessibles
@@ -892,8 +899,6 @@ public class Main extends Application {
 			if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
 				stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
 			}			
-			// rafraîchissement des données de la sous-fenêtre
-			this.authorSelectCtrl.refreshData();
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(Main.class.getResource("../view/CuratorAuthorSelect.fxml"));
@@ -902,8 +907,12 @@ public class Main extends Application {
 			this.authorSelectCtrl = loader.getController();
 			// passage du contrôleur principal au sous-contrôleur
 			this.authorSelectCtrl.setMainControl(this);
+			// rafraîchissement des données de la sous-fenêtre
+			this.authorSelectCtrl.refreshData();
 			// affichage de la fenêtre
 			Scene scene = new Scene(curatorAuthorSelectPane);
+			scene.getStylesheets().add("style.css");
+			stgAuthorSelect.setTitle("Sélection de l'auteur");
 			stgAuthorSelect.setScene(scene);
 			stgAuthorSelect.show();
 		} catch (IOException e) {
@@ -952,7 +961,7 @@ public class Main extends Application {
 				this.curatorArtExhibitCtrl = loader.getController();
 				// passage du contrôleur principal (this) au sous-contrôleur
 				this.curatorArtExhibitCtrl.setMainControl(this);				
-			}			
+			}
 			// rafraîchissement des données de la sous-fenêtre
 			this.curatorArtExhibitCtrl.refreshData();
 			// définition des menus accessibles
@@ -962,6 +971,34 @@ public class Main extends Application {
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(curatorArtExhibitPane);
 			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * affiche la sous-fenêtre Visitor
+	 */
+	public void showVisitorPane() {
+		try {
+			if (visitorPane==null) {
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("../view/Visitor.fxml"));
+				visitorPane = loader.load();
+				// récupération du contrôleur de la vue
+				this.visitorCtrl = loader.getController();
+				// passage du contrôleur principal (this) au sous-contrôleur
+				this.visitorCtrl.setMainControl(this);				
+			}			
+			// rafraîchissement des données de la sous-fenêtre
+			this.visitorCtrl.refreshData();
+			// définition des menus accessibles
+			menu_bar.setVisible(true);
+			architect_menu.setVisible(false);
+			curator_menu.setVisible(true);
+			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
+			mainWindowRoot.setCenter(visitorPane);
+			lblRoleStatus.setText("Non connecté");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1036,12 +1073,11 @@ public class Main extends Application {
 		if (result.get() == ButtonType.OK){
 			String objectType = object.getClass().getName();
 			switch (objectType) {
-			// TODO supprimer, display plus utilisé
-			case "museum.display.Display":
-				deleteDisplay((Display)object);
-				break;
 			case "museum.floorplan.Floor":
 				deleteFloor((Floor)object);
+				break;
+			case "museum.floorplan.Museum":
+				deleteAllFloors();
 				break;
 			}
 		// si l'utilisateur annule ou ferme la fenêtre

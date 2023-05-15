@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import museum.floorplan.Floor;
 import museum.floorplan.Museum;
 
 public class ArchitectMuseumControl {
@@ -73,14 +74,19 @@ public class ArchitectMuseumControl {
 	public void refreshData() {
 		this.currentMuseum = mainController.getCurrentMuseum();
 		if (currentMuseum == null) {
+			addingMuseum = true;
+			lblMuseumName.setText("");
+			lblFloorNb.setText("");
+			lblRoomNb.setText("");
 			// affichage des champs permettant l'ajout d'un musée			
 			addUpdateMuseumPane.setVisible(true);
-			addingMuseum = true;
 			lblInfo.setText("Aucun musée trouvé dans la base de données. Pour commencer, donnez un nom à votre musée.");
 			btnShowFloorPane.setVisible(false);
 			btnShowRoomPane.setVisible(false);
+			btnCancelSave.setVisible(false);
 		}
 		else {
+			addingMuseum = false;
 			// affichage des infos concernant le musée
 			this.currentMuseum = mainController.getCurrentMuseum();
 			addUpdateMuseumPane.setVisible(false);
@@ -90,6 +96,7 @@ public class ArchitectMuseumControl {
 			btnShowFloorPane.setVisible(true);
 			btnShowRoomPane.setVisible(true);
 		}
+		updatingMuseum = false;
 	}
 	
 	/**
@@ -97,7 +104,8 @@ public class ArchitectMuseumControl {
 	 */
 	public void addMuseum() {
 		String museumName = txtMuseumName.getText();
-		mainController.addMuseum(museumName);
+		Museum museum = new Museum(museumName);
+		mainController.addMuseum(museum);
 	}
 	
 	/**
@@ -106,25 +114,6 @@ public class ArchitectMuseumControl {
 	public void updateMuseum() {
 		currentMuseum.setMuseum_name(txtMuseumName.getText());
 		mainController.updateMuseum(currentMuseum);
-	}
-	
-	/**
-	 * demande au contrôleur principal de supprimer le musée
-	 */
-	public void deleteMuseum() {
-		// TODO en tenant compte du fait qu'il faut supprimer de la BD
-		// les étages associés, et les salles avec leurs surfaces, qui elles-mêmes
-		// peuvent avoir des portes. Supprimer aussi les displays contenus dans
-		// la salle, et donc avant ça replacer les oeuvres en stock !
-		// Je suppose qu'il va falloir déléguer : deleteMuseum va faire appel à MuseumDAO,
-		// qui dans son delete fera appel à FloorDAO pour supprimer les étages de ce musée,
-		// FloorDAO qui lui-même appelera RoomDAO pour supprimer tout ce qui dépend
-		// d'une salle, bref gérer les suppressions en cascade
-		/*
-		Room selectedRoom = roomTable.getItems().get(selectedRoomLine);
-		int id_room = selectedRoom.getId_room();
-		mainControler.deleteRoom(id_room);
-		*/
 	}
 	
 	/**
@@ -146,7 +135,7 @@ public class ArchitectMuseumControl {
 	 *  --------------------------- */	
 	
 	/**
-	 * méthode d'initialisation indispensable, se lance à l'ouverture de la fenêtre
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {
@@ -168,15 +157,38 @@ public class ArchitectMuseumControl {
 	}
 	
 	/**
+	 * event listener du bouton "Supprimer" le musée
+	 * @param e
+	 */
+	@FXML
+	private void handleMuseumDelete(ActionEvent event) {
+		int nbArts = 0;
+		for (Floor floor : mainController.getFloorData()) {
+				nbArts += mainController.getAllArtsOfFloor(floor).size();
+			}
+		if (nbArts == 0) {
+			mainController.notifyConfirmDelete("Suppression du musée", "Voulez-vous vraiment supprimer "
+					+ "le musée ? Les étages et salles seront définitivement supprimés.", currentMuseum);
+		} else {
+			mainController.notifyInfo("Impossible de supprimer un musée ayant des œuvres exposées");
+		}		
+	};
+	
+	/**
 	 * event listener du bouton "Créer le musée"
 	 * @param e
 	 */
 	@FXML
 	private void handleMuseumSave(ActionEvent e) {
-		if (addingMuseum) {
-			addMuseum();
-		} else if (updatingMuseum) {
-			updateMuseum();
+		if (!txtMuseumName.getText().equals("")) {
+			if (addingMuseum) {
+				addMuseum();
+			} else if (updatingMuseum) {
+				updateMuseum();
+			}
+		}
+		else {
+			mainController.notifyInfo("Le nom du musée ne peut pas être vide");
 		}
 	}
 	

@@ -37,8 +37,6 @@ public class CuratorAuthorSelectControl {
 	@FXML
 	private Button btnUpdateAuthor;
 	@FXML
-	private Button btnDeleteAuthor;
-	@FXML
 	private Button btnSelectAuthor;
 	@FXML
 	private Button btnCancelSelectAuthor;
@@ -104,8 +102,6 @@ public class CuratorAuthorSelectControl {
 		txtAuthorFirstName.setText("");
 		txtAuthorAddName.setText("");
 		txtAuthorDates.setText("");
-		// réinitialisation des champs de la zone d'édition d'auteur
-		resetAuthorCreateEdit();
 		// masquage de la fenêtre de modif
 		hideAuthorEditingPane();
 	}
@@ -129,7 +125,6 @@ public class CuratorAuthorSelectControl {
 	 */
 	private void activateAuthorControls() {
 		btnAddAuthor.setDisable(false);
-		btnDeleteAuthor.setDisable(false);
 		btnUpdateAuthor.setDisable(false);
 		authorTable.setDisable(false);
 	}
@@ -139,7 +134,6 @@ public class CuratorAuthorSelectControl {
 	 */
 	private void deactivateAuthorControls() {
 		btnAddAuthor.setDisable(true);
-		btnDeleteAuthor.setDisable(true);
 		btnUpdateAuthor.setDisable(true);
 		authorTable.setDisable(true);
 	}
@@ -152,7 +146,8 @@ public class CuratorAuthorSelectControl {
 		String firstName = txtAuthorFirstName.getText();
 		String additionalName = txtAuthorAddName.getText();
 		String authorDates = txtAuthorDates.getText();
-		mainController.addAuthor(lastName, firstName, additionalName, authorDates);
+		Author author = new Author(lastName, firstName, additionalName, authorDates);
+		mainController.addAuthor(author);
 	}
 	
 	/**
@@ -186,7 +181,7 @@ public class CuratorAuthorSelectControl {
 	 *  --------------------------- */
 	
 	/**
-	 * à l'ouverture de la fenêtre, initialise le contenu des colonnes
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {

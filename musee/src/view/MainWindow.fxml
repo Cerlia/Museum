@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
@@ -33,17 +34,23 @@
                 <Menu mnemonicParsing="false" text="Profil">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#showLoginPane" text="Déconnexion" />
-                    <MenuItem mnemonicParsing="false" text="Activer le mode Visiteur" />
+                    <MenuItem mnemonicParsing="false" onAction="#showVisitorPane" text="Activer le mode Visiteur" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
-            <ImageView fx:id="imgLogo" fitHeight="115.0" fitWidth="115.0" layoutX="7.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imgLogo" fitHeight="100.0" fitWidth="115.0" layoutX="7.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true" />
             <Line fx:id="shpDvdLine" endX="603.0" endY="14.199996948242188" layoutX="477.0" layoutY="141.0" startX="-477.0" startY="14.199996948242188" />
             <Pane fx:id="pneMainActions" layoutX="723.0" layoutY="28.0" prefHeight="125.0" prefWidth="356.0">
                <children>
-                  <Button fx:id="btnQuit" layoutX="261.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleQuit" prefHeight="90.0" prefWidth="90.0" text="Quitter" />
-                  <Button fx:id="btnDisconnect" layoutX="154.0" layoutY="6.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleDisconnect" prefHeight="90.0" prefWidth="90.0" text="Se déconnecter" />
+                  <Button fx:id="btnQuit" layoutX="215.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleQuit" prefHeight="90.0" prefWidth="134.0" text="Quitter">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <Button fx:id="btnDisconnect" layoutX="74.0" layoutY="6.0" minWidth="100.0" mnemonicParsing="false" onAction="#handleDisconnect" prefHeight="90.0" prefWidth="134.0" text="Se déconnecter">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
                   <Label fx:id="lblRoleStatus" alignment="TOP_RIGHT" layoutX="9.0" layoutY="102.0" prefHeight="17.0" prefWidth="342.0" />
                </children>
             </Pane>

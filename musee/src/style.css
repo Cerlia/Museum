@@ -1,0 +1,112 @@
+/* Classes JavaFX */
+
+.button{
+    -fx-text-fill: #000000;
+    background-color: #b8cbc4;
+    -fx-background-color: #b8cbc4;
+    border-style: solid inside;
+    -fx-border-style: solid inside;
+    border-radius: 5;
+    -fx-border-radius: 5;
+    -fx-background-border-radius: 10;
+    border-width: 0px;
+    -fx-border-width: 0px;
+    border-color: #88a89c;
+    -fx-border-color: #88a89c;
+}
+
+.button:hover{
+    background-color: #88a89c;
+    -fx-background-color: #88a89c;
+}
+
+.cell:selected {
+	-fx-text-fill: #000000;
+	background-color: rgb(199, 214, 206);
+    -fx-background-color: rgb(199, 214, 206);
+}
+
+.cell {
+	-fx-text-fill: #000000;
+}
+
+.check-box {
+	-fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
+}
+
+.spinner {
+	font-size: 14px;
+	-fx-font-size: 14px;
+	-fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
+}
+
+.text-field {
+    -fx-focus-color: #004024;
+    -fx-faint-focus-color: #00402422;
+}
+
+.flowPane {
+	background-color: #ececec;
+	-fx-background-color: #ececec;
+}
+
+/* Classes personnelles */
+
+.buttonSurface {
+	border-width: 1px;
+    -fx-border-width: 1px;
+	background-color: #ffffff;
+    -fx-background-color: #ffffff;
+    border-color: #484848;
+    -fx-border-color: #484848;
+    border-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-border-radius: 0;
+}
+
+.buttonSurface:hover {
+	background-color: #ececec;
+    -fx-background-color: #ececec;
+}
+
+.buttonAttention {
+	background-color: #ff7171;
+    -fx-background-color: #ff7171;
+}
+
+.buttonAttention:hover {
+	background-color: #ff4242;
+    -fx-background-color: #ff4242;
+}
+
+.whitePane {
+	background-color: #ffffff;
+	-fx-background-color: #ffffff;
+	border-color: #cdcdcd;
+	-fx-border-color: #cdcdcd;	
+}
+
+.grayPane {
+	background-color: #ececec;
+	-fx-background-color: #ececec;
+}
+
+.mainTitle {
+	-fx-text-fill: #000000;
+	-fx-text-alignment: justify;
+	/*
+	background-color: #ffffff;
+	-fx-background-color: #ffffff;
+	*/
+	-fx-alignment: bottom-center;
+}
+
+.subTitle {
+	background-color: #adb4b0;
+	-fx-background-color: #adb4b0;
+	-fx-alignment: bottom-center;
+	padding: 5px;
+	-fx-padding: 5px;
+}

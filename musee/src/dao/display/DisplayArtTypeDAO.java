@@ -32,21 +32,21 @@ public class DisplayArtTypeDAO extends DAO<DisplayArtType> {
 		super();
 	}
 
+	// Not used
 	@Override
 	public boolean create(DisplayArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean delete(DisplayArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	// Not used
 	@Override
 	public boolean update(DisplayArtType obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

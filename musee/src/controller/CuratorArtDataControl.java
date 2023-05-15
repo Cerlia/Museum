@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import application.Main;
+import dao.art.ArtStatusDAO;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -23,9 +23,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import museum.art.Art;
+import museum.art.ArtStatus;
 import museum.art.ArtType;
 import museum.art.Author;
 import utils.ImageConversion;
@@ -44,8 +44,6 @@ public class CuratorArtDataControl {
 	private int selectedArtLine = -1;
 	private boolean updatingArt = false;
 	private boolean addingArt = false;
-	private Stage stgAuthorSelect = new Stage();
-	private CuratorAuthorSelectControl authorSelectCtrl = null;
 	private Stage stgImageSelect = new Stage();
 	// fenêtre de sélection de fichier
 	final FileChooser fileChooser = new FileChooser();
@@ -76,6 +74,8 @@ public class CuratorArtDataControl {
 	@FXML
 	private ComboBox<Author> cbbAuthor;
 	@FXML
+	private ComboBox<String> cbbOwner;
+	@FXML
 	private ImageView imgArt;
 	@FXML
 	private Label lblArtCreatEditTitle;
@@ -101,6 +101,8 @@ public class CuratorArtDataControl {
 	private Label lblArtStatus;
 	@FXML
 	private Label lblImgPath;
+	@FXML
+	private Label lblOwner;
 	@FXML
 	private Pane pneAuthorSelect;
 	@FXML
@@ -168,6 +170,9 @@ public class CuratorArtDataControl {
 		artTable.setItems(mainController.getArtData());
 		cbbArtType.setItems(mainController.getArtTypeData());
 		cbbAuthor.setItems(mainController.getAuthorData());
+		cbbOwner.setItems(FXCollections.observableArrayList(
+			    new String("Oui"),
+			    new String("Non")));
 	}
 		
 	/**
@@ -209,13 +214,9 @@ public class CuratorArtDataControl {
 			lblArtX.setText(selectedArt.getDim_x()+"");
 			lblArtY.setText(selectedArt.getDim_y()+"");
 			lblArtZ.setText(selectedArt.getDim_z()+"");
-			String fullName = selectedArt.getAuthor().getLast_name() + " " + selectedArt.getAuthor().getFirst_name();
-			if (!selectedArt.getAuthor().getAdditional_name().equals("")) {
-				fullName += ", dit " + selectedArt.getAuthor().getAdditional_name();
-			}
-			lblAuthor.setText(fullName);
+			lblAuthor.setText(selectedArt.getAuthor().getFullName());
 			lblArtType.setText(selectedArt.getArt_type().getName());
-			lblArtStatus.setText(selectedArt.getArt_status().getName());			
+			lblOwner.setText(selectedArt.isOwner() ? "Oui" : "Non");
 			// affiche l'illustration de cette oeuvre si elle existe
 			if (selectedArt.getImage() != null) {
 				try {
@@ -253,21 +254,27 @@ public class CuratorArtDataControl {
 	 */
 	private void addArt() {
 		try {
-			String artTitle = txtArtTitle.getText();
-			String artCode = txtArtCode.getText();
-			String artDates = txtArtDates.getText();
-			String artMaterials = txtMaterials.getText();			
-			int artDimX = Integer.parseInt(txtDimX.getText());
-			int artDimY = Integer.parseInt(txtDimY.getText());
-			int artDimZ = Integer.parseInt(txtDimZ.getText());
-			byte[] artImage = null;
+			String title = txtArtTitle.getText();
+			String code = txtArtCode.getText();
+			String date = txtArtDates.getText();
+			String materials = txtMaterials.getText();			
+			int dimX = Integer.parseInt(txtDimX.getText());
+			int dimY = Integer.parseInt(txtDimY.getText());
+			int dimZ = Integer.parseInt(txtDimZ.getText());
+			byte[] image = null;
 			if (this.file != null) {
-				artImage = ImageConversion.imageToByteArray(this.file);
+				image = ImageConversion.imageToByteArray(this.file);
 			}
 			Author author = cbbAuthor.getValue();
-			ArtType artType = cbbArtType.getValue();
-			mainController.addArt(artCode, artTitle, artDates, artMaterials, artDimX, artDimY, artDimZ,
-					artImage, author, null, artType, null);
+			ArtType type = cbbArtType.getValue();
+			boolean artOwner = (cbbOwner.getValue() == "Oui" ? true : false);
+			// par défaut, une œuvre est "Possédée" (id_art_status = 1)
+			// et elle n'a pas de présentoir (display = null)
+			// TODO l'oeuvre pourrait avoir le statut "Prêté" ou "Emprunté"
+			ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
+			Art art = new Art(code, title, date, materials, dimX, dimY, dimZ, image,
+					author, artStatus, type, null, artOwner);
+			mainController.addArt(art);
 		} catch (Exception e) {
 			mainController.notifyFail("Échec lors de l'enregistrement de l'œuvre");
 			e.printStackTrace();
@@ -309,7 +316,7 @@ public class CuratorArtDataControl {
 	 *  --------------------------- */
 	
 	/**
-	 * TODO à l'ouverture de la fenêtre, initialise je sais pas quoi, à revoir
+	 * initialisation de la vue JavaFX
 	 */
 	@FXML
 	private void initialize() {
@@ -414,27 +421,7 @@ public class CuratorArtDataControl {
 	 */
 	@FXML
 	private void handleAuthorSelect(ActionEvent event) {
-		if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
-			stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			// lien avec la vue
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/CuratorAuthorSelect.fxml"));
-			pneAuthorSelect = (Pane)loader.load();
-			// récupération du contrôleur de la vue
-			this.authorSelectCtrl = loader.getController();
-			// passage du contrôleur principal au sous-contrôleur
-			this.authorSelectCtrl.setMainControl(this.mainController);
-			// rafraîchissement des données de la sous-fenêtre
-			this.authorSelectCtrl.refreshData();
-			// affichage de la fenêtre
-			Scene scene = new Scene(pneAuthorSelect);
-			stgAuthorSelect.setScene(scene);
-			stgAuthorSelect.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mainController.showCuratorAuthorSelectionStage();
 	}
 	
 	/**
