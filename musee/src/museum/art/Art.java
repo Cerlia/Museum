@@ -13,6 +13,12 @@ public class Art {
 	private int dim_z;
 	private byte[] image;
 	private Author author;
+	private boolean owner;
+	
+	public boolean isOwner() {
+		return owner;
+	}
+
 	public void setArt_code(String art_code) {
 		this.art_code = art_code;
 	}
@@ -80,10 +86,11 @@ public class Art {
 	 * @param art_status
 	 * @param art_type
 	 * @param display
+	 * @param owner
 	 */
 	public Art(int id_art, String art_code, String art_title, String creation_date,
 			String materials, int dim_x, int dim_y, int dim_z, byte[] image, Author author,
-			ArtStatus art_status, ArtType art_type, Display display) {
+			ArtStatus art_status, ArtType art_type, Display display, boolean owner) {
 		this.id_art = id_art;
 		this.art_code = art_code;
 		this.art_title = art_title;
@@ -97,6 +104,7 @@ public class Art {
 		this.art_status = art_status;
 		this.art_type = art_type;
 		this.display = display;
+		this.owner = owner;
 	}
 	
 	/**
@@ -113,10 +121,11 @@ public class Art {
 	 * @param art_status
 	 * @param art_type
 	 * @param display
+	 * @param owner
 	 */
 	public Art(String art_code, String art_title, String creation_date, String materials,
 			int dim_x, int dim_y, int dim_z, byte[] image, Author author, ArtStatus art_status,
-			ArtType art_type, Display display) {
+			ArtType art_type, Display display, boolean owner) {
 		this.art_code = art_code;
 		this.art_title = art_title;
 		this.creation_date = creation_date;
@@ -129,6 +138,7 @@ public class Art {
 		this.art_status = art_status;
 		this.art_type = art_type;
 		this.display = display;
+		this.owner = owner;
 	}
 
 	public int getId_art() {
@@ -189,9 +199,6 @@ public class Art {
 	
 	@Override
 	public String toString() {
-		return "Object [id=" + id_art + ", code=" + art_code + ", titre=" + art_title +
-				", date=" + creation_date + ", matériaux=" + materials + ", dim_x=" + dim_x +
-				", dim_y=" + dim_y + ", dim_z=" + dim_z + ", auteur=" + author.getLast_name() +
-				", nomStatut=" + art_status.getName() + ", typeObjet=" + art_type.getName() + "]";
+		return art_title + " (" + author.getFullName() + ")";
 	}
 }

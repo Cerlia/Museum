@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtDataControl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="642.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CuratorArtDataControl">
    <children>
          <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="43.0" prefWidth="1400.0" styleClass="mainTitle" text="LISTE DES ŒUVRES DU MUSÉE">
          <font>
@@ -22,7 +22,7 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="artTable" layoutX="14.0" layoutY="124.0" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" prefHeight="463.0" prefWidth="480.0" styleClass="whitePane">
+      <TableView fx:id="artTable" layoutX="14.0" layoutY="124.0" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" prefHeight="507.0" prefWidth="480.0" styleClass="whitePane">
         <columns>
           <TableColumn fx:id="codeColumn" prefWidth="94.39999103546143" text="Code" />
           <TableColumn fx:id="nameColumn" prefWidth="168.00001525878906" text="Titre" />
@@ -34,7 +34,7 @@
          <font>
             <Font size="14.0" />
          </font></Button>
-      <AnchorPane fx:id="pneArtInfo" layoutX="510.0" layoutY="92.0" prefHeight="494.0" prefWidth="880.0" styleClass="whitePane" visible="false">
+      <AnchorPane fx:id="pneArtInfo" layoutX="510.0" layoutY="92.0" prefHeight="539.0" prefWidth="880.0" styleClass="whitePane" visible="false">
          <children>
             <Label alignment="CENTER" prefHeight="35.0" prefWidth="880.0" styleClass="subTitle" text="Détails de l'œuvre" textAlignment="CENTER">
                <font>
@@ -81,7 +81,7 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label alignment="CENTER_RIGHT" layoutX="9.0" layoutY="372.0" prefHeight="20.0" prefWidth="146.0" text="Statut">
+            <Label alignment="CENTER_RIGHT" layoutX="9.0" layoutY="372.0" prefHeight="20.0" prefWidth="146.0" text="Propriétaire">
                <font>
                   <Font size="14.0" />
                </font></Label>
@@ -117,26 +117,26 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label fx:id="lblArtStatus" layoutX="174.0" layoutY="372.0" prefHeight="18.0" prefWidth="294.0" text="Titre">
+            <Label fx:id="lblOwner" layoutX="174.0" layoutY="372.0" prefHeight="18.0" prefWidth="294.0" text="Titre">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="editArt" layoutX="187.0" layoutY="430.0" mnemonicParsing="false" onAction="#handleArtUpdate" prefHeight="30.0" prefWidth="94.0" text="Modifier">
+            <Button fx:id="editArt" layoutX="187.0" layoutY="458.0" mnemonicParsing="false" onAction="#handleArtUpdate" prefHeight="30.0" prefWidth="94.0" text="Modifier">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="deleteArt" layoutX="63.0" layoutY="430.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="94.0" text="Supprimer">
+            <Button fx:id="deleteArt" layoutX="63.0" layoutY="458.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="94.0" text="Supprimer">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Pane layoutX="511.0" layoutY="91.0" prefHeight="338.0" prefWidth="344.0">
+            <Pane layoutX="510.0" layoutY="135.0" prefHeight="338.0" prefWidth="344.0">
                <children>
                   <ImageView fx:id="imgArt" fitHeight="330.0" fitWidth="344.0" layoutX="2.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </Pane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="pneArtCreatEdit" layoutX="510.0" layoutY="92.0" prefHeight="494.0" prefWidth="590.0" styleClass="whitePane" visible="false">
+      <AnchorPane fx:id="pneArtCreatEdit" layoutX="510.0" layoutY="92.0" prefHeight="539.0" prefWidth="590.0" styleClass="whitePane" visible="false">
          <children>
             <Label fx:id="lblArtCreatEditTitle" alignment="CENTER" prefHeight="30.0" prefWidth="590.0" styleClass="subTitle" textAlignment="CENTER">
                <font>
@@ -178,11 +178,11 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="saveArt" layoutX="305.0" layoutY="453.0" mnemonicParsing="false" onAction="#handleSaveArt" prefHeight="26.0" prefWidth="110.0" text="Sauvegarder">
+            <Button fx:id="saveArt" layoutX="305.0" layoutY="495.0" mnemonicParsing="false" onAction="#handleSaveArt" prefHeight="26.0" prefWidth="110.0" text="Sauvegarder">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="cancelCreatEdit" layoutX="145.0" layoutY="453.0" mnemonicParsing="false" onAction="#handleCancelCreatEdit" prefHeight="26.0" prefWidth="110.0" text="Annuler">
+            <Button fx:id="cancelCreatEdit" layoutX="145.0" layoutY="495.0" mnemonicParsing="false" onAction="#handleCancelCreatEdit" prefHeight="26.0" prefWidth="110.0" text="Annuler">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -194,11 +194,11 @@
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <TextField fx:id="txtArtDates" layoutX="164.0" layoutY="132.0" prefHeight="26.0" prefWidth="226.0">
+            <TextField fx:id="txtArtDates" layoutX="164.0" layoutY="132.0" prefHeight="30.0" prefWidth="208.0">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <TextField fx:id="txtMaterials" layoutX="164.0" layoutY="165.0" prefHeight="26.0" prefWidth="226.0">
+            <TextField fx:id="txtMaterials" layoutX="164.0" layoutY="165.0" prefHeight="30.0" prefWidth="208.0">
                <font>
                   <Font size="14.0" />
                </font></TextField>
@@ -219,17 +219,26 @@
                   <Font size="14.0" />
                </font></Button>
             <ComboBox fx:id="cbbArtType" layoutX="164.0" layoutY="331.0" prefHeight="26.0" prefWidth="146.0" />
-            <Label alignment="CENTER_RIGHT" layoutX="9.0" layoutY="365.0" prefHeight="20.0" prefWidth="146.0" text="Image">
+            <Label alignment="CENTER_RIGHT" layoutX="9.0" layoutY="405.0" prefHeight="20.0" prefWidth="146.0" text="Image">
                <font>
                   <Font size="14.0" />
                </font></Label>
             <ComboBox fx:id="cbbAuthor" disable="true" layoutX="164.0" layoutY="300.0" opacity="0.74" prefHeight="26.0" prefWidth="225.0" />
-            <Button fx:id="btnImageSelect" layoutX="406.0" layoutY="361.0" mnemonicParsing="false" onAction="#handleImageSelect" prefHeight="26.0" prefWidth="86.0" text="Choisir*">
+            <Button fx:id="btnImageSelect" layoutX="406.0" layoutY="401.0" mnemonicParsing="false" onAction="#handleImageSelect" prefHeight="26.0" prefWidth="86.0" text="Choisir*">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Label fx:id="lblImgPath" layoutX="164.0" layoutY="365.0" prefHeight="18.0" prefWidth="226.0" />
-            <Label layoutX="145.0" layoutY="411.0" prefHeight="18.0" prefWidth="378.0" text="* L'image doit être un fichier au format .jpg de moins de 250 Kio" />
+            <Label fx:id="lblImgPath" layoutX="164.0" layoutY="405.0" prefHeight="18.0" prefWidth="226.0">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label layoutX="145.0" layoutY="451.0" prefHeight="18.0" prefWidth="378.0" text="* L'image doit être un fichier au format .jpg de moins de 250 Kio" />
+            <Label alignment="CENTER_RIGHT" layoutX="9.0" layoutY="367.0" prefHeight="20.0" prefWidth="146.0" text="Propriétaire">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="cbbOwner" layoutX="164.0" layoutY="364.0" prefHeight="26.0" prefWidth="146.0" />
          </children>
       </AnchorPane>
    </children>

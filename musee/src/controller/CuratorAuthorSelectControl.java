@@ -37,8 +37,6 @@ public class CuratorAuthorSelectControl {
 	@FXML
 	private Button btnUpdateAuthor;
 	@FXML
-	private Button btnDeleteAuthor;
-	@FXML
 	private Button btnSelectAuthor;
 	@FXML
 	private Button btnCancelSelectAuthor;
@@ -104,8 +102,6 @@ public class CuratorAuthorSelectControl {
 		txtAuthorFirstName.setText("");
 		txtAuthorAddName.setText("");
 		txtAuthorDates.setText("");
-		// réinitialisation des champs de la zone d'édition d'auteur
-		resetAuthorCreateEdit();
 		// masquage de la fenêtre de modif
 		hideAuthorEditingPane();
 	}
@@ -129,7 +125,6 @@ public class CuratorAuthorSelectControl {
 	 */
 	private void activateAuthorControls() {
 		btnAddAuthor.setDisable(false);
-		btnDeleteAuthor.setDisable(false);
 		btnUpdateAuthor.setDisable(false);
 		authorTable.setDisable(false);
 	}
@@ -139,7 +134,6 @@ public class CuratorAuthorSelectControl {
 	 */
 	private void deactivateAuthorControls() {
 		btnAddAuthor.setDisable(true);
-		btnDeleteAuthor.setDisable(true);
 		btnUpdateAuthor.setDisable(true);
 		authorTable.setDisable(true);
 	}

@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 // TODO C'est bien normal que le contrôleur de la vue ait accès au modèle, oui ?
@@ -435,7 +436,7 @@ public class ArchitectRoomControl {
 	 * event listener de la liste de salles, permet de récupérer la ligne sélectionnée (bouton)
 	 */
 	@FXML
-	private void handleRoomTableKeyPressed(ActionEvent event) {
+	private void handleRoomTableKeyPressed(KeyEvent event) {
 		selectedRoomLine = roomTable.getSelectionModel().getSelectedIndex();
 		showRoomInfo();
 	}

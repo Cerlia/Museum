@@ -17,11 +17,11 @@
          <font>
             <Font size="14.0" />
          </font></Label>
-	  <TextField fx:id="txtLogin" layoutX="433.0" layoutY="258.0" onMouseClicked="#handleTextfieldClick">
+	  <TextField fx:id="txtLogin" layoutX="433.0" layoutY="258.0" onMouseClicked="#handleTextfieldClick" prefHeight="30.0" prefWidth="268.0">
          <font>
             <Font size="14.0" />
          </font></TextField>
-      <PasswordField fx:id="txtPassword" layoutX="433.0" layoutY="300.0" onMouseClicked="#handleTextfieldClick">
+      <PasswordField fx:id="txtPassword" layoutX="433.0" layoutY="300.0" onMouseClicked="#handleTextfieldClick" prefHeight="30.0" prefWidth="268.0">
          <font>
             <Font size="14.0" />
          </font></PasswordField>      

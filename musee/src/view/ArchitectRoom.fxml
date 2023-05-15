@@ -18,18 +18,18 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <Label layoutX="12.0" layoutY="60.0" prefHeight="18.0" prefWidth="160.0" text="Salles">
+      <Label layoutX="12.0" layoutY="63.0" prefHeight="18.0" prefWidth="160.0" text="Salles">
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="roomTable" layoutX="12.0" layoutY="100.0" onKeyReleased="#handleRoomTableKeyPressed" onMouseClicked="#handleRoomTableAction" prefHeight="486.0" prefWidth="530.0" styleClass="whitePane">
+      <TableView fx:id="roomTable" layoutX="12.0" layoutY="107.0" onKeyReleased="#handleRoomTableKeyPressed" onMouseClicked="#handleRoomTableAction" prefHeight="486.0" prefWidth="530.0" styleClass="whitePane">
         <columns>
           <TableColumn fx:id="nameColumn" maxWidth="500.0" prefWidth="230.0" text="Nom" />
           <TableColumn fx:id="floorColumn" maxWidth="300.0" prefWidth="160.0" text="Étage" />
             <TableColumn fx:id="nbArtColumn" maxWidth="300.0" prefWidth="130.0" text="Œuvres exposées" />
         </columns>
       </TableView>
-      <Button fx:id="btnCreateRoom" layoutX="451.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="26.0" prefWidth="90.0" text="Créer">
+      <Button fx:id="btnCreateRoom" layoutX="409.0" layoutY="67.0" mnemonicParsing="false" onAction="#handleRoomAddition" prefHeight="30.0" prefWidth="132.0" text="Nouvelle salle">
          <font>
             <Font size="14.0" />
          </font></Button>
@@ -91,11 +91,11 @@
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <Button layoutX="214.0" layoutY="436.0" mnemonicParsing="false" onAction="#handleSaveRoom" prefHeight="30.0" prefWidth="90.0" text="Enregistrer">
+            <Button layoutX="223.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleSaveRoom" prefHeight="30.0" prefWidth="90.0" text="Enregistrer">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button layoutX="85.0" layoutY="436.0" mnemonicParsing="false" onAction="#handleCancelRoomEdit" prefHeight="30.0" prefWidth="90.0" text="Annuler">
+            <Button layoutX="102.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleCancelRoomEdit" prefHeight="30.0" prefWidth="90.0" text="Annuler">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -124,11 +124,11 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="btnDeleteRoom" layoutX="75.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleRoomDeletion" prefHeight="26.0" prefWidth="90.0" text="Supprimer">
+            <Button fx:id="btnDeleteRoom" layoutX="102.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleRoomDeletion" prefHeight="26.0" prefWidth="90.0" styleClass="buttonAttention" text="Supprimer">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnEditRoom" layoutX="205.0" layoutY="366.0" mnemonicParsing="false" onAction="#handleRoomUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier">
+            <Button fx:id="btnEditRoom" layoutX="223.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleRoomUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier">
                <font>
                   <Font size="14.0" />
                </font></Button>
@@ -176,27 +176,27 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="btnWall1" layoutX="463.0" layoutY="94.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" text="Mur 1">
+            <Button fx:id="btnWall1" layoutX="463.0" layoutY="77.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="30.0" prefWidth="139.0" styleClass="buttonSurface" text="Mur 1">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnWall2" layoutX="534.0" layoutY="165.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="90.0" styleClass="buttonSurface" text="Mur 2">
+            <Button fx:id="btnWall2" layoutX="553.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="30.0" prefWidth="139.0" rotate="90.0" styleClass="buttonSurface" text="Mur 2">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnWall3" layoutX="463.0" layoutY="235.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" styleClass="buttonSurface" text="Mur 3">
+            <Button fx:id="btnWall3" layoutX="463.0" layoutY="251.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="30.0" prefWidth="139.0" styleClass="buttonSurface" text="Mur 3">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnWall4" layoutX="392.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="25.0" prefWidth="110.0" rotate="-90.0" styleClass="buttonSurface" text="Mur 4">
+            <Button fx:id="btnWall4" layoutX="374.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="30.0" prefWidth="139.0" rotate="-90.0" styleClass="buttonSurface" text="Mur 4">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnFloor" layoutX="477.0" layoutY="136.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" styleClass="buttonSurface" text="Sol">
+            <Button fx:id="btnFloor" layoutX="491.0" layoutY="137.0" mnemonicParsing="false" onAction="#handleBtnSurfaceAction" prefHeight="84.0" prefWidth="84.0" styleClass="buttonSurface" text="Sol">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Pane fx:id="pneSurfaceInfo" layoutX="372.0" layoutY="287.0" prefHeight="173.0" prefWidth="314.0" visible="false">
+            <Pane fx:id="pneSurfaceInfo" layoutX="372.0" layoutY="320.0" prefHeight="173.0" prefWidth="314.0" visible="false">
                <children>
                   <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="33.0" prefHeight="20.0" prefWidth="150.0" text="Nom">
                      <font>
@@ -232,10 +232,6 @@
                      </font></Label>
                </children>
             </Pane>
-            <Button fx:id="btnShowFloor" layoutX="74.0" layoutY="413.0" mnemonicParsing="false" onAction="#handleShowFloor" prefHeight="26.0" prefWidth="222.0" text="Voir les étages">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
             <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="35.0" prefWidth="706.0" styleClass="subTitle" text="Informations de la salle">
                <font>
                   <Font size="20.0" />
@@ -243,5 +239,10 @@
             </Label>
          </children>
       </AnchorPane>
+      <Button fx:id="btnShowFloor" layoutX="269.0" layoutY="67.0" mnemonicParsing="false" onAction="#handleShowFloor" prefHeight="30.0" prefWidth="132.0" text="Écran des étages">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

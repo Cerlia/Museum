@@ -17,11 +17,11 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <Label layoutX="12.0" layoutY="60.0" prefHeight="18.0" prefWidth="160.0" text="Étages">
+      <Label layoutX="14.0" layoutY="65.0" prefHeight="18.0" prefWidth="160.0" text="Étages">
          <font>
             <Font size="24.0" />
          </font></Label>
-      <TableView fx:id="floorTable" layoutX="12.0" layoutY="100.0" onKeyReleased="#handleFloorTableKeyPressed" onMouseClicked="#handleFloorTableAction" prefHeight="470.0" prefWidth="584.0" styleClass="whitePane">
+      <TableView fx:id="floorTable" layoutX="12.0" layoutY="107.0" onKeyReleased="#handleFloorTableKeyPressed" onMouseClicked="#handleFloorTableAction" prefHeight="464.0" prefWidth="584.0" styleClass="whitePane">
         <columns>
             <TableColumn fx:id="rankColumn" prefWidth="71.19997882843018" text="Rang" />
           <TableColumn fx:id="nameColumn" prefWidth="208.80006408691406" text="Nom" />
@@ -29,53 +29,53 @@
             <TableColumn fx:id="nbArtsColumn" prefWidth="138.39996337890625" text="Œuvres exposées" />
         </columns>
       </TableView>
-      <Button fx:id="btnCreateFloor" layoutX="505.0" layoutY="64.0" mnemonicParsing="false" onAction="#handleFloorAddition" prefHeight="26.0" prefWidth="90.0" text="Créer">
+      <Button fx:id="btnCreateFloor" layoutX="473.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleFloorAddition" prefHeight="30.0" prefWidth="122.0" text="Nouvel étage">
          <font>
             <Font size="14.0" />
          </font></Button>
       <AnchorPane fx:id="pneFloorCreatEdit" disable="false" layoutX="630.0" layoutY="64.0" prefHeight="506.0" prefWidth="404.0" styleClass="whitePane" visible="false">
          <children>
-            <Label alignment="CENTER_RIGHT" layoutX="23.0" layoutY="95.0" prefHeight="18.0" prefWidth="142.0" text="Nom">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="94.0" prefHeight="18.0" prefWidth="142.0" text="Nom">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <TextField fx:id="txtFloorName" layoutX="178.0" layoutY="90.0">
+            <TextField fx:id="txtFloorName" layoutX="179.0" layoutY="89.0">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <Label alignment="CENTER_RIGHT" layoutX="23.0" layoutY="133.0" prefHeight="18.0" prefWidth="142.0" text="Longueur x en mètres">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="132.0" prefHeight="18.0" prefWidth="142.0" text="Longueur x en mètres">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label alignment="CENTER_RIGHT" layoutX="23.0" layoutY="173.0" prefHeight="18.0" prefWidth="142.0" text="Largeur y en mètres">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="172.0" prefHeight="18.0" prefWidth="142.0" text="Largeur y en mètres">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <TextField fx:id="txtFloorDimX" layoutX="178.0" layoutY="129.0" prefHeight="26.0" prefWidth="68.0">
+            <TextField fx:id="txtFloorDimX" layoutX="179.0" layoutY="128.0" prefHeight="26.0" prefWidth="68.0">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <TextField fx:id="txtFloorDimY" layoutX="178.0" layoutY="169.0" prefHeight="26.0" prefWidth="68.0">
+            <TextField fx:id="txtFloorDimY" layoutX="179.0" layoutY="168.0" prefHeight="26.0" prefWidth="68.0">
                <font>
                   <Font size="14.0" />
                </font></TextField>
-            <Button layoutX="209.0" layoutY="379.0" mnemonicParsing="false" onAction="#handleSaveFloor" prefHeight="30.0" prefWidth="90.0" text="Enregistrer">
+            <Button layoutX="223.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleSaveFloor" prefHeight="30.0" prefWidth="90.0" text="Enregistrer">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button layoutX="76.0" layoutY="379.0" mnemonicParsing="false" onAction="#handleCancelFloorEdit" prefHeight="30.0" prefWidth="90.0" text="Annuler">
+            <Button layoutX="102.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleCancelFloorEdit" prefHeight="30.0" prefWidth="90.0" text="Annuler">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <CheckBox fx:id="chbIgnoreFloorDim" layoutX="178.0" layoutY="211.0" mnemonicParsing="false" onAction="#handleIgnoreFloorDim" prefHeight="20.0" prefWidth="198.0" text="Ignorer les dimensions">
+            <CheckBox fx:id="chbIgnoreFloorDim" layoutX="179.0" layoutY="210.0" mnemonicParsing="false" onAction="#handleIgnoreFloorDim" prefHeight="20.0" prefWidth="198.0" text="Ignorer les dimensions">
                <font>
                   <Font size="14.0" />
                </font></CheckBox>
-            <Label alignment="CENTER_RIGHT" layoutX="23.0" layoutY="270.0" prefHeight="18.0" prefWidth="142.0" text="Rang de l'étage">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="269.0" prefHeight="18.0" prefWidth="142.0" text="Rang de l'étage">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Spinner fx:id="spnRank" initialValue="1" layoutX="178.0" layoutY="265.0" max="20" min="1" prefHeight="30.0" prefWidth="142.0" />
+            <Spinner fx:id="spnRank" initialValue="1" layoutX="179.0" layoutY="264.0" max="20" min="1" prefHeight="30.0" prefWidth="142.0" />
             <Label fx:id="floorFormTitle" alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="404.0" styleClass="subTitle" text="Nouvel étage">
                <font>
                   <Font size="20.0" />
@@ -83,57 +83,53 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="pneFloorDisplay" disable="false" layoutX="630.0" layoutY="64.0" prefHeight="506.0" prefWidth="404.0" styleClass="whitePane">
+      <AnchorPane fx:id="pneFloorDisplay" disable="false" layoutX="630.0" layoutY="64.0" prefHeight="506.0" prefWidth="404.0" styleClass="whitePane" visible="false">
          <children>
-            <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="89.0" prefHeight="18.0" prefWidth="142.0" text="Nom">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="94.0" prefHeight="18.0" prefWidth="142.0" text="Nom">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="127.0" prefHeight="18.0" prefWidth="142.0" text="Longueur x en mètres">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="132.0" prefHeight="18.0" prefWidth="142.0" text="Longueur x en mètres">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="167.0" prefHeight="18.0" prefWidth="142.0" text="Largeur y en mètres">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="172.0" prefHeight="18.0" prefWidth="142.0" text="Largeur y en mètres">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="btnDeleteFloor" layoutX="39.0" layoutY="402.0" mnemonicParsing="false" onAction="#handleFloorDeletion" prefHeight="26.0" prefWidth="90.0" text="Supprimer">
+            <Button fx:id="btnDeleteFloor" layoutX="102.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleFloorDeletion" prefHeight="26.0" prefWidth="90.0" styleClass="buttonAttention" text="Supprimer">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="btnEditFloor" layoutX="147.0" layoutY="402.0" mnemonicParsing="false" onAction="#handleFloorUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier">
+            <Button fx:id="btnEditFloor" layoutX="223.0" layoutY="432.0" mnemonicParsing="false" onAction="#handleFloorUpdate" prefHeight="26.0" prefWidth="90.0" text="Modifier">
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Label fx:id="lblFloorName" layoutX="179.0" layoutY="89.0" prefHeight="18.0" prefWidth="178.0">
+            <Label fx:id="lblFloorName" layoutX="181.0" layoutY="94.0" prefHeight="18.0" prefWidth="178.0">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label fx:id="lblDimY" layoutX="179.0" layoutY="167.0" prefHeight="18.0" prefWidth="178.0">
+            <Label fx:id="lblDimY" layoutX="181.0" layoutY="172.0" prefHeight="18.0" prefWidth="178.0">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label fx:id="lblDimX" layoutX="179.0" layoutY="127.0" prefHeight="18.0" prefWidth="178.0">
+            <Label fx:id="lblDimX" layoutX="181.0" layoutY="132.0" prefHeight="18.0" prefWidth="178.0">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Button fx:id="btnShowRooms" layoutX="254.0" layoutY="401.0" mnemonicParsing="false" onAction="#handleShowRooms" prefHeight="30.0" prefWidth="121.0" text="Voir les salles">
-               <font>
-                  <Font size="14.0" />
-               </font></Button>
-            <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="247.0" prefHeight="18.0" prefWidth="142.0" text="Œuvres exposées">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="252.0" prefHeight="18.0" prefWidth="142.0" text="Œuvres exposées">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label fx:id="lblNbArts" layoutX="179.0" layoutY="247.0" prefHeight="18.0" prefWidth="178.0">
+            <Label fx:id="lblNbArts" layoutX="181.0" layoutY="252.0" prefHeight="18.0" prefWidth="178.0">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label alignment="CENTER_RIGHT" layoutX="22.0" layoutY="208.0" prefHeight="18.0" prefWidth="142.0" text="Rang de l'étage">
+            <Label alignment="CENTER_RIGHT" layoutX="24.0" layoutY="213.0" prefHeight="18.0" prefWidth="142.0" text="Rang de l'étage">
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <Label fx:id="lblRank" layoutX="179.0" layoutY="208.0" prefHeight="18.0" prefWidth="178.0">
+            <Label fx:id="lblRank" layoutX="181.0" layoutY="213.0" prefHeight="18.0" prefWidth="178.0">
                <font>
                   <Font size="14.0" />
                </font></Label>
@@ -144,5 +140,10 @@
             </Label>
          </children>
       </AnchorPane>
+      <Button fx:id="btnShowRooms" layoutX="344.0" layoutY="67.0" mnemonicParsing="false" onAction="#handleShowRooms" prefHeight="30.0" prefWidth="121.0" text="Écran des salles">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

@@ -899,8 +899,6 @@ public class Main extends Application {
 			if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
 				stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
 			}			
-			// rafraîchissement des données de la sous-fenêtre
-			this.authorSelectCtrl.refreshData();
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(Main.class.getResource("../view/CuratorAuthorSelect.fxml"));
@@ -909,6 +907,8 @@ public class Main extends Application {
 			this.authorSelectCtrl = loader.getController();
 			// passage du contrôleur principal au sous-contrôleur
 			this.authorSelectCtrl.setMainControl(this);
+			// rafraîchissement des données de la sous-fenêtre
+			this.authorSelectCtrl.refreshData();
 			// affichage de la fenêtre
 			Scene scene = new Scene(curatorAuthorSelectPane);
 			scene.getStylesheets().add("style.css");

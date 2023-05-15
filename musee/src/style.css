@@ -20,23 +20,6 @@
     -fx-background-color: #88a89c;
 }
 
-.buttonSurface {
-	border-width: 1px;
-    -fx-border-width: 1px;
-	background-color: #ffffff;
-    -fx-background-color: #ffffff;
-    border-color: #484848;
-    -fx-border-color: #484848;
-    border-radius: 0;
-    -fx-border-radius: 0;
-    -fx-background-border-radius: 0;
-}
-
-.buttonSurface:hover {
-	background-color: #ececec;
-    -fx-background-color: #ececec;
-}
-
 .cell:selected {
 	-fx-text-fill: #000000;
 	background-color: rgb(199, 214, 206);
@@ -64,7 +47,39 @@
     -fx-faint-focus-color: #00402422;
 }
 
+.flowPane {
+	background-color: #ececec;
+	-fx-background-color: #ececec;
+}
+
 /* Classes personnelles */
+
+.buttonSurface {
+	border-width: 1px;
+    -fx-border-width: 1px;
+	background-color: #ffffff;
+    -fx-background-color: #ffffff;
+    border-color: #484848;
+    -fx-border-color: #484848;
+    border-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-border-radius: 0;
+}
+
+.buttonSurface:hover {
+	background-color: #ececec;
+    -fx-background-color: #ececec;
+}
+
+.buttonAttention {
+	background-color: #ff7171;
+    -fx-background-color: #ff7171;
+}
+
+.buttonAttention:hover {
+	background-color: #ff4242;
+    -fx-background-color: #ff4242;
+}
 
 .whitePane {
 	background-color: #ffffff;
@@ -79,16 +94,18 @@
 }
 
 .mainTitle {
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #000000;
 	-fx-text-alignment: justify;
-	background-color: #004024;
-	-fx-background-color: #004024;
+	/*
+	background-color: #ffffff;
+	-fx-background-color: #ffffff;
+	*/
 	-fx-alignment: bottom-center;
 }
 
 .subTitle {
-	background-color: rgb(199, 214, 206);
-	-fx-background-color: rgb(199, 214, 206);
+	background-color: #adb4b0;
+	-fx-background-color: #adb4b0;
 	-fx-alignment: bottom-center;
 	padding: 5px;
 	-fx-padding: 5px;
