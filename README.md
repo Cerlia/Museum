@@ -11,3 +11,4 @@ Résumé du cahier des charges : un musée des beaux-arts nous sollicite pour in
 
 # Installation
 Le site nécessite une base de données SQL Server dont le script de restauration se trouve dans le dépôt.
+Pour la connexion à la base de données, utiliser l'archive sqljdbc42.jar également fournie dans le dépôt.
