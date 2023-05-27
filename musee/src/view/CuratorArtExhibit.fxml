@@ -92,7 +92,7 @@
                       </Tab>
                     </tabs>
                   </TabPane>
-                  <Label fx:id="lblDisplayedArtPaneTitle" layoutX="1.0" layoutY="1.0" prefHeight="27.0" prefWidth="765.0" styleClass="subTitle" text="Exposition">
+                  <Label fx:id="lblDisplayedArtPaneTitle" layoutX="1.0" layoutY="1.0" prefHeight="30.0" prefWidth="1092.0" styleClass="subTitle" text="Exposition">
                      <font>
                         <Font size="20.0" />
                      </font>

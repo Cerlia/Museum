@@ -37,13 +37,13 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TableView fx:id="tblArts" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" layoutX="123.0" layoutY="353.0" prefHeight="235.0" prefWidth="535.0">
+      <TableView fx:id="tblArts" layoutX="123.0" layoutY="353.0" onKeyReleased="#handleArtTableKeyPressed" onMouseClicked="#handleArtTableAction" prefHeight="235.0" prefWidth="535.0">
         <columns>
           <TableColumn fx:id="colTitle" prefWidth="235.1999969482422" text="Titre" />
           <TableColumn fx:id="colAuthor" minWidth="0.0" prefWidth="297.60003662109375" text="Auteur" />
         </columns>
       </TableView>
-      <AnchorPane fx:id="pneArtInfo" layoutX="670.0" layoutY="16.0" minWidth="400.0" prefHeight="572.0" prefWidth="717.0" style="-fx-background-color: #FFFFFF;">
+      <AnchorPane fx:id="pneArtInfo" layoutX="670.0" layoutY="16.0" minWidth="400.0" prefHeight="572.0" prefWidth="717.0" style="-fx-background-color: #FFFFFF;" visible="false">
          <children>
             <Label fx:id="lblArtTitle" alignment="TOP_LEFT" layoutX="24.0" layoutY="23.0" prefHeight="54.0" prefWidth="646.0" text="Titre" wrapText="true">
                <font>

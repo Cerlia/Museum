@@ -332,10 +332,12 @@ public class CuratorArtSelectControl {
 	@FXML
 	private void handleTableExistingDisplayAction(MouseEvent event) {
 		selectedExistingDisplayLine = tblExistingDisplay.getSelectionModel().getSelectedIndex();
-		Display display = tblExistingDisplay.getItems().get(selectedExistingDisplayLine);
-		lblDisplaySelected.setText(display.getName() + " - " + display.getDisplay_model().getName() + " - " +
-				display.getDisplay_model().getDisplay_type().getName());
-		btnConfirmExhibit.setDisable(false);
+		if (selectedExistingDisplayLine != -1) {
+			Display display = tblExistingDisplay.getItems().get(selectedExistingDisplayLine);
+			lblDisplaySelected.setText(display.getName() + " - " + display.getDisplay_model().getName() + " - " +
+					display.getDisplay_model().getDisplay_type().getName());
+			btnConfirmExhibit.setDisable(false);
+		}		
 	}
 	
 	/**
@@ -345,11 +347,17 @@ public class CuratorArtSelectControl {
 	@FXML
 	private void handleTableNewDisplayAction(MouseEvent event) {
 		selectedNewDisplayLine = tblNewDisplay.getSelectionModel().getSelectedIndex();
-		DisplayModel displayModel = tblNewDisplay.getItems().get(selectedNewDisplayLine);
-		lblDisplaySelected.setText(displayModel.getName() + " - " +
-				displayModel.getDisplay_type().getName());
+		if (selectedNewDisplayLine != -1) {
+			DisplayModel displayModel = tblNewDisplay.getItems().get(selectedNewDisplayLine);
+			lblDisplaySelected.setText(displayModel.getName() + " - " +
+					displayModel.getDisplay_type().getName());
+		}		
 	}
 	
+	/**
+	 * event listener du bouton pour valider la mise en exposition de l'œuvre
+	 * @param event
+	 */
 	public void handleBtnConfirmExhibit(ActionEvent event) {
 		int art_id = artTable.getItems().get(selectedArtLine).getId_art();
 		Art art = mainController.getFullArtData(art_id);
@@ -367,10 +375,12 @@ public class CuratorArtSelectControl {
 			String name = txtDisplayName.getText();
 			display = addDisplay(name, art);
 		};
-		// Dans tous les cas, update de l'œuvre avec la référence du présentoir
+		// Dans tous les cas, mise à jour de l'œuvre avec la référence du présentoir
 		art.setDisplay(display);
-		mainController.updateArt(art, "artExhibit");
-		display.setArts(ArtDAO.getInstance().reloadArtsOfDisplay(art.getDisplay().getId_display()));		
+		this.mainController.updateArt(art, "artExhibit");
+		display.setArts(ArtDAO.getInstance().reloadArtsOfDisplay(art.getDisplay().getId_display()));
+		Stage stage = (Stage)btnConfirmExhibit.getScene().getWindow();
+		stage.close();
 	}
 	
 	/**

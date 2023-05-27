@@ -125,7 +125,7 @@
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <Button fx:id="deleteArt" layoutX="63.0" layoutY="458.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="94.0" text="Supprimer">
+            <Button fx:id="deleteArt" layoutX="63.0" layoutY="458.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="94.0" styleClass="buttonAttention" text="Supprimer">
                <font>
                   <Font size="14.0" />
                </font></Button>

@@ -224,7 +224,6 @@ public class CuratorArtDataControl {
 					imgArt.setImage(image);		
 					lblImgPath.setText("image présente dans la base");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} else {
@@ -270,7 +269,6 @@ public class CuratorArtDataControl {
 			boolean artOwner = (cbbOwner.getValue() == "Oui" ? true : false);
 			// par défaut, une œuvre est "Possédée" (id_art_status = 1)
 			// et elle n'a pas de présentoir (display = null)
-			// TODO l'oeuvre pourrait avoir le statut "Prêté" ou "Emprunté"
 			ArtStatus artStatus = ArtStatusDAO.getInstance().read(1);
 			Art art = new Art(code, title, date, materials, dimX, dimY, dimZ, image,
 					author, artStatus, type, null, artOwner);
@@ -347,6 +345,7 @@ public class CuratorArtDataControl {
 				txtDimZ.setText(selectedArt.getDim_z()+"");
 				cbbAuthor.setValue(selectedArt.getAuthor());
 				cbbArtType.setValue(selectedArt.getArt_type());
+				cbbOwner.setValue(selectedArt.isOwner() ? "Oui" : "Non");
 				showArtEditingPane();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -417,7 +416,8 @@ public class CuratorArtDataControl {
 	}
 	
 	/**
-	 * event listener du bouton pour ajouter un artiste : ouvre une nouvelle fenêtre
+	 * event listener du bouton pour ajouter un auteur : ouvre une nouvelle fenêtre
+	 * @param event
 	 */
 	@FXML
 	private void handleAuthorSelect(ActionEvent event) {
@@ -426,6 +426,7 @@ public class CuratorArtDataControl {
 	
 	/**
 	 * event listener du bouton pour ajouter le fichier contenant l'image de l'œuvre
+	 * @param event
 	 */
 	@FXML
 	private void handleImageSelect(ActionEvent event) {
