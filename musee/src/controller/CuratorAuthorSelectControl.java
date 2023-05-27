@@ -277,6 +277,10 @@ public class CuratorAuthorSelectControl {
 		selectedAuthorLine = authorTable.getSelectionModel().getSelectedIndex();
 	}
 	
+	/**
+	 * event listener du bouton pour valider le choix de l'auteur
+	 * @param e
+	 */
 	@FXML
 	private void handleSelectAuthor(ActionEvent e) {
 		if (selectedAuthorLine != -1) {

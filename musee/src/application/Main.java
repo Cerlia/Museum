@@ -9,7 +9,7 @@ import controller.ArchitectMuseumControl;
 import controller.ArchitectRoomControl;
 import controller.CuratorArtDataControl;
 import controller.CuratorArtExhibitControl;
-import controller.CuratorArtMovementControl;
+import controller.CuratorArtSelectControl;
 import controller.CuratorAuthorSelectControl;
 import controller.LoginControl;
 import controller.VisitorControl;
@@ -73,6 +73,7 @@ public class Main extends Application {
 	private BorderPane mainWindowRoot;	// fenêtre principale
 	private Museum currentMuseum;
 	private Stage stgAuthorSelect = new Stage();     // "stage" de gestion des auteurs
+	private Stage stgArtSelect = new Stage();      // "stage" d'exposition d'une œuvre
 	
 	private final String NTF_TITLE_FORM_NG = "Enregistrement impossible";
 	private final String NTF_BODY_FORM_NG = "Les champs ne sont pas correctement remplis.\n" +
@@ -90,10 +91,10 @@ public class Main extends Application {
 	private AnchorPane architectFloorPane = null;
 	private AnchorPane architectRoomPane = null;
 	private AnchorPane curatorArtDataPane = null;
-	private AnchorPane curatorArtMovementPane = null;
 	private AnchorPane visitorPane = null;
 	private Pane curatorAuthorSelectPane = null;
 	private FlowPane curatorArtExhibitPane = null;
+	private Pane pneArtSelect = null;
 	
 	// sous-contrôleurs des différentes sous-fenêtres
 	private LoginControl loginCtrl = null;
@@ -101,10 +102,10 @@ public class Main extends Application {
 	private ArchitectFloorControl architectFloorCtrl = null;
 	private ArchitectRoomControl architectRoomCtrl = null;
 	private CuratorArtDataControl curatorArtDataCtrl = null;
-	private CuratorArtMovementControl curatorArtMovementCtrl = null;
 	private VisitorControl visitorCtrl = null;
 	private CuratorArtExhibitControl curatorArtExhibitCtrl = null;
 	private CuratorAuthorSelectControl authorSelectCtrl = null;
+	private CuratorArtSelectControl artSelectCtrl = null;
 	
 	// observableLists pour manipuler les données
 	private ObservableList<Art> artData = FXCollections.observableArrayList();
@@ -777,6 +778,7 @@ public class Main extends Application {
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(loginPane);
 			lblRoleStatus.setText("Non connecté");
+			btnDisconnect.setVisible(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -805,6 +807,8 @@ public class Main extends Application {
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(architectMuseumPane);
 			lblRoleStatus.setText("Connecté avec le rôle Architecte");
+			btnDisconnect.setText("Se déconnecter");
+			btnDisconnect.setVisible(true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -898,6 +902,7 @@ public class Main extends Application {
 		try {
 			if (stgAuthorSelect.getModality() != Modality.APPLICATION_MODAL) {
 				stgAuthorSelect.initModality(Modality.APPLICATION_MODAL);
+				stgAuthorSelect.getIcons().add(new Image(APPICON));
 			}			
 			// lien avec la vue
 			FXMLLoader loader = new FXMLLoader();
@@ -921,33 +926,35 @@ public class Main extends Application {
 	}
 	
 	/**
-	 * affiche la sous-fenêtre ArtMovement du rôle "conservateur"
+	 * affichage la modale de sélection de l'œuvre à mettre en exposition
 	 */
-	public void showCuratorArtMovementPane() {
+	public void showCuratorArtExhibitStage() {
 		try {
-			if (curatorArtMovementPane==null) {
-				FXMLLoader loader = new FXMLLoader();
-				loader.setLocation(Main.class.getResource("../view/CuratorArtMovement.fxml"));
-				curatorArtMovementPane = (AnchorPane)loader.load();
-				// récupération du contrôleur de la vue
-				this.curatorArtMovementCtrl = loader.getController();
-				// passage du contrôleur principal (this) au sous-contrôleur
-				this.curatorArtMovementCtrl.setMainControl(this);
-			}
+			if (stgArtSelect.getModality() != Modality.APPLICATION_MODAL) {
+				stgArtSelect.initModality(Modality.APPLICATION_MODAL);
+				stgArtSelect.getIcons().add(new Image(APPICON));
+			};		
+			// lien avec la vue
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("../view/CuratorArtSelect.fxml"));
+			pneArtSelect = (Pane)loader.load();
+			// récupération du contrôleur de la vue
+			this.artSelectCtrl = loader.getController();
+			// passage du contrôleur principal au sous-contrôleur
+			this.artSelectCtrl.setMainControl(this);
 			// rafraîchissement des données de la sous-fenêtre
-			this.curatorArtMovementCtrl.refreshData();
-			// définition des menus accessibles
-			menu_bar.setVisible(true);
-			architect_menu.setVisible(false);
-			curator_menu.setVisible(true);
-			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
-			mainWindowRoot.setCenter(curatorArtMovementPane);
-			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
+			this.artSelectCtrl.refreshData();
+			// affichage de la fenêtre
+			Scene scene = new Scene(pneArtSelect);
+			scene.getStylesheets().add("style.css");
+			stgArtSelect.setTitle("Exposer une œuvre");
+			stgArtSelect.setScene(scene);
+			stgArtSelect.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+		
 	/**
 	 * affiche la sous-fenêtre ArtExhibit du rôle "conservateur"
 	 */
@@ -971,6 +978,8 @@ public class Main extends Application {
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(curatorArtExhibitPane);
 			lblRoleStatus.setText("Connecté avec le rôle Conservateur");
+			btnDisconnect.setText("Se déconnecter");
+			btnDisconnect.setVisible(true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -999,6 +1008,7 @@ public class Main extends Application {
 			// positionnement de cette sous-fenêtre au milieu de la fenêtre principale
 			mainWindowRoot.setCenter(visitorPane);
 			lblRoleStatus.setText("Non connecté");
+			btnDisconnect.setText("Se connecter");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

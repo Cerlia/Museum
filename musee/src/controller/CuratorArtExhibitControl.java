@@ -291,36 +291,13 @@ public class CuratorArtExhibitControl {
 		}
 	}
 	
-	// TODO à déplacer, normalement c'est main qui appelle les fenêtres
 	/**
 	 * event listener du bouton "Ajouter une œuvre" : ouvre une nouvelle fenêtre
-	 * @param e
+	 * @param event
 	 */
 	@FXML
 	private void handleBtnAddArtAction(ActionEvent event) {
-		if (stgArtSelect.getModality() != Modality.APPLICATION_MODAL) {
-			stgArtSelect.initModality(Modality.APPLICATION_MODAL);
-		};		
-		try {
-			// lien avec la vue
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("../view/CuratorArtSelect.fxml"));
-			pneArtSelect = (Pane)loader.load();
-			// récupération du contrôleur de la vue
-			this.artSelectCtrl = loader.getController();
-			// passage du contrôleur principal au sous-contrôleur
-			this.artSelectCtrl.setMainControl(this.mainController);
-			// rafraîchissement des données de la sous-fenêtre
-			this.artSelectCtrl.refreshData();
-			// affichage de la fenêtre
-			Scene scene = new Scene(pneArtSelect);
-			scene.getStylesheets().add("style.css");
-			stgArtSelect.setTitle("Exposer une œuvre");
-			stgArtSelect.setScene(scene);
-			stgArtSelect.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		mainController.showCuratorArtExhibitStage();
 	}
 		
 	/**

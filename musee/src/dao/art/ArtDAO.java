@@ -112,14 +112,14 @@ public class ArtDAO extends DAO<Art> {
 			pst.setInt(8, art.getDim_x());
 			pst.setInt(9, art.getDim_y());
 			pst.setInt(10, art.getDim_z());
-			pst.setBytes(11, art.getImage());
-			pst.setBoolean(12, art.isOwner());
+			pst.setBytes(11, art.getImage());			
 			if (art.getDisplay() != null) {
 				pst.setInt(12, art.getDisplay().getId_display());
 			} else {
 				pst.setNull(12, Types.INTEGER);
 			}
-			pst.setInt(13, art.getId_art());
+			pst.setBoolean(13, art.isOwner());
+			pst.setInt(14, art.getId_art());
 			pst.executeUpdate();
 		} catch (SQLException e) {
 			success=false;
